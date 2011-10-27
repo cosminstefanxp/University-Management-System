@@ -2,6 +2,8 @@ package aii.gui.frames;
 
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,16 +17,21 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import aii.gui.panels.PersonalDataPanel;
+
 import net.miginfocom.swing.MigLayout;
 
 /**
  * The Administrator frame that contains all the features that the admin uses.
  */
 @SuppressWarnings("serial")
-public class AdminFrame extends JFrame {
+public class AdminFrame extends JFrame implements ActionListener{
 
 	/** The content pane. */
 	private JPanel contentPane;
+	private JPanel mainPanel;
+	private JButton btnSetariPersonale;
+	private JButton btnAdminUtilizatori;
 
 	/**
 	 * Launch the application.
@@ -51,6 +58,7 @@ public class AdminFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 895, 563);
 		
+		/******* MENUs ********/
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
@@ -58,17 +66,21 @@ public class AdminFrame extends JFrame {
 		menuBar.add(mnAdministrare);
 		
 		JMenuItem mntmAdminUtilizatori = new JMenuItem("Administrare Utilizatori");
+		mntmAdminUtilizatori.addActionListener(this);
 		mnAdministrare.add(mntmAdminUtilizatori);
 		
 		JMenuItem mntmSuperAdmin = new JMenuItem("Super Administrator");
+		mntmSuperAdmin.addActionListener(this);
 		mnAdministrare.add(mntmSuperAdmin);
 		
 		JMenu mnSetari = new JMenu("Setari");
 		menuBar.add(mnSetari);
 		
-		JMenuItem mntmDatePersonale = new JMenuItem("Date Personale");
-		mnSetari.add(mntmDatePersonale);
+		JMenuItem mntmSetariPersonale = new JMenuItem("Setari Personale");
+		mntmSetariPersonale.addActionListener(this);
+		mnSetari.add(mntmSetariPersonale);
 		
+		/******* FULL CONTENT PANEL ********/
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -83,21 +95,67 @@ public class AdminFrame extends JFrame {
 		lblBineAiVenit.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblBineAiVenit, "cell 0 1,alignx center,aligny top");
 		
-		JPanel panel = new JPanel();
-		panel.setBorder(new LineBorder(UIManager.getColor("ToolBar.borderColor")));
-		contentPane.add(panel, "cell 0 2,grow");
-		panel.setLayout(null);
+		/******* MAIN PANEL ********/
+		mainPanel = new JPanel();
+		mainPanel.setBorder(new LineBorder(UIManager.getColor("ToolBar.borderColor")));
+		mainPanel.setLayout(null);
+		contentPane.add(mainPanel, "cell 0 2,grow");
 		
-		JButton btnEditeazaSetariPersonale = new JButton("Setari personale");
-		btnEditeazaSetariPersonale.setBounds(25, 50, 198, 25);
-		panel.add(btnEditeazaSetariPersonale);
+		btnSetariPersonale = new JButton("Setari personale");
+		btnSetariPersonale.setBounds(25, 50, 198, 25);
+		btnSetariPersonale.addActionListener(this);
+		mainPanel.add(btnSetariPersonale);
 		
-		JButton btnAdministrareUtilizatori = new JButton("Administrare utilizatori");
-		btnAdministrareUtilizatori.setBounds(25, 88, 198, 25);
-		panel.add(btnAdministrareUtilizatori);
+		btnAdminUtilizatori = new JButton("Administrare utilizatori");
+		btnAdminUtilizatori.setBounds(25, 88, 198, 25);
+		btnAdminUtilizatori.addActionListener(this);
+		mainPanel.add(btnAdminUtilizatori);
 		
 		JLabel lblFolositiMeniulSau = new JLabel("Folositi meniul sau unul dintre butoanele de mai jos pentru a interactiona cu sistemul:");
 		lblFolositiMeniulSau.setBounds(25, 23, 613, 15);
-		panel.add(lblFolositiMeniulSau);
+		mainPanel.add(lblFolositiMeniulSau);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	@Override
+	public void actionPerformed(ActionEvent event) {
+		Object source = event.getSource();
+        if (source instanceof JMenu)
+            System.out.println (((JMenu)source).getText());
+        
+        // Check menu item events
+        if (source instanceof JMenuItem)
+        {
+        	//Date personale
+        	JMenuItem sourceItem=(JMenuItem)source;
+        	if(sourceItem.getText().toLowerCase().equals("setari personale"))
+        	{
+        		System.out.println("Menu: Setari personale");
+        		
+        		contentPane.remove(mainPanel);
+        		mainPanel=new PersonalDataPanel();
+        		
+        		contentPane.add(mainPanel, "cell 0 2,grow");
+        		contentPane.revalidate();        		
+        	}
+        }
+        
+        // Check buttons
+        if(source instanceof JButton)
+        {
+        	if(source==this.btnSetariPersonale)
+        	{
+        		System.out.println("Buton: Setari personale");
+        		
+        		contentPane.remove(mainPanel);
+        		mainPanel=new PersonalDataPanel();
+        		
+        		contentPane.add(mainPanel, "cell 0 2,grow");
+        		contentPane.revalidate();        		
+        	}
+        }
+		
 	}
 }
