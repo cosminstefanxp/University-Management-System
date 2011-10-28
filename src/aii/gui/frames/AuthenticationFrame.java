@@ -14,6 +14,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
+import aii.Utilizator;
+import aii.database.UtilizatorWrapper;
+
 /**
  * The Class Authentication that implements the window where the user can authentify.
  */
@@ -89,8 +92,6 @@ public class AuthenticationFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		System.out.println("Realizam autentificarea...");
 		
-		mainFrame.dispose();
-		mainFrame=new AdminFrame();
-		mainFrame.setVisible(true);
+		Utilizator utilizator=UtilizatorWrapper.getUtilizator(cnpUtilizatorField.getText());
 	}
 }
