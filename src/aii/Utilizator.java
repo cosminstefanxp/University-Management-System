@@ -14,13 +14,13 @@ public class Utilizator {
 
 	public String CNP;
 	public String parola;
-	public String tip;
+	public Tip tip;
 	public String nume;
 	public String prenume;
 	public String email;
 	public String adresa;
 	public String titlu_grupa;
-	public String finantare;
+	public Finantare finantare;
 	
 	public Utilizator() {
 		super();

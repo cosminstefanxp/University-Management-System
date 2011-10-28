@@ -16,10 +16,10 @@ public class UtilizatorWrapper {
 
 	public static Utilizator getUtilizator(String cnp)
 	{
-		AbstractWrapper<Utilizator> wrapper=new AbstractWrapper<Utilizator>();
-		
+		ObjectWrapper<Utilizator> wrapper=new ObjectWrapper<Utilizator>(Utilizator.class, Constants.USER_FIELD_MATCH);
+		List<Utilizator> utilizatori = null;
 		try {
-			List<Utilizator> utilizatori=wrapper.createObjects(Utilizator.class, Constants.USER_FIELD_MATCH, Constants.USER_TABLE, "cnp='"+cnp+"'");
+			utilizatori=wrapper.createObjects(Constants.USER_TABLE, "cnp='"+cnp+"'");
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -36,6 +36,7 @@ public class UtilizatorWrapper {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		utilizatori.size();
 		
 		return null;
 	}
