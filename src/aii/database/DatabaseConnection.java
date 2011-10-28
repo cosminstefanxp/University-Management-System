@@ -1,10 +1,13 @@
 package aii.database;
 
+import Constants;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  * The Class DatabaseConnection.
@@ -102,6 +105,26 @@ public class DatabaseConnection {
 		ResultSet result = statement.executeQuery(sqlQuery);
 		
 		return result;
+	}
+	
+	public static void modifica_inregistrari_baza_de_date(String tabela, ArrayList<String> valori)
+			throws SQLException {
+		deschide_conexiune_baza_de_date();
+		String expresie = "UPDATE " + tabela + " SET ";
+		for (String[] structura_tabela : Constants.STRUCTURA_TABELA)
+			if (tabela.equals(structura_tabela[0])) {
+				int coloana = 1;
+				for (String valoare : valori)
+					expresie += structura_tabela[coloana++] + "=\'" + valoare + "\', ";
+			}
+		expresie = expresie.substring(0, expresie.length() - 2);
+		expresie += " WHERE ";
+		for (String[] structura_tabela : Constants.STRUCTURA_TABELA)
+			if (tabela.equals(structura_tabela[0]))
+				expresie += structura_tabela[1] + "=\'" + valori.get(0) + "\'";
+		System.out.println(expresie);
+		interogare.execute(expresie);
+		inchide_conexiune_baza_de_date();
 	}
 	
 	

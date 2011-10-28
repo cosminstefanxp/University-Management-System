@@ -1,13 +1,11 @@
 package aii.database;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ObjectWrapper.
  *
@@ -102,4 +100,5 @@ public class ObjectWrapper<T> {
 		System.out.println("S-au obtinut obiectele:" + objects.toString());
 		return objects;
 	}
+	
 }

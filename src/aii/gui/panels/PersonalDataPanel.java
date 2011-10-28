@@ -7,8 +7,11 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import aii.Utilizator;
+
 @SuppressWarnings("serial")
 public class PersonalDataPanel extends MainPanelAbstract {
+	
 	private JTextField textFieldNume;
 	private JTextField textFieldPrenume;
 	private JTextField textFieldEmail;
@@ -16,10 +19,17 @@ public class PersonalDataPanel extends MainPanelAbstract {
 	private JTextField textFieldCNP;
 	private JPasswordField passwordField;
 
+	
+	/** The associated user. */
+	private Utilizator utilizator;
+	private JTextField textFieldTip;
+	
 	/**
 	 * Create the panel.
 	 */
-	public PersonalDataPanel() {
+	public PersonalDataPanel(Utilizator utilizator) {
+		
+		this.utilizator=utilizator;
 		
 		JLabel lblAiciPotiEdita = new JLabel("Aici poti edita datele tale personale:");
 		lblAiciPotiEdita.setBounds(12, 25, 260, 15);
@@ -30,7 +40,7 @@ public class PersonalDataPanel extends MainPanelAbstract {
 		add(panelFields);
 		panelFields.setLayout(null);
 		
-		textFieldNume = new JTextField();
+		textFieldNume = new JTextField(utilizator.nume);
 		textFieldNume.setBounds(115, 90, 260, 28);
 		panelFields.add(textFieldNume);
 		textFieldNume.setColumns(10);
@@ -40,7 +50,7 @@ public class PersonalDataPanel extends MainPanelAbstract {
 		panelFields.add(lblNume);
 		lblNume.setHorizontalAlignment(SwingConstants.TRAILING);
 		
-		textFieldPrenume = new JTextField();
+		textFieldPrenume = new JTextField(utilizator.prenume);
 		textFieldPrenume.setBounds(115, 135, 260, 28);
 		panelFields.add(textFieldPrenume);
 		textFieldPrenume.setColumns(10);
@@ -50,7 +60,7 @@ public class PersonalDataPanel extends MainPanelAbstract {
 		panelFields.add(lblPrenume);
 		lblPrenume.setHorizontalAlignment(SwingConstants.TRAILING);
 		
-		textFieldEmail = new JTextField();
+		textFieldEmail = new JTextField(utilizator.email);
 		textFieldEmail.setBounds(115, 180, 260, 28);
 		panelFields.add(textFieldEmail);
 		textFieldEmail.setColumns(10);
@@ -60,7 +70,7 @@ public class PersonalDataPanel extends MainPanelAbstract {
 		panelFields.add(lblEmail);
 		lblEmail.setHorizontalAlignment(SwingConstants.TRAILING);
 		
-		textFieldAdresa = new JTextField();
+		textFieldAdresa = new JTextField(utilizator.adresa);
 		textFieldAdresa.setBounds(115, 225, 260, 28);
 		panelFields.add(textFieldAdresa);
 		textFieldAdresa.setColumns(10);
@@ -70,7 +80,7 @@ public class PersonalDataPanel extends MainPanelAbstract {
 		panelFields.add(lblAdresa);
 		lblAdresa.setHorizontalAlignment(SwingConstants.TRAILING);
 		
-		textFieldCNP = new JTextField();
+		textFieldCNP = new JTextField(utilizator.CNP);
 		textFieldCNP.setBounds(115, 0, 260, 28);
 		panelFields.add(textFieldCNP);
 		textFieldCNP.setColumns(10);
@@ -80,7 +90,7 @@ public class PersonalDataPanel extends MainPanelAbstract {
 		panelFields.add(lblCnp);
 		lblCnp.setHorizontalAlignment(SwingConstants.TRAILING);
 		
-		passwordField = new JPasswordField();
+		passwordField = new JPasswordField(this.utilizator.parola);
 		passwordField.setBounds(115, 45, 260, 28);
 		panelFields.add(passwordField);
 		
@@ -89,8 +99,20 @@ public class PersonalDataPanel extends MainPanelAbstract {
 		panelFields.add(lblParola);
 		lblParola.setHorizontalAlignment(SwingConstants.TRAILING);
 		
+		textFieldTip = new JTextField(this.utilizator.tip.toString());
+		textFieldTip.setEditable(false);
+		textFieldTip.setColumns(10);
+		textFieldTip.setBounds(509, 79, 260, 28);
+		add(textFieldTip);
+		
+		JLabel lblTipUtilizator = new JLabel("Tip Utilizator:");
+		lblTipUtilizator.setHorizontalAlignment(SwingConstants.TRAILING);
+		lblTipUtilizator.setBounds(591, 52, 97, 15);
+		add(lblTipUtilizator);
+		
 		JButton btnSave = new JButton("Salveaza");
 		btnSave.setBounds(266, 330, 117, 25);
 		add(btnSave);
+		
 	}
 }

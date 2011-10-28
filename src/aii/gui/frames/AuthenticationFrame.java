@@ -1,6 +1,5 @@
 package aii.gui.frames;
 
-import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,13 +26,16 @@ public class AuthenticationFrame implements ActionListener{
 	private JFrame mainFrame;
 	private JTextField cnpUtilizatorField;
 	private JPasswordField parolaUserField;
-
+	private UtilizatorWrapper utilizatorDAO;
+	
 	/**
 	 * Create the application.
 	 */
 	public AuthenticationFrame() {
 		initialize();
 		this.mainFrame.setVisible(true);
+		
+		utilizatorDAO=new UtilizatorWrapper();
 	}
 
 	/**
@@ -92,6 +94,33 @@ public class AuthenticationFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		System.out.println("Realizam autentificarea...");
-		Utilizator utilizator=UtilizatorWrapper.getUtilizator(cnpUtilizatorField.getText());
+		
+		//Get the user
+		Utilizator utilizator=utilizatorDAO.getUtilizator(cnpUtilizatorField.getText());
+		
+		if(utilizator==null)
+		{
+			JOptionPane.showMessageDialog(mainFrame, "Nu s-a gasit in baza de date un utilizator " +
+					"cu CNP-ul introdus. Va rugam incercati din nou!");
+		}
+		
+		//Authentify the user
+		if(!utilizator.parola.equals(new String(parolaUserField.getPassword())))
+		{
+			JOptionPane.showMessageDialog(mainFrame, "Combinatia cnp/parola introdusa nu este corecta. " +
+				"Va rugam incercati din nou!");
+		}
+		else
+		{
+			System.out.println("Utilizator "+utilizator+" autentificat.");
+			switch(utilizator.tip)
+			{
+			case ADMIN: 
+			case SUPER_ADMIN:
+				mainFrame.dispose();
+				mainFrame=new AdminFrame(utilizator);
+				mainFrame.setVisible(true);
+			}
+		}
 	}
 }

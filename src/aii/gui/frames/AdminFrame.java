@@ -1,6 +1,5 @@
 package aii.gui.frames;
 
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,9 +16,10 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import aii.gui.panels.PersonalDataPanel;
-
 import net.miginfocom.swing.MigLayout;
+import aii.Utilizator;
+import aii.gui.panels.AdminUserPanel;
+import aii.gui.panels.PersonalDataPanel;
 
 /**
  * The Administrator frame that contains all the features that the admin uses.
@@ -27,36 +27,21 @@ import net.miginfocom.swing.MigLayout;
 @SuppressWarnings("serial")
 public class AdminFrame extends JFrame implements ActionListener{
 
-	/** The content pane. */
 	private JPanel contentPane;
 	private JPanel mainPanel;
 	private JButton btnSetariPersonale;
 	private JButton btnAdminUtilizatori;
+	private Utilizator utilizator;
 
-	/**
-	 * Launch the application.
-	 *
-	 * @param args the arguments
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					AdminFrame frame = new AdminFrame();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
 
 	/**
 	 * Create the frame.
 	 */
-	public AdminFrame() {
+	public AdminFrame(Utilizator utilizator) {
+		this.utilizator=utilizator;
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 895, 563);
+		setBounds(100, 100, 1052, 701);
 		
 		/******* MENUs ********/
 		JMenuBar menuBar = new JMenuBar();
@@ -84,7 +69,7 @@ public class AdminFrame extends JFrame implements ActionListener{
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(new MigLayout("", "[851.00px]", "[30px][32.00px][412.00px]"));
+		contentPane.setLayout(new MigLayout("", "[1020.00px]", "[30.00px][17.00px][604.00px]"));
 		
 		JLabel label = new JLabel("Universitatea Politehnica Bucuresti");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -135,11 +120,22 @@ public class AdminFrame extends JFrame implements ActionListener{
         		System.out.println("Menu: Setari personale");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new PersonalDataPanel();
+        		mainPanel=new PersonalDataPanel(utilizator);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
         	}
+        	if(sourceItem.getText().toLowerCase().equals("administrare utilizatori"))
+        	{
+        		System.out.println("Meniu: Administrare Utilizatori");
+        		
+        		contentPane.remove(mainPanel);
+        		mainPanel=new AdminUserPanel();
+        		
+        		contentPane.add(mainPanel, "cell 0 2,grow");
+        		contentPane.revalidate();        		
+        	}
+        
         }
         
         // Check buttons
@@ -150,7 +146,18 @@ public class AdminFrame extends JFrame implements ActionListener{
         		System.out.println("Buton: Setari personale");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new PersonalDataPanel();
+        		mainPanel=new PersonalDataPanel(utilizator);
+        		
+        		contentPane.add(mainPanel, "cell 0 2,grow");
+        		contentPane.revalidate();        		
+        	}
+        	
+        	if(source==this.btnAdminUtilizatori)
+        	{
+        		System.out.println("Buton: Administrare Utilizatori");
+        		
+        		contentPane.remove(mainPanel);
+        		mainPanel=new AdminUserPanel();
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
