@@ -18,7 +18,7 @@ import javax.swing.border.LineBorder;
 
 import net.miginfocom.swing.MigLayout;
 import aii.Utilizator;
-import aii.gui.panels.AdminUserPanel;
+import aii.gui.panels.AdminUsersPanel;
 import aii.gui.panels.PersonalDataPanel;
 
 /**

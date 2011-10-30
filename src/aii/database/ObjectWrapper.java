@@ -47,7 +47,7 @@ public class ObjectWrapper<T> {
 	 * @throws NoSuchFieldException the no such field exception
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<T> createObjects(String table, String where) throws SQLException,
+	public ArrayList<T> getObjects(String table, String where) throws SQLException,
 			InstantiationException, IllegalAccessException, SecurityException, NoSuchFieldException 
 		{
 		ResultSet entries=null;

@@ -18,7 +18,7 @@ import javax.swing.border.LineBorder;
 
 import net.miginfocom.swing.MigLayout;
 import aii.Utilizator;
-import aii.gui.panels.AdminUserPanel;
+import aii.gui.panels.AdminUsersPanel;
 import aii.gui.panels.PersonalDataPanel;
 
 /**
@@ -41,7 +41,7 @@ public class AdminFrame extends JFrame implements ActionListener{
 		this.utilizator=utilizator;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1052, 701);
+		setBounds(100, 100, 1052, 750);
 		
 		/******* MENUs ********/
 		JMenuBar menuBar = new JMenuBar();
@@ -130,7 +130,7 @@ public class AdminFrame extends JFrame implements ActionListener{
         		System.out.println("Meniu: Administrare Utilizatori");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new AdminUserPanel();
+        		mainPanel=new AdminUsersPanel();
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -157,7 +157,7 @@ public class AdminFrame extends JFrame implements ActionListener{
         		System.out.println("Buton: Administrare Utilizatori");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new AdminUserPanel();
+        		mainPanel=new AdminUsersPanel();
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		

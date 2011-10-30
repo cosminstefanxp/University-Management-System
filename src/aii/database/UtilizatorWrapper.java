@@ -27,7 +27,7 @@ public class UtilizatorWrapper extends ObjectWrapper<Utilizator> {
 	{
 		ArrayList<Utilizator> utilizatori = null;
 		try {
-			utilizatori=this.createObjects(Constants.USER_TABLE, whereClause);
+			utilizatori=this.getObjects(Constants.USER_TABLE, whereClause);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
