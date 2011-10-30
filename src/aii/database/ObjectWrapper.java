@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The Class ObjectWrapper.
@@ -48,7 +47,7 @@ public class ObjectWrapper<T> {
 	 * @throws NoSuchFieldException the no such field exception
 	 */
 	@SuppressWarnings("unchecked")
-	public List<T> createObjects(String table, String where) throws SQLException,
+	public ArrayList<T> createObjects(String table, String where) throws SQLException,
 			InstantiationException, IllegalAccessException, SecurityException, NoSuchFieldException 
 		{
 		ResultSet entries=null;
@@ -58,7 +57,7 @@ public class ObjectWrapper<T> {
 		entries=DatabaseConnection.getRestrictedTable(table, where);			
 		
 		//Parse the result set entries, create the objects and insert them in the list
-		List<T> objects=new ArrayList<T>();
+		ArrayList<T> objects=new ArrayList<T>();
 		while (entries.next()) 
 		{
 			//Create a new instance of the class, that will be populated with information

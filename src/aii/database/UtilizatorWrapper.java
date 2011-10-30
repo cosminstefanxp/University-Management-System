@@ -1,6 +1,7 @@
 package aii.database;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -22,9 +23,9 @@ public class UtilizatorWrapper extends ObjectWrapper<Utilizator> {
 	 * @param whereClause the where clause
 	 * @return the utilizatori
 	 */
-	public List<Utilizator> getUtilizatori(String whereClause)
+	public ArrayList<Utilizator> getUtilizatori(String whereClause)
 	{
-		List<Utilizator> utilizatori = null;
+		ArrayList<Utilizator> utilizatori = null;
 		try {
 			utilizatori=this.createObjects(Constants.USER_TABLE, whereClause);
 		} catch (SQLException e) {
