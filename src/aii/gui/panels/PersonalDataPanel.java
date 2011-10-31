@@ -61,7 +61,7 @@ public class PersonalDataPanel extends MainPanelAbstract implements ActionListen
 		panelFields.add(textFieldNume);
 		textFieldNume.setColumns(10);
 		
-		JLabel lblNume = new JLabel("Nume:");
+		JLabel lblNume = new JLabel("Nume: *");
 		lblNume.setBounds(0, 100, 97, 15);
 		panelFields.add(lblNume);
 		lblNume.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -71,7 +71,7 @@ public class PersonalDataPanel extends MainPanelAbstract implements ActionListen
 		panelFields.add(textFieldPrenume);
 		textFieldPrenume.setColumns(10);
 		
-		JLabel lblPrenume = new JLabel("Prenume:");
+		JLabel lblPrenume = new JLabel("Prenume: *");
 		lblPrenume.setBounds(0, 144, 97, 15);
 		panelFields.add(lblPrenume);
 		lblPrenume.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -81,7 +81,7 @@ public class PersonalDataPanel extends MainPanelAbstract implements ActionListen
 		panelFields.add(textFieldEmail);
 		textFieldEmail.setColumns(10);
 		
-		JLabel lblEmail = new JLabel("Email:");
+		JLabel lblEmail = new JLabel("Email: *");
 		lblEmail.setBounds(0, 188, 97, 15);
 		panelFields.add(lblEmail);
 		lblEmail.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -101,7 +101,7 @@ public class PersonalDataPanel extends MainPanelAbstract implements ActionListen
 		panelFields.add(textFieldCNP);
 		textFieldCNP.setColumns(10);
 		
-		JLabel lblCnp = new JLabel("CNP:");
+		JLabel lblCnp = new JLabel("CNP: *");
 		lblCnp.setBounds(0, 12, 97, 15);
 		panelFields.add(lblCnp);
 		lblCnp.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -110,7 +110,7 @@ public class PersonalDataPanel extends MainPanelAbstract implements ActionListen
 		passwordField.setBounds(115, 45, 260, 28);
 		panelFields.add(passwordField);
 		
-		JLabel lblParola = new JLabel("Parola:");
+		JLabel lblParola = new JLabel("Parola: *");
 		lblParola.setBounds(0, 56, 97, 15);
 		panelFields.add(lblParola);
 		lblParola.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -146,6 +146,8 @@ public class PersonalDataPanel extends MainPanelAbstract implements ActionListen
 			
 			comboBoxFinantare = new JComboBox();
 			comboBoxFinantare.setBounds(5, 187, 260, 34);
+			comboBoxFinantare.setModel(new DefaultComboBoxModel(Utilizator.Finantare.values()));
+			comboBoxFinantare.setSelectedItem(utilizator.finantare);
 			panelSideInfo.add(comboBoxFinantare);
 			
 			JLabel lblTitluGrupa = new JLabel("Grupa:");
@@ -153,7 +155,7 @@ public class PersonalDataPanel extends MainPanelAbstract implements ActionListen
 			panelSideInfo.add(lblTitluGrupa);
 			lblTitluGrupa.setHorizontalAlignment(SwingConstants.CENTER);
 			
-			textFieldTitluGrupa = new JTextField((String) null);
+			textFieldTitluGrupa = new JTextField(utilizator.titlu_grupa);
 			textFieldTitluGrupa.setBounds(5, 120, 260, 28);
 			panelSideInfo.add(textFieldTitluGrupa);
 			textFieldTitluGrupa.setColumns(10);	
@@ -166,7 +168,7 @@ public class PersonalDataPanel extends MainPanelAbstract implements ActionListen
 			panelSideInfo.add(lblTitluGrupa);
 			lblTitluGrupa.setHorizontalAlignment(SwingConstants.CENTER);
 			
-			textFieldTitluGrupa = new JTextField((String) null);
+			textFieldTitluGrupa = new JTextField(utilizator.titlu_grupa);
 			textFieldTitluGrupa.setBounds(5, 120, 260, 28);
 			panelSideInfo.add(textFieldTitluGrupa);
 			textFieldTitluGrupa.setColumns(10);

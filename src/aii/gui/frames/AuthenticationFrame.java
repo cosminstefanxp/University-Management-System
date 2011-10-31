@@ -43,6 +43,7 @@ public class AuthenticationFrame implements ActionListener{
 	 */
 	private void initialize() {
 		mainFrame = new JFrame();
+		mainFrame.setResizable(false);
 		mainFrame.setBounds(100, 100, 663, 375);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.getContentPane().setLayout(null);
@@ -58,7 +59,7 @@ public class AuthenticationFrame implements ActionListener{
 		mainFrame.getContentPane().add(lblBineAtiVenit);
 		
 		JPanel authenticationPanel = new JPanel();
-		authenticationPanel.setBounds(29, 71, 572, 226);
+		authenticationPanel.setBounds(35, 71, 572, 226);
 		authenticationPanel.setBorder(new TitledBorder(null, "Autentificare", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		authenticationPanel.setLayout(null);
 		mainFrame.getContentPane().add(authenticationPanel);
@@ -121,6 +122,13 @@ public class AuthenticationFrame implements ActionListener{
 				mainFrame.dispose();
 				mainFrame=new AdminFrame(utilizator);
 				mainFrame.setVisible(true);
+				break;
+			case CADRU_DIDACTIC:
+			case SEF_CATEDRA:
+				mainFrame.dispose();
+				mainFrame=new TeacherFrame(utilizator);
+				mainFrame.setVisible(true);
+				break;
 			}
 		}
 	}

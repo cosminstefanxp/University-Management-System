@@ -1,7 +1,7 @@
 package aii;
 
 /**
- * The clas the contains all the information regarding an user.
+ * The class the contains all the information regarding an user.
  */
 public class Utilizator {
 	public enum Tip {
@@ -22,10 +22,6 @@ public class Utilizator {
 	public String titlu_grupa;
 	public Finantare finantare;
 	
-	public Utilizator() {
-		super();
-	}
-
 	@Override
 	public String toString() {
 		return "Utilizator [CNP=" + CNP + ", adresa=" + adresa + ", email=" + email

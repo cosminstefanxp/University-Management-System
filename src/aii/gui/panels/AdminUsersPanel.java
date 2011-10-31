@@ -78,7 +78,7 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		setLayout(new MigLayout("", "[799.00px:1022.00px]", "[201.00px:306.00px][301.00px:313px]"));
+		setLayout(new MigLayout("", "[799.00px:1022.00px]", "[132.00px:306.00px][301.00px:313px]"));
 		
 		JScrollPane scrollPaneTable = new JScrollPane();
 		add(scrollPaneTable, "cell 0 0,grow");
@@ -184,7 +184,7 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		textFieldTitluGrupa.setColumns(10);
 		
 		lblTitluGrupa = new JLabel("Grupa:");
-		lblTitluGrupa.setBounds(82, 73, 48, 15);
+		lblTitluGrupa.setBounds(64, 73, 132, 15);
 		panelEditSideInfo.add(lblTitluGrupa);
 		lblTitluGrupa.setHorizontalAlignment(SwingConstants.CENTER);
 		
@@ -292,7 +292,7 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		}
 		else if(object.tip==Tip.CADRU_DIDACTIC || object.tip==Tip.SEF_CATEDRA)
 		{
-			lblTitluGrupa.setText("Titlu");
+			lblTitluGrupa.setText("Titulatura");
 			lblTitluGrupa.setVisible(true);
 			textFieldTitluGrupa.setVisible(true);
 			
@@ -441,7 +441,7 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 			}
 			else if(comboBoxTipUtilizator.getSelectedItem()==Tip.CADRU_DIDACTIC || comboBoxTipUtilizator.getSelectedItem()==Tip.SEF_CATEDRA)
 			{
-				lblTitluGrupa.setText("Titlu");
+				lblTitluGrupa.setText("Titulatura");
 				lblTitluGrupa.setVisible(true);
 				textFieldTitluGrupa.setVisible(true);
 				
