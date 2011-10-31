@@ -1,16 +1,25 @@
 package aii.gui.panels;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import aii.Utilizator;
+import aii.Utilizator.Finantare;
+import aii.Utilizator.Tip;
+import aii.database.UtilizatorWrapper;
 
 @SuppressWarnings("serial")
-public class PersonalDataPanel extends MainPanelAbstract {
+public class PersonalDataPanel extends MainPanelAbstract implements ActionListener {
 	
 	private JTextField textFieldNume;
 	private JTextField textFieldPrenume;
@@ -19,17 +28,24 @@ public class PersonalDataPanel extends MainPanelAbstract {
 	private JTextField textFieldCNP;
 	private JPasswordField passwordField;
 
+	private JLabel statusLbl;
 	
 	/** The associated user. */
 	private Utilizator utilizator;
-	private JTextField textFieldTip;
+	
+	private UtilizatorWrapper utilizatorDAO=new UtilizatorWrapper();
+	private JTextField textFieldTitluGrupa;
+	private JComboBox comboBoxFinantare;
 	
 	/**
 	 * Create the panel.
 	 */
-	public PersonalDataPanel(Utilizator utilizator) {
+	public PersonalDataPanel(Utilizator utilizator, JLabel statusLbl) {
 		
 		this.utilizator=utilizator;
+		this.statusLbl=statusLbl;
+		
+		this.statusLbl.setText("Modifica datele tale personale.");
 		
 		JLabel lblAiciPotiEdita = new JLabel("Aici poti edita datele tale personale:");
 		lblAiciPotiEdita.setBounds(12, 25, 260, 15);
@@ -99,20 +115,99 @@ public class PersonalDataPanel extends MainPanelAbstract {
 		panelFields.add(lblParola);
 		lblParola.setHorizontalAlignment(SwingConstants.TRAILING);
 		
-		textFieldTip = new JTextField(this.utilizator.tip.toString());
-		textFieldTip.setEditable(false);
-		textFieldTip.setColumns(10);
-		textFieldTip.setBounds(509, 79, 260, 28);
-		add(textFieldTip);
-		
-		JLabel lblTipUtilizator = new JLabel("Tip Utilizator:");
-		lblTipUtilizator.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblTipUtilizator.setBounds(591, 52, 97, 15);
-		add(lblTipUtilizator);
-		
 		JButton btnSave = new JButton("Salveaza");
+		btnSave.addActionListener(this);
 		btnSave.setBounds(266, 330, 117, 25);
 		add(btnSave);
 		
+		JPanel panelSideInfo = new JPanel();
+		panelSideInfo.setBorder(null);
+		panelSideInfo.setBounds(464, 52, 270, 226);
+		add(panelSideInfo);
+		panelSideInfo.setLayout(null);
+		
+		JLabel label = new JLabel("Tip Utilizator:");
+		label.setBounds(87, 20, 97, 15);
+		panelSideInfo.add(label);
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		JComboBox comboBoxTip = new JComboBox();
+		comboBoxTip.setModel(new DefaultComboBoxModel(new String[] {utilizator.tip.toString()}));
+		comboBoxTip.setEnabled(false);
+		comboBoxTip.setBounds(5, 47, 260, 34);
+		panelSideInfo.add(comboBoxTip);
+		
+		if(utilizator.tip==Tip.STUDENT)
+		{
+			JLabel lblFormaFinantare = new JLabel("Forma Finantare:");
+			lblFormaFinantare.setBounds(87, 160, 122, 15);
+			panelSideInfo.add(lblFormaFinantare);
+			lblFormaFinantare.setHorizontalAlignment(SwingConstants.CENTER);
+			
+			comboBoxFinantare = new JComboBox();
+			comboBoxFinantare.setBounds(5, 187, 260, 34);
+			panelSideInfo.add(comboBoxFinantare);
+			
+			JLabel lblTitluGrupa = new JLabel("Grupa:");
+			lblTitluGrupa.setBounds(87, 93, 97, 15);
+			panelSideInfo.add(lblTitluGrupa);
+			lblTitluGrupa.setHorizontalAlignment(SwingConstants.CENTER);
+			
+			textFieldTitluGrupa = new JTextField((String) null);
+			textFieldTitluGrupa.setBounds(5, 120, 260, 28);
+			panelSideInfo.add(textFieldTitluGrupa);
+			textFieldTitluGrupa.setColumns(10);	
+		}
+		
+		if(utilizator.tip==Tip.CADRU_DIDACTIC || utilizator.tip==Tip.SEF_CATEDRA)
+		{
+			JLabel lblTitluGrupa = new JLabel("Titlu:");
+			lblTitluGrupa.setBounds(87, 93, 97, 15);
+			panelSideInfo.add(lblTitluGrupa);
+			lblTitluGrupa.setHorizontalAlignment(SwingConstants.CENTER);
+			
+			textFieldTitluGrupa = new JTextField((String) null);
+			textFieldTitluGrupa.setBounds(5, 120, 260, 28);
+			panelSideInfo.add(textFieldTitluGrupa);
+			textFieldTitluGrupa.setColumns(10);
+		}
+		
+		
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent event) {
+		
+		//Check fields
+		if(textFieldCNP.getText().isEmpty() ||
+				textFieldNume.getText().isEmpty() ||
+				textFieldPrenume.getText().isEmpty() ||
+				passwordField.getPassword().length==0 ||
+				textFieldEmail.getText().isEmpty())
+		{
+			JOptionPane.showMessageDialog(null, "Va rugam sa completati toate campurile obligatorii","Incomplet",JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		//Copy the old user
+		Utilizator utilizatorCopy=utilizator.clone();
+		
+		//Create the new user
+		utilizator.CNP=textFieldCNP.getText();
+		utilizator.nume=textFieldNume.getText();
+		utilizator.prenume=textFieldPrenume.getText();
+		utilizator.parola=new String(passwordField.getPassword());
+		utilizator.email=textFieldEmail.getText();
+		utilizator.adresa=textFieldAdresa.getText();
+		if(textFieldTitluGrupa!=null)
+			utilizator.titlu_grupa=textFieldTitluGrupa.getText();
+		if(comboBoxFinantare!=null)
+			utilizator.finantare=(Finantare) comboBoxFinantare.getSelectedItem();
+		
+		System.out.println("Utilizator existent -> modificat in " + utilizator);
+		if(!utilizatorDAO.UpdateUtilizator(utilizatorCopy,utilizator))
+			return;
+		
+		statusLbl.setText("Utilizatorul "+utilizator.CNP+" a fost actualizat.");	
+	}
+	
 }

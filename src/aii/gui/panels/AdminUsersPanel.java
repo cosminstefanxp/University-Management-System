@@ -1,4 +1,5 @@
 package aii.gui.panels;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -16,6 +17,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -26,9 +29,6 @@ import aii.Utilizator.Tip;
 import aii.database.Constants;
 import aii.database.UtilizatorWrapper;
 import aii.gui.tools.ObjectTableModel;
-import javax.swing.border.TitledBorder;
-import javax.swing.border.LineBorder;
-import java.awt.Color;
 
 
 @SuppressWarnings("serial")
@@ -39,6 +39,8 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 	private ArrayList<Utilizator> objects;
 	private ObjectTableModel<Utilizator> tableModel;
 	private UtilizatorWrapper utilizatorDAO=new UtilizatorWrapper();
+	
+	private JLabel statusLbl;
 	
 	private JTextField textFieldNume;
 	private JTextField textFieldPrenume;
@@ -59,8 +61,10 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 	/**
 	 * Create the panel.
 	 */
-	public AdminUsersPanel(Utilizator utilizator) {
+	public AdminUsersPanel(Utilizator utilizator, JLabel statusLbl) {
 		this.utilizator=utilizator;
+		this.statusLbl=statusLbl;
+		this.statusLbl.setText("Administrare utilizatori ca "+utilizator.tip+". Completeaza campurile pentru a crea un nou utilizator sau selecteaza un rand pentru a il modifica.");
 		
 		//Get the objects		
 		try {
@@ -74,7 +78,7 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		setLayout(new MigLayout("", "[799.00px:1022.00px]", "[201.00px:315px][301.00px:313px]"));
+		setLayout(new MigLayout("", "[799.00px:1022.00px]", "[201.00px:306.00px][301.00px:313px]"));
 		
 		JScrollPane scrollPaneTable = new JScrollPane();
 		add(scrollPaneTable, "cell 0 0,grow");
@@ -160,12 +164,12 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		panelEditMainInfo.add(label_5);
 		
 		JPanel panelEditSideInfo = new JPanel();
-		panelEditSideInfo.setBounds(473, 24, 260, 202);
+		panelEditSideInfo.setBounds(465, 24, 268, 215);
 		panelEditInfo.add(panelEditSideInfo);
 		panelEditSideInfo.setLayout(null);
 		
 		comboBoxFinantare = new JComboBox();
-		comboBoxFinantare.setBounds(0, 168, 260, 34);
+		comboBoxFinantare.setBounds(0, 168, 260, 35);
 		panelEditSideInfo.add(comboBoxFinantare);
 		comboBoxFinantare.setModel(new DefaultComboBoxModel(Utilizator.Finantare.values()));
 		
@@ -180,7 +184,7 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		textFieldTitluGrupa.setColumns(10);
 		
 		lblTitluGrupa = new JLabel("Grupa:");
-		lblTitluGrupa.setBounds(82, 73, 97, 15);
+		lblTitluGrupa.setBounds(82, 73, 48, 15);
 		panelEditSideInfo.add(lblTitluGrupa);
 		lblTitluGrupa.setHorizontalAlignment(SwingConstants.CENTER);
 		
@@ -272,7 +276,8 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		comboBoxTipUtilizator.setSelectedItem(object.tip);
 		comboBoxFinantare.setSelectedItem(null);
 		textFieldTitluGrupa.setText(null);
-		
+
+		statusLbl.setText("Modfica datele utilizatorului "+object.CNP+" si apasa 'Salveaza' pentru a face permanente modificarile.");
 		//Per-type fields
 		if(object.tip==Tip.STUDENT)
 		{
@@ -317,6 +322,7 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		{
 			System.out.println("Adding new User");
 			table.getSelectionModel().clearSelection();
+			statusLbl.setText("Completeaza campurile pentru a crea un nou utilizator si apasa 'Salveaza'");
 		} else	
 		if(source==btnSterge)
 		{
@@ -328,6 +334,8 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 			//Delete the user
 			if(!utilizatorDAO.deleteUtilizator(objects.get(table.getSelectedRow())))
 				return;
+			
+			statusLbl.setText("Utilizatorul "+utilizator.CNP+" a fost sters.");
 			
 			//Update JTable
 			objects.remove(table.getSelectedRow());
@@ -369,21 +377,25 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 				System.out.println("Utilizator nou: "+object);
 				if(!utilizatorDAO.insertUtilizator(object))
 					return;
-				
+			
+				statusLbl.setText("S-a creat un utilizator nou.");
 				//Update JTable
 				objects.add(object);
 				tableModel.setObjects(objects);
-				tableModel.fireTableDataChanged();				
+				tableModel.fireTableDataChanged();
+				table.getSelectionModel().setSelectionInterval(0, objects.size()-1);
 			}
 			else //If it's an old entry
 			{
 				System.out.println("Utilizator existent -> modificat in " + object);
-				if(!utilizatorDAO.UpdateUtilizator(objects.get(table.getSelectedRow()), object));
+				if(!utilizatorDAO.UpdateUtilizator(objects.get(table.getSelectedRow()), object))
+					return;
 				
+				statusLbl.setText("Utilizatorul "+utilizator.CNP+" a fost actualizat.");
 				//Update JTable
 				objects.set(table.getSelectedRow(), object);
 				tableModel.setObjects(objects);
-				tableModel.fireTableDataChanged();				
+				tableModel.fireTableDataChanged();	
 			}
 				
 		}
@@ -437,6 +449,4 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		}
 		
 	}
-	
-	
 }

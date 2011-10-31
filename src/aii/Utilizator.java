@@ -33,5 +33,22 @@ public class Utilizator {
 				+ ", prenume=" + prenume + ", tip=" + tip + ", titlu_grupa=" + titlu_grupa + "]";
 	}
 
+	@Override
+	public Utilizator clone() {
+		Utilizator utilizator=new Utilizator();
+		
+		utilizator.CNP=CNP;
+		utilizator.parola=parola;
+		utilizator.tip=tip;
+		utilizator.nume=nume;
+		utilizator.prenume=prenume;
+		utilizator.email=email;
+		utilizator.adresa=adresa;
+		utilizator.titlu_grupa=titlu_grupa;
+		utilizator.finantare=finantare;
+		
+		return utilizator;
+	}
+
 	
 }

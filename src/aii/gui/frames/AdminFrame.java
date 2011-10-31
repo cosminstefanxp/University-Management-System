@@ -32,6 +32,7 @@ public class AdminFrame extends JFrame implements ActionListener{
 	private JButton btnSetariPersonale;
 	private JButton btnAdminUtilizatori;
 	private Utilizator utilizator;
+	public JLabel statusLbl;
 
 
 	/**
@@ -41,7 +42,7 @@ public class AdminFrame extends JFrame implements ActionListener{
 		this.utilizator=utilizator;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1052, 750);
+		setBounds(100, 100, 1052, 800);
 		
 		/******* MENUs ********/
 		JMenuBar menuBar = new JMenuBar();
@@ -69,7 +70,7 @@ public class AdminFrame extends JFrame implements ActionListener{
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(new MigLayout("", "[1020.00px]", "[30.00px][17.00px][604.00px]"));
+		contentPane.setLayout(new MigLayout("", "[1020.00px]", "[30.00px][17.00px][640.00px][40.00]"));
 		
 		JLabel label = new JLabel("Universitatea Politehnica Bucuresti");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -79,7 +80,10 @@ public class AdminFrame extends JFrame implements ActionListener{
 		JLabel lblBineAiVenit = new JLabel("Bine ati venit in consola de adminstrare a universitatii!");
 		lblBineAiVenit.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblBineAiVenit, "cell 0 1,alignx center,aligny top");
-		
+
+		statusLbl = new JLabel("Autentificat ca administrator.");
+		statusLbl.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 11));
+		contentPane.add(statusLbl, "cell 0 3");
 		/******* MAIN PANEL ********/
 		mainPanel = new JPanel();
 		mainPanel.setBorder(new LineBorder(UIManager.getColor("ToolBar.borderColor")));
@@ -120,7 +124,7 @@ public class AdminFrame extends JFrame implements ActionListener{
         		System.out.println("Menu: Setari personale");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new PersonalDataPanel(utilizator);
+        		mainPanel=new PersonalDataPanel(utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -130,7 +134,7 @@ public class AdminFrame extends JFrame implements ActionListener{
         		System.out.println("Meniu: Administrare Utilizatori");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new AdminUsersPanel(utilizator);
+        		mainPanel=new AdminUsersPanel(utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -146,7 +150,7 @@ public class AdminFrame extends JFrame implements ActionListener{
         		System.out.println("Buton: Setari personale");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new PersonalDataPanel(utilizator);
+        		mainPanel=new PersonalDataPanel(utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -157,7 +161,7 @@ public class AdminFrame extends JFrame implements ActionListener{
         		System.out.println("Buton: Administrare Utilizatori");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new AdminUsersPanel(utilizator);
+        		mainPanel=new AdminUsersPanel(utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
