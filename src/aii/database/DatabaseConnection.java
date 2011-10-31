@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  * The Class DatabaseConnection.
@@ -58,8 +59,8 @@ public class DatabaseConnection {
 	 */
 	public static ResultSet getFullTable(String table) throws SQLException 
 	{
-		if (!open)
-			openConnection();
+		openConnection();
+		
 		String expression = "SELECT * FROM " + table;
 		ResultSet result = statement.executeQuery(expression);
 		System.out.println("S-a apelat expresia SQL '"+expression+"'");
@@ -77,8 +78,8 @@ public class DatabaseConnection {
 	 */
 	public static ResultSet getRestrictedTable(String tables, String where) throws SQLException
 	{
-		if (!open)
-			openConnection();
+		openConnection();
+		
 		String expression = "SELECT * FROM " + tables + " WHERE " + where;
 		System.out.println("S-a apelat expresia SQL '"+expression+"'");
 		ResultSet result = statement.executeQuery(expression);
@@ -96,12 +97,44 @@ public class DatabaseConnection {
 	 */
 	public static ResultSet customQuery(String sqlQuery) throws SQLException
 	{
-		if (!open)
-			openConnection();
+		openConnection();
+		
 		System.out.println("S-a apelat expresia SQL '"+sqlQuery+"'");
 		ResultSet result = statement.executeQuery(sqlQuery);
 		
 		return result;
+	}
+	
+	
+	/**
+	 * Adds a new entity in the database table, given the fieldNames and the field Values.
+	 *
+	 * @param table the table
+	 * @param fieldNames the field names
+	 * @param values the values
+	 * @throws SQLException the sQL exception
+	 */
+	public static void addEntity(String table, String[] fieldNames, String[] values)
+			throws SQLException {
+
+		openConnection();
+		
+		String expression = "INSERT INTO " + table + " (";
+		
+		//Insert field names
+		for (int col = 0; col < fieldNames.length; col++)
+			expression += fieldNames[col] + ",";
+		expression = expression.substring(0, expression.length() - 1);
+		
+		//Insert field values
+		expression += ") VALUES (";
+		for (String value : values)
+			expression += "\'" + value + "\',";
+		expression = expression.substring(0, expression.length() - 1);
+		expression += ")";
+		
+		System.out.println("S-a apelat expresia SQL \'"+expression+"\'");
+		statement.execute(expression);
 	}
 	
 	/*public static void modifica_inregistrari_baza_de_date(String tabela, ArrayList<String> valori)
@@ -153,25 +186,7 @@ public class DatabaseConnection {
 	// return continut_baza_de_date;
 	// }
 	//
-	// public static void adauga_inregistrari_baza_de_date (String tabela,
-	// ArrayList<String> valori) throws SQLException
-	// {
-	// openConnection();
-	// String expresie = "INSERT INTO "+tabela+" (";
-	// for (String[] structura_tabela:Constants.STRUCTURA_TABELA)
-	// if (tabela.equals(structura_tabela[0]))
-	// for (int coloana = 1; coloana < structura_tabela.length; coloana++)
-	// expresie += structura_tabela[coloana]+",";
-	// expresie = expresie.substring(0,expresie.length()-1);
-	// expresie += ") VALUES (";
-	// for (String valoare: valori)
-	// expresie += "\'"+valoare+"\',";
-	// expresie = expresie.substring(0,expresie.length()-1);
-	// expresie += ")";
-	// System.out.println (expresie);
-	// statement.execute(expresie);
-	// closeConnection();
-	// }
+
 	//
 	// public static void modifica_inregistrari_baza_de_date (String tabela,
 	// ArrayList<String> valori) throws SQLException

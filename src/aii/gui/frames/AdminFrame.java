@@ -130,7 +130,7 @@ public class AdminFrame extends JFrame implements ActionListener{
         		System.out.println("Meniu: Administrare Utilizatori");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new AdminUsersPanel();
+        		mainPanel=new AdminUsersPanel(utilizator);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -157,7 +157,7 @@ public class AdminFrame extends JFrame implements ActionListener{
         		System.out.println("Buton: Administrare Utilizatori");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new AdminUsersPanel();
+        		mainPanel=new AdminUsersPanel(utilizator);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		

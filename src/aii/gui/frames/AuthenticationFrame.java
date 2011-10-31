@@ -102,6 +102,7 @@ public class AuthenticationFrame implements ActionListener{
 		{
 			JOptionPane.showMessageDialog(mainFrame, "Nu s-a gasit in baza de date un utilizator " +
 					"cu CNP-ul introdus. Va rugam incercati din nou!");
+			return ;
 		}
 		
 		//Authentify the user

@@ -81,7 +81,7 @@ public class ObjectWrapper<T> {
 						if(field.getType().isEnum())
 						{
 							String enumValue=(String) entries.getObject(columnName);
-							if(enumValue==null)
+							if(enumValue==null || enumValue.equalsIgnoreCase("null"))
 								continue;
 							field.set(instance, Enum.valueOf((Class<Enum>) field.getType(), enumValue));	
 						}
@@ -98,6 +98,40 @@ public class ObjectWrapper<T> {
 		
 		System.out.println("S-au obtinut obiectele:" + objects.toString());
 		return objects;
+	}
+	
+	/**
+	 * Insert a new object in the given table.
+	 *
+	 * @param table the table
+	 * @param object the object
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws IllegalAccessException the illegal access exception
+	 * @throws SecurityException the security exception
+	 * @throws NoSuchFieldException the no such field exception
+	 * @throws SQLException the sQL exception
+	 */
+	public void insertObject(String table, T object) throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException, SQLException
+	{
+		String[] values=new String[nameMatch[0].length];
+		
+		//For every field in the nameMatch[0] array of database field names, we put the value in the matching object field in the values array
+		for(int i=0; i<nameMatch[0].length;i++)
+		{
+			//Prepare the field of the object which we are now getting info from
+			Field field=classType.getDeclaredField(nameMatch[1][i]);
+			
+			Object value=field.get(object);
+			if(value!=null)
+				values[i]=value.toString();
+			else
+				values[i]="NULL";
+		}
+		
+		//Run the SQL insertion query
+		System.out.println("Inseram un nou obiect in baza de date: "+values);
+		DatabaseConnection.openConnection();
+		DatabaseConnection.addEntity(table, nameMatch[0], values);
 	}
 	
 }

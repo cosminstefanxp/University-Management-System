@@ -84,4 +84,8 @@ public class ObjectTableModel<T> extends AbstractTableModel {
 		return columnNames[index];
 	}
 
+	public void setObjects(ArrayList<T> objects) {
+		this.objects = objects;
+	}
+
 }

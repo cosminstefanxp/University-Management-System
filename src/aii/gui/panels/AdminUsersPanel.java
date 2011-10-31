@@ -8,6 +8,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
@@ -20,6 +21,7 @@ import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
 import aii.Utilizator;
+import aii.Utilizator.Finantare;
 import aii.Utilizator.Tip;
 import aii.database.Constants;
 import aii.database.UtilizatorWrapper;
@@ -31,9 +33,13 @@ import java.awt.Color;
 
 @SuppressWarnings("serial")
 public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionListener, ActionListener {
+	
+	private Utilizator utilizator;
 	private JTable table;
 	private ArrayList<Utilizator> objects;
 	private ObjectTableModel<Utilizator> tableModel;
+	private UtilizatorWrapper utilizatorDAO=new UtilizatorWrapper();
+	
 	private JTextField textFieldNume;
 	private JTextField textFieldPrenume;
 	private JTextField textFieldEmail;
@@ -53,10 +59,10 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 	/**
 	 * Create the panel.
 	 */
-	public AdminUsersPanel() {
-		//Get the objects
-		UtilizatorWrapper utilizatorDAO=new UtilizatorWrapper();
+	public AdminUsersPanel(Utilizator utilizator) {
+		this.utilizator=utilizator;
 		
+		//Get the objects		
 		try {
 			objects=utilizatorDAO.getObjects(Constants.USER_TABLE,"cnp=cnp");
 			tableModel=new ObjectTableModel<Utilizator>(Utilizator.class,
@@ -162,7 +168,6 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		comboBoxFinantare.setBounds(0, 168, 260, 34);
 		panelEditSideInfo.add(comboBoxFinantare);
 		comboBoxFinantare.setModel(new DefaultComboBoxModel(Utilizator.Finantare.values()));
-		comboBoxFinantare.setEditable(true);
 		
 		lblFormaFinantare = new JLabel("Forma Finantare:");
 		lblFormaFinantare.setBounds(69, 141, 122, 15);
@@ -180,10 +185,10 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		lblTitluGrupa.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		comboBoxTipUtilizator = new JComboBox();
+		comboBoxTipUtilizator.addActionListener(this);
 		comboBoxTipUtilizator.setBounds(0, 27, 260, 34);
 		panelEditSideInfo.add(comboBoxTipUtilizator);
 		comboBoxTipUtilizator.setModel(new DefaultComboBoxModel(Utilizator.Tip.values()));
-		comboBoxTipUtilizator.setEditable(true);
 		
 		JLabel label_6 = new JLabel("Tip Utilizator:");
 		label_6.setBounds(82, 0, 97, 15);
@@ -197,10 +202,12 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		comboBoxTipUtilizator.setSelectedItem(null);
 		
 		btnSalveaza = new JButton("Salveaza");
+		btnSalveaza.addActionListener(this);
 		btnSalveaza.setBounds(616, 272, 117, 25);
 		panelEditInfo.add(btnSalveaza);
 		
 		btnSterge = new JButton("Sterge");
+		btnSterge.addActionListener(this);
 		btnSterge.setBounds(788, 65, 117, 25);
 		panelEdit.add(btnSterge);
 		
@@ -208,6 +215,18 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		btnAdauga.addActionListener(this);
 		btnAdauga.setBounds(788, 16, 117, 25);
 		panelEdit.add(btnAdauga);
+		
+		
+		//Some default values
+		textFieldCNP.setText(null);
+		textFieldNume.setText(null);
+		textFieldPrenume.setText(null);
+		textFieldAdresa.setText(null);
+		textFieldEmail.setText(null);
+		passwordField.setText(null);
+		comboBoxTipUtilizator.setSelectedItem(Tip.SECRETAR);
+		comboBoxFinantare.setSelectedItem(null);
+		textFieldTitluGrupa.setText(null);
 	}
 
 	/* Eveniment declansat la schimbarea selectiei
@@ -230,7 +249,7 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 			textFieldAdresa.setText(null);
 			textFieldEmail.setText(null);
 			passwordField.setText(null);
-			comboBoxTipUtilizator.setSelectedItem(null);
+			comboBoxTipUtilizator.setSelectedItem(Tip.SECRETAR);
 			comboBoxFinantare.setSelectedItem(null);
 			textFieldTitluGrupa.setText(null);
 			
@@ -285,6 +304,10 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		
 	}
 
+	/* Evenimente declansate la click pe cele 3 butoane sau la schimbarea selectiei tipului
+	 *  (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		Object source = event.getSource();
@@ -294,6 +317,84 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		{
 			System.out.println("Adding new User");
 			table.getSelectionModel().clearSelection();
+		} else		
+		if(source==btnSalveaza)
+		{
+			System.out.println("Salvam informatiile in DB");
+			
+			if(table.getSelectedRow()==-1)
+			{
+				//Create the new user
+				Utilizator object=new Utilizator();
+				object.CNP=textFieldCNP.getText();
+				object.nume=textFieldNume.getText();
+				object.prenume=textFieldPrenume.getText();
+				object.parola=new String(passwordField.getPassword());
+				object.email=textFieldEmail.getText();
+				object.adresa=textFieldAdresa.getText();
+				object.titlu_grupa=textFieldTitluGrupa.getText();
+				object.tip=(Tip) comboBoxTipUtilizator.getSelectedItem();
+				object.finantare=(Finantare) comboBoxFinantare.getSelectedItem();
+				
+				//Insert the new user
+				System.out.println("Utilizator nou: "+object);
+				if(!utilizatorDAO.insertUtilizator(object))
+					return;
+				
+				//Update JTable
+				objects.add(object);
+				tableModel.setObjects(objects);
+				tableModel.fireTableDataChanged();
+				
+			}
+		}
+		else if(source==comboBoxTipUtilizator)
+		{
+			System.out.println("Schimbat selectie tip.");
+			//If unauthorized
+			if(utilizator.tip!=Tip.SUPER_ADMIN && (comboBoxTipUtilizator.getSelectedItem()==Tip.ADMIN || comboBoxTipUtilizator.getSelectedItem()==Tip.SUPER_ADMIN))
+			{
+				//If existing user
+				if(table.getSelectedRow()!=-1 && comboBoxTipUtilizator.getSelectedItem()!=objects.get(table.getSelectedRow()).tip)
+				{
+					JOptionPane.showMessageDialog(null,"Nu aveti dreptul de a crea administratori!","Neautorizat",JOptionPane.ERROR_MESSAGE);
+					comboBoxTipUtilizator.setSelectedItem(objects.get(table.getSelectedRow()).tip);
+				}
+				//If new user
+				if(table.getSelectedRow()==-1)
+				{
+					JOptionPane.showMessageDialog(null,"Nu aveti dreptul de a crea administratori!","Neautorizat",JOptionPane.ERROR_MESSAGE);
+					comboBoxTipUtilizator.setSelectedItem(Tip.STUDENT);
+				}
+			}
+			//Per-type fields
+			if(comboBoxTipUtilizator.getSelectedItem()==Tip.STUDENT)
+			{
+				comboBoxFinantare.setSelectedItem(Finantare.Buget);
+				comboBoxFinantare.setVisible(true);
+				lblFormaFinantare.setVisible(true);
+				
+				textFieldTitluGrupa.setText(null);
+				lblTitluGrupa.setText("Grupa");
+				lblTitluGrupa.setVisible(true);
+				textFieldTitluGrupa.setVisible(true);
+			}
+			else if(comboBoxTipUtilizator.getSelectedItem()==Tip.CADRU_DIDACTIC || comboBoxTipUtilizator.getSelectedItem()==Tip.SEF_CATEDRA)
+			{
+				lblTitluGrupa.setText("Titlu");
+				lblTitluGrupa.setVisible(true);
+				textFieldTitluGrupa.setVisible(true);
+				
+				comboBoxFinantare.setVisible(false);
+				lblFormaFinantare.setVisible(false);
+			}
+			else
+			{
+				comboBoxFinantare.setVisible(false);
+				lblFormaFinantare.setVisible(false);
+				lblTitluGrupa.setVisible(false);
+				textFieldTitluGrupa.setVisible(false);
+			}
 		}
 		
 	}
