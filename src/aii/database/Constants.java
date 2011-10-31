@@ -11,6 +11,7 @@ public class Constants {
 															{ "cnp", "parola", "tip", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare"},	//campuri obiect
 															{ "CNP", "parola", "tip", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare"}		//campuri baza de date
 														};
+	final public static int			USER_TABLE_PK_COUNT	= 1;
 	
 	final public static String[][]	ADMIN_USER_COLUMN_FIELD_MATCH ={
 															{ "tip",      "CNP", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare"},			//campuri obiect

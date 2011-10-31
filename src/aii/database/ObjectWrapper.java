@@ -13,11 +13,16 @@ import java.util.ArrayList;
 public class ObjectWrapper<T> {
 	
 	/** The class type. */
-	Class<T> classType;
+	private Class<T> classType;
 	
 	/** A 2 dimensional array containing matchings between the names of the fields in the database and the
 	 *  names of the fields in the objects. */
-	String[][] nameMatch;
+	private String[][] nameMatch;
+	
+	/** The private key count is the number of the fields the form the private key of the object. The fields should
+	 * be on the first privateKeyCount positions in the nameMatch array. */
+	private int privateKeyCount;
+	
 	
 		
 	/**
@@ -25,12 +30,15 @@ public class ObjectWrapper<T> {
 	 *
 	 * @param type the type
 	 * @param nameMatch a 2 dimensional array containing matchings between the names of the fields in the database and the
-	 *  		names of the fields in the objects.
+	 * names of the fields in the objects.
+	 * @param privateKeyCount The private key count is the number of the fields the form the private key of the object. The fields should
+	 * be on the first privateKeyCount positions in the nameMatch array.
 	 */
-	public ObjectWrapper(Class<T> type, String[][] nameMatch) {
+	public ObjectWrapper(Class<T> type, String[][] nameMatch, int privateKeyCount) {
 		super();
 		this.classType = type;
 		this.nameMatch = nameMatch;
+		this.privateKeyCount=privateKeyCount;
 	}
 
 
@@ -133,5 +141,86 @@ public class ObjectWrapper<T> {
 		DatabaseConnection.openConnection();
 		DatabaseConnection.addEntity(table, nameMatch[0], values);
 	}
+	
+	/**
+	 * Delete an object from the given table
+	 *
+	 * @param table the table
+	 * @param object the object
+	 * @throws SecurityException the security exception
+	 * @throws NoSuchFieldException the no such field exception
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws IllegalAccessException the illegal access exception
+	 * @throws SQLException the sQL exception
+	 */
+	public void deleteObject(String table, T object) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, SQLException
+	{
+		String whereClause="";
+		
+		//For every field in the private key, we put the value in the where clause
+		for(int i=0;i<this.privateKeyCount;i++)
+		{
+			//Prepare the field of the object which we are now getting info from
+			Field field=classType.getDeclaredField(nameMatch[1][i]);
+			
+			whereClause+=nameMatch[0][i]+"=\'"+field.get(object)+"\' ,";				
+		}
+		
+		//Clean the last ,
+		whereClause=whereClause.substring(0,whereClause.length()-1);
+
+		//Run the SQL deletion query
+		System.out.println("Stergem un obiect din baza de date: "+whereClause);
+		DatabaseConnection.openConnection();
+		DatabaseConnection.deleteEntities(table, whereClause);	
+	}
+	
+	/**
+	 * Updates an object from the given table. Object selection is based on private key.
+	 *
+	 * @param table the table
+	 * @param oldObject the old object
+	 * @param newObject the new object
+	 * @throws SecurityException the security exception
+	 * @throws NoSuchFieldException the no such field exception
+	 * @throws SQLException the sQL exception
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws IllegalAccessException the illegal access exception
+	 */
+	public void updateObject(String table, T oldObject, T newObject) throws SecurityException, NoSuchFieldException, SQLException, IllegalArgumentException, IllegalAccessException
+	{
+		String whereClause="";
+		String setClause="";
+		
+		//For every field in the private key, we put the value in the where clause
+		for(int i=0;i<this.privateKeyCount;i++)
+		{
+			//Prepare the field of the object which we are now getting info from
+			Field field=classType.getDeclaredField(nameMatch[1][i]);
+			
+			whereClause+=nameMatch[0][i]+"=\'"+field.get(oldObject)+"\' ,";				
+		}
+		
+		//Clean the last ,
+		whereClause=whereClause.substring(0,whereClause.length()-1);
+		
+		//For every field in the object, we put the value in the set clause
+		for(int i=0;i<nameMatch[0].length;i++)
+		{
+			//Prepare the field of the object which we are now getting info from
+			Field field=classType.getDeclaredField(nameMatch[1][i]);
+			
+			setClause+=nameMatch[0][i]+"=\'"+field.get(newObject)+"\', ";				
+		}
+		
+		//Clean the last ,
+		setClause=setClause.substring(0,setClause.length()-2);
+
+		//Run the SQL deletion query
+		System.out.println("Actualizam un obiect din baza de date: "+whereClause);
+		DatabaseConnection.openConnection();
+		DatabaseConnection.updateEntities(table, setClause, whereClause);	
+	}
+	
 	
 }

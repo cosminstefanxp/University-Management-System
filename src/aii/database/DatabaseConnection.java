@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 
 /**
  * The Class DatabaseConnection.
@@ -135,6 +134,43 @@ public class DatabaseConnection {
 		
 		System.out.println("S-a apelat expresia SQL \'"+expression+"\'");
 		statement.execute(expression);
+	}
+	
+	/**
+	 * Delete entities that match a given where close.
+	 *
+	 * @param table the table
+	 * @param whereClause the where clause
+	 * @throws SQLException the sQL exception
+	 */
+	public static void deleteEntities(String table, String whereClause)
+			throws SQLException {
+		
+		openConnection();
+		
+		String expression = "DELETE FROM " + table + " WHERE "+whereClause;
+		
+		System.out.println("S-a apelat expresia SQL \'"+expression+"\'");
+		statement.execute(expression);
+	}
+	
+	/**
+	 * Updates entities in the table, using the setClause for setting values and whereClause to restrict rows.
+	 *
+	 * @param table the table
+	 * @param setClause the set clause
+	 * @param whereClause the where clause
+	 * @throws SQLException the sQL exception
+	 */
+	public static void updateEntities(String table, String setClause, String whereClause) throws SQLException
+	{
+		openConnection();
+		
+		String expression = "UPDATE " + table + " SET "+setClause+" WHERE "+whereClause;
+		
+		System.out.println("S-a apelat expresia SQL \'"+expression+"\'");
+		statement.execute(expression);		
+		
 	}
 	
 	/*public static void modifica_inregistrari_baza_de_date(String tabela, ArrayList<String> valori)

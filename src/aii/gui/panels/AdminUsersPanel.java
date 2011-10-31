@@ -105,7 +105,7 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		textFieldNume.setBounds(115, 90, 260, 28);
 		panelEditMainInfo.add(textFieldNume);
 		
-		JLabel label = new JLabel("Nume:");
+		JLabel label = new JLabel("Nume: *");
 		label.setHorizontalAlignment(SwingConstants.TRAILING);
 		label.setBounds(0, 100, 97, 15);
 		panelEditMainInfo.add(label);
@@ -115,7 +115,7 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		textFieldPrenume.setBounds(115, 135, 260, 28);
 		panelEditMainInfo.add(textFieldPrenume);
 		
-		JLabel label_1 = new JLabel("Prenume:");
+		JLabel label_1 = new JLabel("Prenume: *");
 		label_1.setHorizontalAlignment(SwingConstants.TRAILING);
 		label_1.setBounds(0, 144, 97, 15);
 		panelEditMainInfo.add(label_1);
@@ -125,7 +125,7 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		textFieldEmail.setBounds(115, 180, 260, 28);
 		panelEditMainInfo.add(textFieldEmail);
 		
-		JLabel label_2 = new JLabel("Email:");
+		JLabel label_2 = new JLabel("Email: *");
 		label_2.setHorizontalAlignment(SwingConstants.TRAILING);
 		label_2.setBounds(0, 188, 97, 15);
 		panelEditMainInfo.add(label_2);
@@ -145,7 +145,7 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		textFieldCNP.setBounds(115, 0, 260, 28);
 		panelEditMainInfo.add(textFieldCNP);
 		
-		JLabel label_4 = new JLabel("CNP:");
+		JLabel label_4 = new JLabel("CNP: *");
 		label_4.setHorizontalAlignment(SwingConstants.TRAILING);
 		label_4.setBounds(0, 12, 97, 15);
 		panelEditMainInfo.add(label_4);
@@ -154,7 +154,7 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		passwordField.setBounds(115, 45, 260, 28);
 		panelEditMainInfo.add(passwordField);
 		
-		JLabel label_5 = new JLabel("Parola:");
+		JLabel label_5 = new JLabel("Parola: *");
 		label_5.setHorizontalAlignment(SwingConstants.TRAILING);
 		label_5.setBounds(0, 56, 97, 15);
 		panelEditMainInfo.add(label_5);
@@ -317,25 +317,54 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		{
 			System.out.println("Adding new User");
 			table.getSelectionModel().clearSelection();
-		} else		
+		} else	
+		if(source==btnSterge)
+		{
+			System.out.println("Stergem utilizatorul");
+			
+			if(table.getSelectedRow()==-1)
+				return;
+			
+			//Delete the user
+			if(!utilizatorDAO.deleteUtilizator(objects.get(table.getSelectedRow())))
+				return;
+			
+			//Update JTable
+			objects.remove(table.getSelectedRow());
+			tableModel.setObjects(objects);
+			tableModel.fireTableDataChanged();
+			
+		} else
 		if(source==btnSalveaza)
 		{
 			System.out.println("Salvam informatiile in DB");
 			
+			//Check fields
+			if(textFieldCNP.getText().isEmpty() ||
+					textFieldNume.getText().isEmpty() ||
+					textFieldPrenume.getText().isEmpty() ||
+					passwordField.getPassword().length==0 ||
+					textFieldEmail.getText().isEmpty())
+			{
+				JOptionPane.showMessageDialog(null, "Va rugam sa completati toate campurile obligatorii","Incomplet",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
+			//Create the new user
+			Utilizator object=new Utilizator();
+			object.CNP=textFieldCNP.getText();
+			object.nume=textFieldNume.getText();
+			object.prenume=textFieldPrenume.getText();
+			object.parola=new String(passwordField.getPassword());
+			object.email=textFieldEmail.getText();
+			object.adresa=textFieldAdresa.getText();
+			object.titlu_grupa=textFieldTitluGrupa.getText();
+			object.tip=(Tip) comboBoxTipUtilizator.getSelectedItem();
+			object.finantare=(Finantare) comboBoxFinantare.getSelectedItem();
+			
+			//If it's a new entry
 			if(table.getSelectedRow()==-1)
 			{
-				//Create the new user
-				Utilizator object=new Utilizator();
-				object.CNP=textFieldCNP.getText();
-				object.nume=textFieldNume.getText();
-				object.prenume=textFieldPrenume.getText();
-				object.parola=new String(passwordField.getPassword());
-				object.email=textFieldEmail.getText();
-				object.adresa=textFieldAdresa.getText();
-				object.titlu_grupa=textFieldTitluGrupa.getText();
-				object.tip=(Tip) comboBoxTipUtilizator.getSelectedItem();
-				object.finantare=(Finantare) comboBoxFinantare.getSelectedItem();
-				
 				//Insert the new user
 				System.out.println("Utilizator nou: "+object);
 				if(!utilizatorDAO.insertUtilizator(object))
@@ -344,9 +373,19 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 				//Update JTable
 				objects.add(object);
 				tableModel.setObjects(objects);
-				tableModel.fireTableDataChanged();
-				
+				tableModel.fireTableDataChanged();				
 			}
+			else //If it's an old entry
+			{
+				System.out.println("Utilizator existent -> modificat in " + object);
+				if(!utilizatorDAO.UpdateUtilizator(objects.get(table.getSelectedRow()), object));
+				
+				//Update JTable
+				objects.set(table.getSelectedRow(), object);
+				tableModel.setObjects(objects);
+				tableModel.fireTableDataChanged();				
+			}
+				
 		}
 		else if(source==comboBoxTipUtilizator)
 		{

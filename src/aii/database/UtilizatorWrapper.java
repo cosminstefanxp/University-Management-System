@@ -16,7 +16,7 @@ import aii.Utilizator;
 public class UtilizatorWrapper extends ObjectWrapper<Utilizator> {
 
 	public UtilizatorWrapper() {
-		super(Utilizator.class, Constants.USER_FIELD_MATCH);
+		super(Utilizator.class, Constants.USER_FIELD_MATCH, Constants.USER_TABLE_PK_COUNT);
 	}
 
 	/**
@@ -90,4 +90,58 @@ public class UtilizatorWrapper extends ObjectWrapper<Utilizator> {
 		return true;
 	}
 	
+	
+	/**
+	 * Deletes an utilizator from the database
+	 *
+	 * @param utilizator the utilizator
+	 * @return true, if successful
+	 */
+	public boolean deleteUtilizator(Utilizator utilizator)
+	{
+		try {
+			this.deleteObject(Constants.USER_TABLE, utilizator);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"accesului la baza de date!");
+			return false;
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
+			e.printStackTrace();
+			return false;
+		} 
+		
+		return true;
+	}
+	
+	/**
+	 * Updates an utilizator in the database
+	 *
+	 * @param utilizator the utilizator
+	 * @return true, if successful
+	 */
+	public boolean UpdateUtilizator(Utilizator utilizatorVechi, Utilizator utilizatorNou)
+	{
+		try {
+			this.updateObject(Constants.USER_TABLE, utilizatorVechi, utilizatorNou);
+		} catch (MySQLIntegrityConstraintViolationException e){
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,"Aveti campuri invalide: "+e.getMessage());	
+			return false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"accesului la baza de date!");
+			return false;
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
+			e.printStackTrace();
+			return false;
+		} 
+		
+		return true;
+	}
 }
