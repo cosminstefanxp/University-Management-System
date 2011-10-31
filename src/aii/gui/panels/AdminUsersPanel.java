@@ -307,6 +307,15 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 			textFieldTitluGrupa.setVisible(false);
 		}
 		
+		//Extra-case for super admin
+		if(object.tip==Tip.SUPER_ADMIN && utilizator.tip!=Tip.SUPER_ADMIN)
+		{
+			btnSalveaza.setEnabled(false);
+			statusLbl.setText("Conturile de super-admin nu pot fi editate.");
+		}
+		else
+			btnSalveaza.setEnabled(true);
+		
 	}
 
 	/* Evenimente declansate la click pe cele 3 butoane sau la schimbarea selectiei tipului
