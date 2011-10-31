@@ -22,6 +22,7 @@ import javax.swing.border.LineBorder;
 import net.miginfocom.swing.MigLayout;
 import aii.Utilizator;
 import aii.Utilizator.Tip;
+import aii.gui.panels.AdminDisciplinePanel;
 import aii.gui.panels.PersonalDataPanel;
 
 /**
@@ -198,7 +199,7 @@ public class TeacherFrame extends JFrame implements ActionListener{
         		System.out.println("Meniu: Administrare Discipline");
         		
         		contentPane.remove(mainPanel);
-        		//mainPanel=new AdminUsersPanel(utilizator, statusLbl);
+        		mainPanel=new AdminDisciplinePanel(utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -254,7 +255,7 @@ public class TeacherFrame extends JFrame implements ActionListener{
         		System.out.println("Buton: Discipline");
         		
         		contentPane.remove(mainPanel);
-        		//mainPanel=new AdminUsersPanel(utilizator, statusLbl);
+        		mainPanel=new AdminDisciplinePanel(utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		

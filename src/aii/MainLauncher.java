@@ -20,7 +20,7 @@ public class MainLauncher {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AuthenticationFrame authWindow = new AuthenticationFrame();
+					new AuthenticationFrame();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
