@@ -22,6 +22,13 @@ public class Constants {
 															};
 	final public static int			DISCIPLINA_TABLE_PK_COUNT	= 1;	//doar cod face parte din cheie
 	
+	final public static String		ACTIVITATE_TABLE			= "activitate";
+	final public static String[][]	ACTIVITATE_FIELD_MATCH		= {
+																{ "id", "cod_disciplina", "cnp_cadru_didactic", "tip"},	//campuri baza de date
+																{ "id", "codDisciplina", "cnpCadruDidactic", "tip"}		//campuri obiect
+															};
+	final public static int			ACTIVITATE_TABLE_PK_COUNT	= 1;	//doar cod face parte din cheie
+	
 	
 	
 	final public static String[][]	ADMIN_USER_COLUMN_FIELD_MATCH ={

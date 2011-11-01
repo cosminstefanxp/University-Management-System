@@ -36,6 +36,7 @@ import aii.gui.tools.ObjectTableModel;
 @SuppressWarnings("serial")
 public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelectionListener, ActionListener {
 	
+	@SuppressWarnings("unused")
 	private Utilizator utilizator;
 	private JTable table;
 	private ArrayList<Disciplina> objects;
