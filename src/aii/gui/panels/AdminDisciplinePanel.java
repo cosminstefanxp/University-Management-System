@@ -11,11 +11,12 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
@@ -25,13 +26,11 @@ import javax.swing.event.ListSelectionListener;
 import net.miginfocom.swing.MigLayout;
 import aii.Disciplina;
 import aii.Utilizator;
-import aii.Utilizator.Finantare;
-import aii.Utilizator.Tip;
+import aii.Disciplina.Examinare;
+import aii.Disciplina.TipDisciplina;
 import aii.database.Constants;
 import aii.database.DisciplinaWrapper;
 import aii.gui.tools.ObjectTableModel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
 
 
 @SuppressWarnings("serial")
@@ -50,6 +49,12 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 	private JButton btnAdauga;
 	private JPanel panelEditInfo;
 	private JTextField textFieldDenumire;
+	private JSpinner spinnerAnStudiu;
+	private JSpinner spinnerSemestru;
+	private JComboBox comboBoxExaminare;
+	private JSpinner spinnerPctCredit;
+	private JSpinner spinnerNrOre;
+	private JComboBox comboBoxTip;
 
 	/**
 	 * Create the panel.
@@ -112,6 +117,71 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 		lblDenumire.setBounds(29, 49, 97, 15);
 		panelEditMainInfo.add(lblDenumire);
 		
+		textFieldDenumire = new JTextField((String) null);
+		textFieldDenumire.setColumns(10);
+		textFieldDenumire.setBounds(144, 43, 260, 28);
+		panelEditMainInfo.add(textFieldDenumire);
+		
+		comboBoxTip = new JComboBox();
+		comboBoxTip.setModel(new DefaultComboBoxModel(Disciplina.TipDisciplina.values()));
+		comboBoxTip.setBounds(144, 83, 260, 28);
+		panelEditMainInfo.add(comboBoxTip);
+		
+		JLabel lblTipDisciplina = new JLabel("Tip Disciplina: *");
+		lblTipDisciplina.setHorizontalAlignment(SwingConstants.TRAILING);
+		lblTipDisciplina.setBounds(18, 90, 108, 15);
+		panelEditMainInfo.add(lblTipDisciplina);
+		
+		spinnerNrOre = new JSpinner();
+		spinnerNrOre.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
+		spinnerNrOre.setBounds(542, 83, 48, 28);
+		panelEditMainInfo.add(spinnerNrOre);
+		
+		JLabel lblNumarOre = new JLabel("Numar Ore: *");
+		lblNumarOre.setHorizontalAlignment(SwingConstants.TRAILING);
+		lblNumarOre.setBounds(416, 89, 108, 15);
+		panelEditMainInfo.add(lblNumarOre);
+		
+		spinnerPctCredit = new JSpinner();
+		spinnerPctCredit.setModel(new SpinnerNumberModel(1, 1, 5, 1));
+		spinnerPctCredit.setBounds(731, 83, 55, 28);
+		panelEditMainInfo.add(spinnerPctCredit);
+		
+		JLabel lblPuncteCredit = new JLabel("Puncte Credit: *");
+		lblPuncteCredit.setHorizontalAlignment(SwingConstants.TRAILING);
+		lblPuncteCredit.setBounds(602, 89, 111, 15);
+		panelEditMainInfo.add(lblPuncteCredit);
+		
+		JLabel lblFormaStudiu = new JLabel("Examinare: *");
+		lblFormaStudiu.setHorizontalAlignment(SwingConstants.TRAILING);
+		lblFormaStudiu.setBounds(416, 7, 108, 15);
+		panelEditMainInfo.add(lblFormaStudiu);
+		
+		comboBoxExaminare = new JComboBox();
+		comboBoxExaminare.setModel(new DefaultComboBoxModel(Disciplina.Examinare.values()));
+		comboBoxExaminare.setBounds(542, 0, 244, 28);
+		panelEditMainInfo.add(comboBoxExaminare);
+		
+		JLabel lblAnStudiu = new JLabel("An Studiu: *");
+		lblAnStudiu.setHorizontalAlignment(SwingConstants.TRAILING);
+		lblAnStudiu.setBounds(416, 44, 108, 15);
+		panelEditMainInfo.add(lblAnStudiu);
+		
+		spinnerAnStudiu = new JSpinner();
+		spinnerAnStudiu.setModel(new SpinnerNumberModel(1, 1, 5, 1));
+		spinnerAnStudiu.setBounds(542, 43, 48, 28);
+		panelEditMainInfo.add(spinnerAnStudiu);
+		
+		JLabel lblSemestru = new JLabel("Semestru: *");
+		lblSemestru.setHorizontalAlignment(SwingConstants.TRAILING);
+		lblSemestru.setBounds(602, 44, 111, 15);
+		panelEditMainInfo.add(lblSemestru);
+		
+		spinnerSemestru = new JSpinner();
+		spinnerSemestru.setModel(new SpinnerNumberModel(1, 1, 2, 1));
+		spinnerSemestru.setBounds(731, 43, 55, 28);
+		panelEditMainInfo.add(spinnerSemestru);
+		
 		btnSalveaza = new JButton("Salveaza");
 		btnSalveaza.addActionListener(this);
 		btnSalveaza.setBounds(681, 203, 117, 25);
@@ -130,71 +200,10 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 		
 		//Some default values
 		textFieldCodDisciplina.setText(null);
+		textFieldCodDisciplina.setEnabled(false);	//if we create a new entity, we let the PK to be auto incremented
+		textFieldCodDisciplina.setText("Auto-Generated");
 		
-		textFieldDenumire = new JTextField((String) null);
-		textFieldDenumire.setColumns(10);
-		textFieldDenumire.setBounds(144, 43, 260, 28);
-		panelEditMainInfo.add(textFieldDenumire);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(Disciplina.TipDisciplina.values()));
-		comboBox.setBounds(144, 83, 260, 28);
-		panelEditMainInfo.add(comboBox);
-		
-		JLabel lblTipDisciplina = new JLabel("Tip Disciplina: *");
-		lblTipDisciplina.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblTipDisciplina.setBounds(18, 90, 108, 15);
-		panelEditMainInfo.add(lblTipDisciplina);
-		
-		JSpinner spinnerNrOre = new JSpinner();
-		spinnerNrOre.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
-		spinnerNrOre.setBounds(542, 83, 48, 28);
-		panelEditMainInfo.add(spinnerNrOre);
-		
-		JLabel lblNumarOre = new JLabel("Numar Ore: *");
-		lblNumarOre.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblNumarOre.setBounds(416, 89, 108, 15);
-		panelEditMainInfo.add(lblNumarOre);
-		
-		JSpinner spinnerPctCredit = new JSpinner();
-		spinnerPctCredit.setModel(new SpinnerNumberModel(1, 1, 5, 1));
-		spinnerPctCredit.setBounds(731, 83, 55, 28);
-		panelEditMainInfo.add(spinnerPctCredit);
-		
-		JLabel lblPuncteCredit = new JLabel("Puncte Credit: *");
-		lblPuncteCredit.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblPuncteCredit.setBounds(602, 89, 111, 15);
-		panelEditMainInfo.add(lblPuncteCredit);
-		
-		JLabel lblFormaStudiu = new JLabel("Examinare: *");
-		lblFormaStudiu.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblFormaStudiu.setBounds(416, 7, 108, 15);
-		panelEditMainInfo.add(lblFormaStudiu);
-		
-		JComboBox comboBoxExaminare = new JComboBox();
-		comboBoxExaminare.setModel(new DefaultComboBoxModel(Disciplina.Examinare.values()));
-		comboBoxExaminare.setBounds(542, 0, 244, 28);
-		panelEditMainInfo.add(comboBoxExaminare);
-		
-		JLabel lblAnStudiu = new JLabel("An Studiu: *");
-		lblAnStudiu.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblAnStudiu.setBounds(416, 44, 108, 15);
-		panelEditMainInfo.add(lblAnStudiu);
-		
-		JSpinner spinner = new JSpinner();
-		spinner.setModel(new SpinnerNumberModel(1, 1, 5, 1));
-		spinner.setBounds(542, 43, 48, 28);
-		panelEditMainInfo.add(spinner);
-		
-		JLabel lblSemestru = new JLabel("Semestru: *");
-		lblSemestru.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblSemestru.setBounds(602, 44, 111, 15);
-		panelEditMainInfo.add(lblSemestru);
-		
-		JSpinner spinner_1 = new JSpinner();
-		spinner_1.setModel(new SpinnerNumberModel(1, 1, 2, 1));
-		spinner_1.setBounds(731, 43, 55, 28);
-		panelEditMainInfo.add(spinner_1);
 	}
 
 	/* Eveniment declansat la schimbarea selectiei
@@ -209,77 +218,38 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 		int row = table.getSelectedRow();
 		System.out.println("Selectie modificata pe randul "+row);
 		
+		//Nothing selected / deselection
 		if(row==-1)
 		{
 			textFieldCodDisciplina.setText(null);
-			textFieldNume.setText(null);
-			textFieldPrenume.setText(null);
-			textFieldAdresa.setText(null);
-			textFieldEmail.setText(null);
-			passwordField.setText(null);
-			comboBoxTipUtilizator.setSelectedItem(Tip.SECRETAR);
-			comboBoxFinantare.setSelectedItem(null);
-			textFieldTitluGrupa.setText(null);
+			textFieldDenumire.setText(null);
+			comboBoxTip.setSelectedItem(TipDisciplina.Obligatoriu);
+			comboBoxExaminare.setSelectedItem(Examinare.Examen);
+			spinnerAnStudiu.setValue(1);
+			spinnerNrOre.setValue(1);
+			spinnerPctCredit.setValue(1);
+			spinnerSemestru.setValue(1);
 			
-			comboBoxFinantare.setVisible(false);
-			lblFormaFinantare.setVisible(false);
-			lblTitluGrupa.setVisible(false);
-			textFieldTitluGrupa.setVisible(false);
+			textFieldCodDisciplina.setEnabled(false);	//if we create a new entity, we let the PK to be auto incremented
+			textFieldCodDisciplina.setText("Auto-Generated");
 			
 			return;
 		}
 		
 		//Always Visible fields
-		Utilizator object=null;//=objects.get(row);
-		textFieldCodDisciplina.setText(object.CNP);
-		textFieldNume.setText(object.nume);
-		textFieldPrenume.setText(object.prenume);
-		textFieldAdresa.setText(object.adresa);
-		textFieldEmail.setText(object.email);
-		passwordField.setText(object.parola);
-		comboBoxTipUtilizator.setSelectedItem(object.tip);
-		comboBoxFinantare.setSelectedItem(null);
-		textFieldTitluGrupa.setText(null);
+		Disciplina object=objects.get(table.getSelectedRow());
+		textFieldCodDisciplina.setText(Integer.toString(object.cod));
+		textFieldDenumire.setText(object.denumire);
+		comboBoxTip.setSelectedItem(object.tip);
+		comboBoxExaminare.setSelectedItem(object.examinare);
+		spinnerAnStudiu.setValue(object.anStudiu);
+		spinnerNrOre.setValue(object.nrOre);
+		spinnerPctCredit.setValue(object.pctCredit);
+		spinnerSemestru.setValue(object.semestru);
+		
+		textFieldCodDisciplina.setEnabled(true);
 
-		statusLbl.setText("Modfica datele utilizatorului "+object.CNP+" si apasa 'Salveaza' pentru a face permanente modificarile.");
-		//Per-type fields
-		if(object.tip==Tip.STUDENT)
-		{
-			comboBoxFinantare.setSelectedItem(object.finantare);
-			comboBoxFinantare.setVisible(true);
-			lblFormaFinantare.setVisible(true);
-			
-			textFieldTitluGrupa.setText(object.titlu_grupa);
-			lblTitluGrupa.setText("Grupa");
-			lblTitluGrupa.setVisible(true);
-			textFieldTitluGrupa.setVisible(true);
-		}
-		else if(object.tip==Tip.CADRU_DIDACTIC || object.tip==Tip.SEF_CATEDRA)
-		{
-			lblTitluGrupa.setText("Titulatura");
-			lblTitluGrupa.setVisible(true);
-			textFieldTitluGrupa.setVisible(true);
-			
-			comboBoxFinantare.setVisible(false);
-			lblFormaFinantare.setVisible(false);
-		}
-		else
-		{
-			comboBoxFinantare.setVisible(false);
-			lblFormaFinantare.setVisible(false);
-			lblTitluGrupa.setVisible(false);
-			textFieldTitluGrupa.setVisible(false);
-		}
-		
-		//Extra-case for super admin
-		if(object.tip==Tip.SUPER_ADMIN && utilizator.tip!=Tip.SUPER_ADMIN)
-		{
-			btnSalveaza.setEnabled(false);
-			statusLbl.setText("Conturile de super-admin nu pot fi editate.");
-		}
-		else
-			btnSalveaza.setEnabled(true);
-		
+		statusLbl.setText("Modfica datele disciplinei "+object.denumire+" si apasa 'Salveaza' pentru a face permanente modificarile.");
 	}
 
 	/* Evenimente declansate la click pe cele 3 butoane sau la schimbarea selectiei tipului
@@ -293,22 +263,22 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 		//Adding new entities
 		if(source==btnAdauga)
 		{
-			System.out.println("Adding new User");
+			System.out.println("Adding new Disciplina");
 			table.getSelectionModel().clearSelection();
-			statusLbl.setText("Completeaza campurile pentru a crea un nou utilizator si apasa 'Salveaza'");
+			statusLbl.setText("Completeaza campurile pentru a crea o noua disciplina si apasa 'Salveaza'");
 		} else	
 		if(source==btnSterge)
 		{
-			System.out.println("Stergem utilizatorul");
+			System.out.println("Stergem disciplina");
 			
 			if(table.getSelectedRow()==-1)
 				return;
 			
-			//Delete the user
-			//if(!utilizatorDAO.deleteUtilizator(objects.get(table.getSelectedRow())))
-				//return;
+			//Delete the disciplina
+			if(!disciplinaDAO.deleteDisciplina(objects.get(table.getSelectedRow())))
+				return;
 			
-			statusLbl.setText("Utilizatorul "+utilizator.CNP+" a fost sters.");
+			statusLbl.setText("Disciplina "+objects.get(table.getSelectedRow()).denumire+" a fost stearsa.");
 			
 			//Update JTable
 			objects.remove(table.getSelectedRow());
@@ -321,104 +291,73 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 			System.out.println("Salvam informatiile in DB");
 			
 			//Check fields
-			if(textFieldCodDisciplina.getText().isEmpty() ||
-					textFieldNume.getText().isEmpty() ||
-					textFieldPrenume.getText().isEmpty() ||
-					passwordField.getPassword().length==0 ||
-					textFieldEmail.getText().isEmpty())
+			if(textFieldDenumire.getText().isEmpty())
 			{
 				JOptionPane.showMessageDialog(null, "Va rugam sa completati toate campurile obligatorii","Incomplet",JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			
-			//Create the new user
-			Utilizator object=new Utilizator();
-			object.CNP=textFieldCodDisciplina.getText();
-			object.nume=textFieldNume.getText();
-			object.prenume=textFieldPrenume.getText();
-			object.parola=new String(passwordField.getPassword());
-			object.email=textFieldEmail.getText();
-			object.adresa=textFieldAdresa.getText();
-			object.titlu_grupa=textFieldTitluGrupa.getText();
-			object.tip=(Tip) comboBoxTipUtilizator.getSelectedItem();
-			object.finantare=(Finantare) comboBoxFinantare.getSelectedItem();
+			if(textFieldCodDisciplina.getText().isEmpty() && 
+					table.getSelectedRow()!=-1)	//if there's something selected
+			{
+				JOptionPane.showMessageDialog(null, "Va rugam sa completati toate campurile obligatorii","Incomplet",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
+			//Create the new object
+			Disciplina object=new Disciplina();
+			object.denumire=textFieldDenumire.getText();
+			object.tip=(TipDisciplina) comboBoxTip.getSelectedItem();
+			object.examinare=(Examinare) comboBoxExaminare.getSelectedItem();
+			object.anStudiu=(Integer) spinnerAnStudiu.getValue();
+			object.nrOre=(Integer) spinnerNrOre.getValue();
+			object.pctCredit=(Integer) spinnerPctCredit.getValue();
+			object.semestru=(Integer) spinnerSemestru.getValue();
 			
 			//If it's a new entry
 			if(table.getSelectedRow()==-1)
 			{
+				object.cod=0;
+				
 				//Insert the new user
-				System.out.println("Utilizator nou: "+object);
-				//if(!utilizatorDAO.insertUtilizator(object))
-					//return;
+				System.out.println("Disciplina noua: "+object);
+				if(!disciplinaDAO.insertDisciplina(object))
+					return;
 			
-				statusLbl.setText("S-a creat un utilizator nou.");
-				//Update JTable
-//				objects.add(object);
+				statusLbl.setText("S-a creat o disciplina noua.");
+				
+				//Update JTable - need new pull from database, as a new id was generated
+				try {
+					objects=disciplinaDAO.getObjects(Constants.DISCIPLINA_TABLE,"cod=cod");
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
 				tableModel.setObjects(objects);
 				tableModel.fireTableDataChanged();
 				table.getSelectionModel().setSelectionInterval(0, objects.size()-1);
 			}
 			else //If it's an old entry
 			{
-				System.out.println("Utilizator existent -> modificat in " + object);
-			//	if(!utilizatorDAO.UpdateUtilizator(objects.get(table.getSelectedRow()), object))
-				//	return;
+				object.cod=Integer.parseInt(textFieldCodDisciplina.getText());
 				
-				statusLbl.setText("Utilizatorul "+utilizator.CNP+" a fost actualizat.");
+				System.out.println("Disciplina existenta -> modificata in " + object);
+				if(!disciplinaDAO.updateDisciplina(objects.get(table.getSelectedRow()), object))
+					return;
+				
+				statusLbl.setText("Disciplina "+object.denumire+" a fost actualizata.");
+				
 				//Update JTable
-//				objects.set(table.getSelectedRow(), object);
+				int curSelected=table.getSelectedRow();
+				objects.set(table.getSelectedRow(), object);
 				tableModel.setObjects(objects);
 				tableModel.fireTableDataChanged();	
+				table.getSelectionModel().setSelectionInterval(0, curSelected);
 			}
 				
-		}
-		else if(source==comboBoxTipUtilizator)
-		{
-			System.out.println("Schimbat selectie tip.");
-			//If unauthorized
-			if(utilizator.tip!=Tip.SUPER_ADMIN && (comboBoxTipUtilizator.getSelectedItem()==Tip.ADMIN || comboBoxTipUtilizator.getSelectedItem()==Tip.SUPER_ADMIN))
-			{
-				//If existing user
-				if(table.getSelectedRow()!=-1 && comboBoxTipUtilizator.getSelectedItem()!=objects.get(table.getSelectedRow()).tip)
-				{
-					JOptionPane.showMessageDialog(null,"Nu aveti dreptul de a crea administratori!","Neautorizat",JOptionPane.ERROR_MESSAGE);
-					comboBoxTipUtilizator.setSelectedItem(objects.get(table.getSelectedRow()).tip);
-				}
-				//If new user
-				if(table.getSelectedRow()==-1)
-				{
-					JOptionPane.showMessageDialog(null,"Nu aveti dreptul de a crea administratori!","Neautorizat",JOptionPane.ERROR_MESSAGE);
-					comboBoxTipUtilizator.setSelectedItem(Tip.STUDENT);
-				}
-			}
-			//Per-type fields
-			if(comboBoxTipUtilizator.getSelectedItem()==Tip.STUDENT)
-			{
-				comboBoxFinantare.setSelectedItem(Finantare.Buget);
-				comboBoxFinantare.setVisible(true);
-				lblFormaFinantare.setVisible(true);
-				
-				textFieldTitluGrupa.setText(null);
-				lblTitluGrupa.setText("Grupa");
-				lblTitluGrupa.setVisible(true);
-				textFieldTitluGrupa.setVisible(true);
-			}
-			else if(comboBoxTipUtilizator.getSelectedItem()==Tip.CADRU_DIDACTIC || comboBoxTipUtilizator.getSelectedItem()==Tip.SEF_CATEDRA)
-			{
-				lblTitluGrupa.setText("Titulatura");
-				lblTitluGrupa.setVisible(true);
-				textFieldTitluGrupa.setVisible(true);
-				
-				comboBoxFinantare.setVisible(false);
-				lblFormaFinantare.setVisible(false);
-			}
-			else
-			{
-				comboBoxFinantare.setVisible(false);
-				lblFormaFinantare.setVisible(false);
-				lblTitluGrupa.setVisible(false);
-				textFieldTitluGrupa.setVisible(false);
-			}
 		}
 		
 	}
