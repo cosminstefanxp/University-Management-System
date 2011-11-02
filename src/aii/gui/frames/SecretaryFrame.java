@@ -5,15 +5,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
@@ -21,31 +18,28 @@ import javax.swing.border.LineBorder;
 
 import net.miginfocom.swing.MigLayout;
 import aii.Utilizator;
-import aii.Utilizator.Tip;
-import aii.gui.panels.AdminActivitatiPanel;
-import aii.gui.panels.AdminDisciplinePanel;
 import aii.gui.panels.PersonalDataPanel;
 
 /**
  * The Administrator frame that contains all the features that the admin uses.
  */
 @SuppressWarnings("serial")
-public class TeacherFrame extends JFrame implements ActionListener{
+public class SecretaryFrame extends JFrame implements ActionListener{
 
 	private JPanel contentPane;
 	private JPanel mainPanel;
 	private JButton btnSetariPersonale;
-	private JButton btnCatalog;
+	private JButton btnAdminGrupe;
 	private Utilizator utilizator;
 	public JLabel statusLbl;
-	private JButton btnOrar;
-	private JButton btnDiscipline;
+	private JButton btnAdminOrar;
+	private JButton btnProgramareExamene;
 
 
 	/**
 	 * Create the frame.
 	 */
-	public TeacherFrame(Utilizator utilizator) {
+	public SecretaryFrame(Utilizator utilizator) {
 		this.utilizator=utilizator;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -58,26 +52,17 @@ public class TeacherFrame extends JFrame implements ActionListener{
 		JMenu mnAdministrare = new JMenu("Administrare");
 		menuBar.add(mnAdministrare);
 		
-		JMenuItem mntmCatalog = new JMenuItem("Catalog");
-		mntmCatalog.addActionListener(this);
-		mnAdministrare.add(mntmCatalog);
+		JMenuItem mntmGrupe = new JMenuItem("Grupe");
+		mntmGrupe.addActionListener(this);
+		mnAdministrare.add(mntmGrupe);
 		
-		JSeparator separator = new JSeparator();
-		mnAdministrare.add(separator);
-
-		JCheckBoxMenuItem chckbxmntmSefCatedra = new JCheckBoxMenuItem("Sef de Catedra");
-		chckbxmntmSefCatedra.setEnabled(false);
-		mnAdministrare.add(chckbxmntmSefCatedra);
+		JMenuItem mntmOrar = new JMenuItem("Orar");
+		mntmOrar.addActionListener(this);
+		mnAdministrare.add(mntmOrar);
 		
-		JMenuItem mntmDiscipline = new JMenuItem("Discipline");
-		mntmDiscipline.addActionListener(this);
-		mntmDiscipline.setEnabled(false);
-		mnAdministrare.add(mntmDiscipline);
-		
-		JMenuItem mntmOrare = new JMenuItem("Activitati de predare");
-		mntmOrare.addActionListener(this);
-		mntmOrare.setEnabled(false);
-		mnAdministrare.add(mntmOrare);
+		JMenuItem mntmProgramareExamene = new JMenuItem("Programare examene");
+		mntmProgramareExamene.addActionListener(this);
+		mnAdministrare.add(mntmProgramareExamene);
 		
 		JMenu mnSetari = new JMenu("Setari");
 		menuBar.add(mnSetari);
@@ -97,14 +82,13 @@ public class TeacherFrame extends JFrame implements ActionListener{
 		label.setFont(new Font("Dialog", Font.BOLD, 25));
 		contentPane.add(label, "cell 0 0,alignx center,aligny top");
 		
-		JLabel lblBineAiVenit = new JLabel("Bine ati venit in consola cadrelor didactice ale universitatii!");
+		JLabel lblBineAiVenit = new JLabel("Bine ati venit in consola pentru secretar a universitatii!");
 		lblBineAiVenit.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblBineAiVenit, "cell 0 1,alignx center,aligny top");
 
-		statusLbl = new JLabel("Autentificat ca "+utilizator.tip);
+		statusLbl = new JLabel("Autentificat...");
 		statusLbl.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 11));
 		contentPane.add(statusLbl, "cell 0 3");
-		
 		/******* MAIN PANEL ********/
 		mainPanel = new JPanel();
 		mainPanel.setBorder(new LineBorder(UIManager.getColor("ToolBar.borderColor")));
@@ -116,49 +100,25 @@ public class TeacherFrame extends JFrame implements ActionListener{
 		btnSetariPersonale.addActionListener(this);
 		mainPanel.add(btnSetariPersonale);
 		
-		btnCatalog = new JButton("Catalog");
-		btnCatalog.setBounds(25, 88, 198, 25);
-		btnCatalog.addActionListener(this);
-		mainPanel.add(btnCatalog);
+		btnAdminGrupe = new JButton("Administrare grupe");
+		btnAdminGrupe.setBounds(25, 88, 198, 25);
+		btnAdminGrupe.addActionListener(this);
+		mainPanel.add(btnAdminGrupe);
+		
+		btnAdminOrar = new JButton("Administrare orar");
+		btnAdminOrar.setBounds(25, 125, 198, 25);
+		btnAdminOrar.addActionListener(this);
+		mainPanel.add(btnAdminOrar);
+		
+		btnProgramareExamene = new JButton("Programare examene");
+		btnProgramareExamene.setBounds(25, 162, 198, 25);
+		btnProgramareExamene.addActionListener(this);
+		mainPanel.add(btnProgramareExamene);
 		
 		JLabel lblFolositiMeniulSau = new JLabel("Folositi meniul sau unul dintre butoanele de mai jos pentru a interactiona cu sistemul:");
 		lblFolositiMeniulSau.setBounds(25, 23, 613, 15);
 		mainPanel.add(lblFolositiMeniulSau);
 		
-		JSeparator separator_1 = new JSeparator();
-		separator_1.setBounds(25, 125, 198, 2);
-		mainPanel.add(separator_1);
-		
-		btnDiscipline = new JButton("Administrare Discipline");
-		btnDiscipline.addActionListener(this);
-		btnDiscipline.setEnabled(false);
-		btnDiscipline.setBounds(25, 166, 198, 25);
-		mainPanel.add(btnDiscipline);
-		
-		btnOrar = new JButton("Activitati de predare");
-		btnOrar.addActionListener(this);
-		btnOrar.setEnabled(false);
-		btnOrar.setBounds(25, 203, 198, 25);
-		mainPanel.add(btnOrar);
-		
-		JCheckBox chckbxSefDeCatedra = new JCheckBox("Sef de catedra");
-		chckbxSefDeCatedra.setEnabled(false);
-		chckbxSefDeCatedra.setBounds(25, 135, 129, 23);
-		mainPanel.add(chckbxSefDeCatedra);
-		
-		//Other initializations
-		if(utilizator.tip==Tip.SEF_CATEDRA)
-		{
-			//Buttons
-			chckbxSefDeCatedra.setSelected(true);
-			btnDiscipline.setEnabled(true);
-			btnOrar.setEnabled(true);
-			
-			//Menu
-			chckbxmntmSefCatedra.setSelected(true);
-			mntmDiscipline.setEnabled(true);
-			mntmOrare.setEnabled(true);
-		}
 	}
 
 	/* (non-Javadoc)
@@ -184,10 +144,10 @@ public class TeacherFrame extends JFrame implements ActionListener{
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
-        	}
-        	else if(sourceItem.getText().toLowerCase().equals("catalog"))
+        	} 
+        	else if(sourceItem.getText().toLowerCase().equals("orar"))
         	{
-        		System.out.println("Meniu: Administrare Catalog");
+        		System.out.println("Meniu: Administrare Orar");
         		
         		contentPane.remove(mainPanel);
         		//mainPanel=new AdminUsersPanel(utilizator, statusLbl);
@@ -195,26 +155,27 @@ public class TeacherFrame extends JFrame implements ActionListener{
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
         	}
-        	else if(sourceItem.getText().toLowerCase().equals("discipline"))
+        	else if(sourceItem.getText().toLowerCase().equals("grupe"))
         	{
-        		System.out.println("Meniu: Administrare Discipline");
+        		System.out.println("Meniu: Administrare Grupe");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new AdminDisciplinePanel(utilizator, statusLbl);
+        		//mainPanel=new AdminUsersPanel(utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
         	}
-        	else if(sourceItem.getText().toLowerCase().equals("orare"))
+        	else if(sourceItem.getText().toLowerCase().equals("programare examene"))
         	{
-        		System.out.println("Meniu: Administrare Orare");
+        		System.out.println("Meniu: Programare Examene");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new AdminActivitatiPanel(utilizator, statusLbl);
+        		//mainPanel=new AdminUsersPanel(utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
         	}
+
         
         }
         
@@ -231,9 +192,9 @@ public class TeacherFrame extends JFrame implements ActionListener{
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
         	}
-        	else if(source==this.btnCatalog)
+        	else if(source==this.btnAdminGrupe)
         	{
-        		System.out.println("Buton: Catalog");
+        		System.out.println("Buton: Administrare Grupe");
         		
         		contentPane.remove(mainPanel);
         		//mainPanel=new AdminUsersPanel(utilizator, statusLbl);
@@ -241,22 +202,22 @@ public class TeacherFrame extends JFrame implements ActionListener{
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
         	}
-        	else if(source==this.btnOrar)
+        	else if(source==this.btnAdminOrar)
         	{
-        		System.out.println("Buton: Orar");
+        		System.out.println("Buton: Administrare Orar");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new AdminActivitatiPanel(utilizator, statusLbl);
+        		//mainPanel=new AdminUsersPanel(utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
         	}
-        	else if(source==this.btnDiscipline)
+        	else if(source==this.btnProgramareExamene)
         	{
-        		System.out.println("Buton: Discipline");
+        		System.out.println("Buton: Programare Examen");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new AdminDisciplinePanel(utilizator, statusLbl);
+        		//mainPanel=new AdminUsersPanel(utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		

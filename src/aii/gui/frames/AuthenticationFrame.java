@@ -129,6 +129,11 @@ public class AuthenticationFrame implements ActionListener{
 				mainFrame=new TeacherFrame(utilizator);
 				mainFrame.setVisible(true);
 				break;
+			case SECRETAR:
+				mainFrame.dispose();
+				mainFrame=new SecretaryFrame(utilizator);
+				mainFrame.setVisible(true);
+				break;
 			}
 		}
 	}

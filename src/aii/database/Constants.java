@@ -39,5 +39,9 @@ public class Constants {
 															{ "cod", "denumire", "tip", "nrOre", "pctCredit", "examinare", "anStudiu", "semestru"},	//campuri obiect
 															{ "Cod Disciplina", "Denumire", "Tip", "Numar Ore", "Puncte Credit", "Examinare", "An Studiu", "Semestru"}	//nume coloane
 														};
+	final public static String[][]	ADMIN_ACTIVITATE_COLUMN_FIELD_MATCH 	= {
+															{ "id", "codDisciplina" , "cnpCadruDidactic",   "tip"},				//campuri obiect
+															{ "ID", "Cod Disciplina", "CNP Cadru Didactic", "Tip Activitate"}	//nume coloane
+	};
 
 }

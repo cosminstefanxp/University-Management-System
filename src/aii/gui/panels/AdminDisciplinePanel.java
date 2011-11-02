@@ -144,7 +144,7 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 		panelEditMainInfo.add(lblNumarOre);
 		
 		spinnerPctCredit = new JSpinner();
-		spinnerPctCredit.setModel(new SpinnerNumberModel(1, 1, 5, 1));
+		spinnerPctCredit.setModel(new SpinnerNumberModel(1, 1, 6, 1));
 		spinnerPctCredit.setBounds(731, 83, 55, 28);
 		panelEditMainInfo.add(spinnerPctCredit);
 		
