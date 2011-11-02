@@ -8,9 +8,11 @@ import java.util.Date;
  */
 public class Orar {
 	public enum Frecventa { Saptamanal, Pare, Impare};
+	public enum Ziua {Luni, Marti, Miercuri, Joi, Vineri};
 	
-	public Date zi;
+	public Ziua zi;
 	public int ora;
+	public String sala;
 	public int durata;
 	public int idActivitate;
 	public Frecventa frecventa;
