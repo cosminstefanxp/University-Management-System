@@ -23,6 +23,7 @@ import net.miginfocom.swing.MigLayout;
 import aii.Utilizator;
 import aii.database.Constants;
 import aii.database.UtilizatorWrapper;
+import aii.gui.tools.FixedSizeDocument;
 import aii.gui.tools.ObjectTableModel;
 
 
@@ -117,6 +118,7 @@ public class AdminGrupePanel extends MainPanelAbstract implements ListSelectionL
 		panelEditMainInfo.add(textFieldGrupa);
 		textFieldGrupa.setColumns(10);
 		textFieldGrupa.setText(null);
+		textFieldGrupa.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_GRUPA));
 
 	}
 

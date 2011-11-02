@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -25,17 +26,15 @@ import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
 import aii.Activitate;
-import aii.Disciplina;
 import aii.Orar;
 import aii.Utilizator;
-import aii.Activitate.TipActivitate;
-import aii.Disciplina.TipDisciplina;
 import aii.Orar.Frecventa;
 import aii.Orar.Ziua;
 import aii.database.ActivitateWrapper;
 import aii.database.Constants;
+import aii.database.DatabaseConnection;
 import aii.database.OrarWrapper;
-import aii.database.UtilizatorWrapper;
+import aii.gui.tools.FixedSizeDocument;
 import aii.gui.tools.ObjectTableModel;
 
 
@@ -58,12 +57,13 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 	private JButton btnSterge;
 	private JButton btnAdauga;
 	private JPanel panelEditInfo;
-	private JTable tableDisciplina;
+	private JTable tableActivitati;
 	private JComboBox comboBoxFrecventa;
 	private JTextField textFieldSala;
 	private JComboBox comboBoxZiua;
 	private JSpinner spinnerOra;
 	private JComboBox comboBoxGrupa;
+	private JSpinner spinnerDurata;
 
 	/**
 	 * Create the panel.
@@ -123,10 +123,10 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 		scrollPaneActivitate.setBounds(11, 52, 368, 245);
 		panelEditInfo.add(scrollPaneActivitate);
 		
-		tableDisciplina = new JTable(activitatiTableModel);
-		tableDisciplina.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableDisciplina.setFillsViewportHeight(true);
-		scrollPaneActivitate.setViewportView(tableDisciplina);
+		tableActivitati = new JTable(activitatiTableModel);
+		tableActivitati.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableActivitati.setFillsViewportHeight(true);
+		scrollPaneActivitate.setViewportView(tableActivitati);
 		
 		comboBoxFrecventa = new JComboBox();
 		comboBoxFrecventa.setBounds(532, 204, 187, 33);
@@ -165,6 +165,7 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 		textFieldSala.setBounds(532, 72, 187, 33);
 		panelEditInfo.add(textFieldSala);
 		textFieldSala.setColumns(10);
+		textFieldSala.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_SALA));
 		
 		comboBoxZiua = new JComboBox();
 		comboBoxZiua.setModel(new DefaultComboBoxModel(Ziua.values()));
@@ -176,7 +177,7 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 		spinnerOra.setBounds(532, 159, 46, 33);
 		panelEditInfo.add(spinnerOra);
 		
-		JSpinner spinnerDurata = new JSpinner();
+		spinnerDurata = new JSpinner();
 		spinnerDurata.setModel(new SpinnerNumberModel(1, 1, 10, 1));
 		spinnerDurata.setBounds(673, 159, 46, 33);
 		panelEditInfo.add(spinnerDurata);
@@ -199,7 +200,33 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 		btnAdauga = new JButton("Adauga");
 		btnAdauga.addActionListener(this);
 		btnAdauga.setBounds(805, 12, 117, 25);
-		panelEdit.add(btnAdauga);		
+		panelEdit.add(btnAdauga);
+		
+		/* Pregatire date despre grupa. */
+		Vector<Object[]> results=null;
+		String query="SELECT DISTINCT titlu_grupa FROM "+Constants.USER_TABLE+" WHERE tip=\'"+Utilizator.Tip.STUDENT.toString()+"\'";
+		
+		try {
+			DatabaseConnection.openConnection();
+			results=DatabaseConnection.customQueryArray(query);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
+		
+		//Construire grupe
+		Vector<String> grupe=new Vector<String>(results.size());
+		for(int i=0;i<results.size();i++)
+		{
+			String value=(String) results.get(i)[0];
+			if(!value.isEmpty())	//Skip empty values
+				grupe.add(value);
+		}
+		System.out.println("Obtinute grupele: "+grupe);
+		
+		comboBoxGrupa.setModel(new DefaultComboBoxModel(grupe));
+		
 	}
 
 	/* Eveniment declansat la schimbarea selectiei
@@ -218,51 +245,45 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 		if(row==-1)
 		{
 			System.out.println("Deselectie detectata.");
-			tableCadruDidactic.getSelectionModel().clearSelection();
-			tableDisciplina.getSelectionModel().clearSelection();
-			comboBoxFrecventa.setSelectedItem(TipDisciplina.Obligatoriu);
+			tableActivitati.getSelectionModel().clearSelection();
+			textFieldSala.setText(null);
+			comboBoxGrupa.setSelectedIndex(0);
+			comboBoxZiua.setSelectedIndex(0);
+			comboBoxFrecventa.setSelectedItem(Frecventa.Saptamanal);
+			spinnerOra.setValue(8);
+			spinnerDurata.setValue(1);			
 			
-			statusLbl.setText("Seteaza disciplina, cadrul didactic asociat si tipul activitatii si apasa 'Salveaza' pentru a crea o noua activitate didactica.");
+			statusLbl.setText("Seteaza campurile corespunzatori si apasa 'Salveaza' pentru a crea o noua intrare in orar.");
 			return;
 		}
 		
 		//Always Visible fields
-		Activitate object=objects.get(table.getSelectedRow());
+		Orar object=objects.get(table.getSelectedRow());
 		
-		//Finding the associated 'Disciplina'
-		int indexDisciplina=-1;
-		for(int i=0;i<discipline.size();i++)
-			if(discipline.get(i).cod==object.codDisciplina)
+		//Finding the associated 'Activitate'
+		int indexActivitate=-1;
+		for(int i=0;i<activitati.size();i++)
+			if(activitati.get(i).id==object.idActivitate)
 			{
-				indexDisciplina=i;
+				indexActivitate=i;
 				break;
 			}
-		if(indexDisciplina==-1)
+		if(indexActivitate==-1)
 		{
-			JOptionPane.showMessageDialog(null, "Lipseste disciplina asociata.");
+			JOptionPane.showMessageDialog(null, "Lipseste activitatea asociata.");
 			return;
 		}
-		tableDisciplina.getSelectionModel().setSelectionInterval(0, indexDisciplina);
+		tableActivitati.getSelectionModel().setSelectionInterval(0, indexActivitate);
 		
-		//Finding the associated 'Utilizator'
-		int indexCadruDidactic=-1;
-		for(int i=0;i<utilizatori.size();i++)
-			if(utilizatori.get(i).CNP.equals(object.cnpCadruDidactic))
-			{
-				indexCadruDidactic=i;
-				break;
-			}
-		if(indexCadruDidactic==-1)
-		{
-			JOptionPane.showMessageDialog(null, "Lipseste cadrul didactic asociat.");
-			return;
-		}
-		tableCadruDidactic.getSelectionModel().setSelectionInterval(0, indexCadruDidactic);
-
 		//Set the "Tip"
-		comboBoxFrecventa.setSelectedItem(object.tip);
+		textFieldSala.setText(object.sala);
+		comboBoxGrupa.setSelectedItem(object.grupa);
+		comboBoxZiua.setSelectedItem(object.zi);
+		comboBoxFrecventa.setSelectedItem(object.frecventa);
+		spinnerOra.setValue(object.ora);
+		spinnerDurata.setValue(object.durata);		
 
-		statusLbl.setText("Seteaza disciplina, cadrul didactic asociat si tipul activitatii si apasa 'Salveaza' pentru a face permanente modificarile.");
+		statusLbl.setText("Modifica campurile dorite si apasa 'Salveaza' pentru a face permanente modificarile.");
 	}
 
 	/* Evenimente declansate la click pe cele 3 butoane sau la schimbarea selectiei tipului
@@ -276,28 +297,28 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 		//Adding new entities
 		if(source==btnAdauga)
 		{
-			System.out.println("Adaugam o noua activitate");
+			System.out.println("Adaugam o noua intrare in orar");
 			table.getSelectionModel().clearSelection();
-			tableCadruDidactic.getSelectionModel().clearSelection();
-			tableDisciplina.getSelectionModel().clearSelection();
+			tableActivitati.getSelectionModel().clearSelection();
 			
-			statusLbl.setText("Seteaza disciplina, cadrul didactic asociat si tipul activitatii si apasa 'Salveaza' pentru a crea o noua activitate didactica.");
+			statusLbl.setText("Seteaza campurile dorite si apasa 'Salveaza' pentru a crea o noua intrare in orar.");
 		} else	
 		if(source==btnSterge)
 		{
-			System.out.println("Stergem activitatea");
+			System.out.println("Stergem intrarea din orar");
 			
 			if(table.getSelectedRow()==-1)
 				return;
 			
-			//Delete the disciplina
-			if(!activitatiDAO.deleteActivitate(objects.get(table.getSelectedRow())))
+			//Delete the orar
+			if(!orareDAO.deleteOrar(objects.get(table.getSelectedRow())))
 				return;
 			
-			statusLbl.setText("Activitatea "+objects.get(table.getSelectedRow()).id+" a fost stearsa.");
+			statusLbl.setText("Orarul pentru "+objects.get(table.getSelectedRow()).grupa+"la activitate "+objects.get(table.getSelectedRow()).idActivitate+" a fost sters.");
 			
 			//Update JTable
 			objects.remove(table.getSelectedRow());
+			table.getSelectionModel().clearSelection();
 			mainTableModel.setObjects(objects);
 			mainTableModel.fireTableDataChanged();
 			
@@ -307,55 +328,46 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 			System.out.println("Salvam informatiile in DB");
 			
 			//Check fields
-			if(tableCadruDidactic.getSelectedRow()==-1 ||
-					tableDisciplina.getSelectedRow()==-1)
+			if(tableActivitati.getSelectedRow()==-1 ||
+					textFieldSala.getText().isEmpty())
 			{
-				JOptionPane.showMessageDialog(null, "Va rugam sa completati toate campurile obligatorii","Incomplet",JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Va rugam sa completati toate campurile si sa alegeti o activitate.","Incomplet",JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			
 			//Create the new object
-			Activitate object=new Activitate();
-			object.cnpCadruDidactic=utilizatori.get(tableCadruDidactic.getSelectedRow()).CNP;
-			object.codDisciplina=discipline.get(tableDisciplina.getSelectedRow()).cod;
-			object.tip=(TipActivitate) comboBoxFrecventa.getSelectedItem();
+			Orar object=new Orar();
+			object.frecventa=(Frecventa) comboBoxFrecventa.getSelectedItem();
+			object.durata=(Integer) spinnerDurata.getValue();
+			object.grupa=(String) comboBoxGrupa.getSelectedItem();
+			object.sala=textFieldSala.getText();
+			object.idActivitate=activitati.get(tableActivitati.getSelectedRow()).id;
+			object.zi=(Ziua) comboBoxZiua.getSelectedItem();
+			object.ora=(Integer)spinnerOra.getValue();
 			
 			//If it's a new entry
 			if(table.getSelectedRow()==-1)
 			{
-				object.id=0;
-				
-				//Insert the new user
-				System.out.println("Activitate noua: "+object);
-				if(!activitatiDAO.insertActivitate(object))
+				//Insert the new orar
+				System.out.println("Intrare noua in orar: "+object);
+				if(!orareDAO.insertOrar(object))
 					return;
 			
-				statusLbl.setText("S-a creat o activitate noua.");
+				statusLbl.setText("S-a creat o noua intrare in orar.");
 				
-				//Update JTable - need new pull from database, as a new id was generated
-				try {
-					objects=activitatiDAO.getObjects(Constants.ACTIVITATE_TABLE,"id=id");
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} 
-				
+				objects.add(object);
 				mainTableModel.setObjects(objects);
 				mainTableModel.fireTableDataChanged();
 				table.getSelectionModel().setSelectionInterval(0, objects.size()-1);
 			}
 			else //If it's an old entry
 			{
-				object.id=objects.get(table.getSelectedRow()).id;
 				
-				System.out.println("Activitate existenta -> modificata in " + object);
-				if(!activitatiDAO.updateActivitate(objects.get(table.getSelectedRow()), object))
+				System.out.println("Orar existent -> modificat in " + object);
+				if(!orareDAO.updateOrar(objects.get(table.getSelectedRow()), object))
 					return;
 				
-				statusLbl.setText("Activitatea "+object.id+" a fost actualizata.");
+				statusLbl.setText("Orarul pentru grupa "+object.grupa +" la activitatea "+object.idActivitate+" a fost actualizat.");
 				
 				//Update JTable
 				int curSelected=table.getSelectedRow();
@@ -363,8 +375,7 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 				mainTableModel.setObjects(objects);
 				mainTableModel.fireTableDataChanged();	
 				table.getSelectionModel().setSelectionInterval(0, curSelected);
-			}
-				
+			}				
 		}
 		
 	}

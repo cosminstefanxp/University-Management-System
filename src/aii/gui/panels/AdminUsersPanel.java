@@ -28,6 +28,7 @@ import aii.Utilizator.Finantare;
 import aii.Utilizator.Tip;
 import aii.database.Constants;
 import aii.database.UtilizatorWrapper;
+import aii.gui.tools.FixedSizeDocument;
 import aii.gui.tools.ObjectTableModel;
 
 
@@ -108,6 +109,7 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		textFieldNume.setColumns(10);
 		textFieldNume.setBounds(115, 90, 260, 28);
 		panelEditMainInfo.add(textFieldNume);
+		textFieldNume.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_NUME));
 		
 		JLabel label = new JLabel("Nume: *");
 		label.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -118,6 +120,7 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		textFieldPrenume.setColumns(10);
 		textFieldPrenume.setBounds(115, 135, 260, 28);
 		panelEditMainInfo.add(textFieldPrenume);
+		textFieldPrenume.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_PRENUME));
 		
 		JLabel label_1 = new JLabel("Prenume: *");
 		label_1.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -128,6 +131,7 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		textFieldEmail.setColumns(10);
 		textFieldEmail.setBounds(115, 180, 260, 28);
 		panelEditMainInfo.add(textFieldEmail);
+		textFieldEmail.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_EMAIL));
 		
 		JLabel label_2 = new JLabel("Email: *");
 		label_2.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -138,6 +142,7 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		textFieldAdresa.setColumns(10);
 		textFieldAdresa.setBounds(115, 225, 260, 28);
 		panelEditMainInfo.add(textFieldAdresa);
+		textFieldAdresa.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_ADRESA));
 		
 		JLabel label_3 = new JLabel("Adresa:");
 		label_3.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -148,6 +153,7 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		textFieldCNP.setColumns(10);
 		textFieldCNP.setBounds(115, 0, 260, 28);
 		panelEditMainInfo.add(textFieldCNP);
+		textFieldCNP.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_CNP));
 		
 		JLabel label_4 = new JLabel("CNP: *");
 		label_4.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -157,6 +163,7 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		passwordField = new JPasswordField((String) null);
 		passwordField.setBounds(115, 45, 260, 28);
 		panelEditMainInfo.add(passwordField);
+		passwordField.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_PAROLA));
 		
 		JLabel label_5 = new JLabel("Parola: *");
 		label_5.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -182,6 +189,7 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 		textFieldTitluGrupa.setBounds(0, 100, 260, 28);
 		panelEditSideInfo.add(textFieldTitluGrupa);
 		textFieldTitluGrupa.setColumns(10);
+		textFieldTitluGrupa.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_GRUPA));
 		
 		lblTitluGrupa = new JLabel("Grupa:");
 		lblTitluGrupa.setBounds(64, 73, 132, 15);

@@ -2,7 +2,6 @@ package aii.database;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -52,7 +51,7 @@ public class OrarWrapper extends ObjectWrapper<Orar> {
 	 * @param cod the cod
 	 * @return the orar
 	 */
-	public Orar getOrar(Date zi, int ora, String sala)
+	public Orar getOrar(String zi, int ora, String sala)
 	{
 		List<Orar> orare=this.getOrare("zi=\'"+zi+"\' AND ora=\'"+ora+"\' AND sala=\'"+sala+"\'");
 		

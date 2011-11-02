@@ -30,6 +30,7 @@ import aii.Disciplina.Examinare;
 import aii.Disciplina.TipDisciplina;
 import aii.database.Constants;
 import aii.database.DisciplinaWrapper;
+import aii.gui.tools.FixedSizeDocument;
 import aii.gui.tools.ObjectTableModel;
 
 
@@ -107,6 +108,7 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 		textFieldCodDisciplina.setColumns(10);
 		textFieldCodDisciplina.setBounds(144, 0, 260, 28);
 		panelEditMainInfo.add(textFieldCodDisciplina);
+		textFieldCodDisciplina.setDocument(new FixedSizeDocument(11));
 		
 		JLabel lblCodDisciplina = new JLabel("Cod Disciplina: *");
 		lblCodDisciplina.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -122,6 +124,7 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 		textFieldDenumire.setColumns(10);
 		textFieldDenumire.setBounds(144, 43, 260, 28);
 		panelEditMainInfo.add(textFieldDenumire);
+		textFieldDenumire.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_DISCIPLINA_DENUMIRE));
 		
 		comboBoxTip = new JComboBox();
 		comboBoxTip.setModel(new DefaultComboBoxModel(Disciplina.TipDisciplina.values()));

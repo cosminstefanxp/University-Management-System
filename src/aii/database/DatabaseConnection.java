@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
+import java.util.Vector;
 
 /**
  * The Class DatabaseConnection.
@@ -102,6 +104,39 @@ public class DatabaseConnection {
 		ResultSet result = statement.executeQuery(sqlQuery);
 		
 		return result;
+	}
+	
+	/**
+	 * Custom query array.
+	 *
+	 * @param sqlQuery the sql query
+	 * @return the vector
+	 * @throws SQLException the sQL exception
+	 */
+	public static Vector<Object[]> customQueryArray(String sqlQuery) throws SQLException
+	{
+		ResultSet entries=DatabaseConnection.customQuery(sqlQuery);
+		Vector<Object[]> vector=new Vector<Object[]>();
+		
+		int columnCount=entries.getMetaData().getColumnCount();
+		System.out.println("S-a obtinut un tabel cu "+columnCount+" coloane.");
+		
+		//Cycle through the rows
+		while(entries.next())
+		{
+			//Prepare a new Row
+			Object[] objects=new Object[columnCount];
+			
+			for(int i=0;i<columnCount;i++)
+				objects[i]=entries.getObject(i+1);
+			
+			vector.add(objects);
+			System.out.println("Rand nou obtinut: "+Arrays.toString(objects));
+		}
+		
+		
+		
+		return vector;
 	}
 	
 	

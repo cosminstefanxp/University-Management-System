@@ -163,11 +163,11 @@ public class ObjectWrapper<T> {
 			//Prepare the field of the object which we are now getting info from
 			Field field=classType.getDeclaredField(nameMatch[1][i]);
 			
-			whereClause+=nameMatch[0][i]+"=\'"+field.get(object)+"\' ,";				
+			whereClause+=nameMatch[0][i]+"=\'"+field.get(object)+"\' AND ";				
 		}
 		
 		//Clean the last ,
-		whereClause=whereClause.substring(0,whereClause.length()-1);
+		whereClause=whereClause.substring(0,whereClause.length()-4);
 
 		//Run the SQL deletion query
 		System.out.println("Stergem un obiect din baza de date: "+whereClause);
@@ -198,11 +198,11 @@ public class ObjectWrapper<T> {
 			//Prepare the field of the object which we are now getting info from
 			Field field=classType.getDeclaredField(nameMatch[1][i]);
 			
-			whereClause+=nameMatch[0][i]+"=\'"+field.get(oldObject)+"\' ,";				
+			whereClause+=nameMatch[0][i]+"=\'"+field.get(oldObject)+"\' AND ";				
 		}
 		
 		//Clean the last ,
-		whereClause=whereClause.substring(0,whereClause.length()-1);
+		whereClause=whereClause.substring(0,whereClause.length()-4);
 		
 		//For every field in the object, we put the value in the set clause
 		for(int i=0;i<nameMatch[0].length;i++)

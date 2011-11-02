@@ -16,7 +16,9 @@ import javax.swing.SwingConstants;
 import aii.Utilizator;
 import aii.Utilizator.Finantare;
 import aii.Utilizator.Tip;
+import aii.database.Constants;
 import aii.database.UtilizatorWrapper;
+import aii.gui.tools.FixedSizeDocument;
 
 @SuppressWarnings("serial")
 public class PersonalDataPanel extends MainPanelAbstract implements ActionListener {
@@ -60,6 +62,8 @@ public class PersonalDataPanel extends MainPanelAbstract implements ActionListen
 		textFieldNume.setBounds(115, 90, 260, 28);
 		panelFields.add(textFieldNume);
 		textFieldNume.setColumns(10);
+		textFieldNume.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_NUME));
+		textFieldNume.setText(utilizator.nume);
 		
 		JLabel lblNume = new JLabel("Nume: *");
 		lblNume.setBounds(0, 100, 97, 15);
@@ -70,6 +74,8 @@ public class PersonalDataPanel extends MainPanelAbstract implements ActionListen
 		textFieldPrenume.setBounds(115, 135, 260, 28);
 		panelFields.add(textFieldPrenume);
 		textFieldPrenume.setColumns(10);
+		textFieldPrenume.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_PRENUME));
+		textFieldPrenume.setText(utilizator.prenume);
 		
 		JLabel lblPrenume = new JLabel("Prenume: *");
 		lblPrenume.setBounds(0, 144, 97, 15);
@@ -80,6 +86,8 @@ public class PersonalDataPanel extends MainPanelAbstract implements ActionListen
 		textFieldEmail.setBounds(115, 180, 260, 28);
 		panelFields.add(textFieldEmail);
 		textFieldEmail.setColumns(10);
+		textFieldEmail.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_EMAIL));
+		textFieldEmail.setText(utilizator.email);
 		
 		JLabel lblEmail = new JLabel("Email: *");
 		lblEmail.setBounds(0, 188, 97, 15);
@@ -90,6 +98,8 @@ public class PersonalDataPanel extends MainPanelAbstract implements ActionListen
 		textFieldAdresa.setBounds(115, 225, 260, 28);
 		panelFields.add(textFieldAdresa);
 		textFieldAdresa.setColumns(10);
+		textFieldAdresa.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_ADRESA));
+		textFieldAdresa.setText(utilizator.adresa);
 		
 		JLabel lblAdresa = new JLabel("Adresa:");
 		lblAdresa.setBounds(0, 232, 97, 15);
@@ -100,6 +110,8 @@ public class PersonalDataPanel extends MainPanelAbstract implements ActionListen
 		textFieldCNP.setBounds(115, 0, 260, 28);
 		panelFields.add(textFieldCNP);
 		textFieldCNP.setColumns(10);
+		textFieldCNP.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_CNP));
+		textFieldCNP.setText(utilizator.CNP);
 		
 		JLabel lblCnp = new JLabel("CNP: *");
 		lblCnp.setBounds(0, 12, 97, 15);
@@ -109,6 +121,8 @@ public class PersonalDataPanel extends MainPanelAbstract implements ActionListen
 		passwordField = new JPasswordField(this.utilizator.parola);
 		passwordField.setBounds(115, 45, 260, 28);
 		panelFields.add(passwordField);
+		passwordField.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_PAROLA));
+		passwordField.setText(utilizator.parola);
 		
 		JLabel lblParola = new JLabel("Parola: *");
 		lblParola.setBounds(0, 56, 97, 15);
@@ -159,6 +173,8 @@ public class PersonalDataPanel extends MainPanelAbstract implements ActionListen
 			textFieldTitluGrupa.setBounds(5, 120, 260, 28);
 			panelSideInfo.add(textFieldTitluGrupa);
 			textFieldTitluGrupa.setColumns(10);	
+			textFieldTitluGrupa.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_GRUPA));
+			textFieldTitluGrupa.setText(utilizator.titlu_grupa);
 		}
 		
 		if(utilizator.tip==Tip.CADRU_DIDACTIC || utilizator.tip==Tip.SEF_CATEDRA)
@@ -172,7 +188,10 @@ public class PersonalDataPanel extends MainPanelAbstract implements ActionListen
 			textFieldTitluGrupa.setBounds(5, 120, 260, 28);
 			panelSideInfo.add(textFieldTitluGrupa);
 			textFieldTitluGrupa.setColumns(10);
+			textFieldTitluGrupa.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_GRUPA));
+			textFieldTitluGrupa.setText(utilizator.titlu_grupa);
 		}
+		
 		
 		
 	}

@@ -57,4 +57,17 @@ public class Constants {
 															{ "Grupa", "ID Activitate", "Zi", "Ora", "Sala", "Durata", "Frecventa"}	//nume coloane
 														};
 
+	
+	/*******FIELD SIZES*********/
+	final public static int FIELD_SIZE_GRUPA=6;
+	final public static int FIELD_SIZE_SALA=10;
+	final public static int FIELD_SIZE_NUME=45;
+	final public static int FIELD_SIZE_PRENUME=45;
+	final public static int FIELD_SIZE_PAROLA=25;
+	final public static int FIELD_SIZE_CNP=13;
+	final public static int FIELD_SIZE_EMAIL=45;
+	final public static int FIELD_SIZE_ADRESA=120;
+	final public static int FIELD_SIZE_DISCIPLINA_DENUMIRE=45;
+	
+	
 }
