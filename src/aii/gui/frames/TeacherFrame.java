@@ -205,7 +205,7 @@ public class TeacherFrame extends JFrame implements ActionListener{
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
         	}
-        	else if(sourceItem.getText().toLowerCase().equals("orare"))
+        	else if(sourceItem.getText().toLowerCase().equals("activitati de predare"))
         	{
         		System.out.println("Meniu: Administrare Orare");
         		

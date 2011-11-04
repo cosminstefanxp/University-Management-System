@@ -18,6 +18,7 @@ import javax.swing.border.LineBorder;
 
 import net.miginfocom.swing.MigLayout;
 import aii.Utilizator;
+import aii.gui.panels.AdminExamenePanel;
 import aii.gui.panels.AdminGrupePanel;
 import aii.gui.panels.AdminOrarePanel;
 import aii.gui.panels.PersonalDataPanel;
@@ -172,7 +173,7 @@ public class SecretaryFrame extends JFrame implements ActionListener{
         		System.out.println("Meniu: Programare Examene");
         		
         		contentPane.remove(mainPanel);
-        		//mainPanel=new AdminUsersPanel(utilizator, statusLbl);
+        		mainPanel=new AdminExamenePanel(utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -219,7 +220,7 @@ public class SecretaryFrame extends JFrame implements ActionListener{
         		System.out.println("Buton: Programare Examen");
         		
         		contentPane.remove(mainPanel);
-        		//mainPanel=new AdminUsersPanel(utilizator, statusLbl);
+        		mainPanel=new AdminExamenePanel(utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		

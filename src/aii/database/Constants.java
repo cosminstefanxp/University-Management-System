@@ -39,6 +39,14 @@ public class Constants {
 															};
 	final public static int			ORAR_TABLE_PK_COUNT	= 2;	//atat 'id_activitate' cat si 'grupa' fac parte din cheie	
 	
+	/*******EXAMEN********/
+	final public static String		EXAMEN_TABLE			= "examen";
+	final public static String[][]	EXAMEN_FIELD_MATCH		= {
+																{ "cod_disciplina", "grupa", "data", "ora", "sala"},	//campuri baza de date
+																{ "codDisciplina",  "grupa", "data", "ora", "sala"}		//campuri obiect
+															};
+	final public static int			EXAMEN_TABLE_PK_COUNT	= 3;	//atat 'cod_disciplina' cat si 'grupa' si 'data' fac parte din cheie	
+	
 	/*******TABELE********/
 	final public static String[][]	ADMIN_USER_COLUMN_FIELD_MATCH ={
 															{ "tip",      "CNP", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare"},			//campuri obiect
@@ -55,6 +63,10 @@ public class Constants {
 	final public static String[][]	ADMIN_ORAR_COLUMN_FIELD_MATCH 	= {
 															{ "grupa", "idActivitate", "zi", "ora", "sala", "durata",   "frecventa"},	//campuri obiect
 															{ "Grupa", "ID Activitate", "Zi", "Ora", "Sala", "Durata", "Frecventa"}	//nume coloane
+														};
+	final public static String[][]	ADMIN_EXAMEN_COLUMN_FIELD_MATCH 	= {
+															{ "grupa", "codDisciplina",  "data", "ora", "sala"},	//campuri obiect
+															{ "Grupa", "Cod Disciplina", "Data", "Ora", "Sala"}		//nume coloane
 														};
 
 	

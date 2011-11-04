@@ -73,7 +73,7 @@ public class OrarWrapper extends ObjectWrapper<Orar> {
 			this.insertObject(Constants.ORAR_TABLE, orar);
 		} catch (MySQLIntegrityConstraintViolationException e){
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Aveti campuri invalide: "+e.getMessage());	
+			JOptionPane.showMessageDialog(null,"Aveti deja o intrare in baza de date pentru aceeasi grupa si pentru aceeasi activitate.");	
 			return false;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -129,7 +129,7 @@ public class OrarWrapper extends ObjectWrapper<Orar> {
 			this.updateObject(Constants.ORAR_TABLE, orarVechi, orarNou);
 		} catch (MySQLIntegrityConstraintViolationException e){
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Aveti campuri invalide: "+e.getMessage());	
+			JOptionPane.showMessageDialog(null,"Aveti deja o intrare in baza de date pentru aceeasi grupa si pentru aceeasi activitate.");		
 			return false;
 		} catch (SQLException e) {
 			e.printStackTrace();

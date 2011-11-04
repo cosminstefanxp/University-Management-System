@@ -6,30 +6,30 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import aii.Examen;
+
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
-import aii.Utilizator;
-
 /**
- * The Class that wraps the access to database for Utilizator Objects.
+ * The Class that wraps the access to database for 'Examen' Objects.
  */
-public class UtilizatorWrapper extends ObjectWrapper<Utilizator> {
+public class ExamenWrapper extends ObjectWrapper<Examen> {
 
-	public UtilizatorWrapper() {
-		super(Utilizator.class, Constants.USER_FIELD_MATCH, Constants.USER_TABLE_PK_COUNT);
+	public ExamenWrapper() {
+		super(Examen.class, Constants.EXAMEN_FIELD_MATCH, Constants.EXAMEN_TABLE_PK_COUNT);
 	}
 
 	/**
-	 * Gets the utilizatori that match a certain where clause.
+	 * Gets all the examen that match a certain where clause.
 	 *
 	 * @param whereClause the where clause
-	 * @return the utilizatori
+	 * @return the examene
 	 */
-	public ArrayList<Utilizator> getUtilizatori(String whereClause)
+	public ArrayList<Examen> getExamene(String whereClause)
 	{
-		ArrayList<Utilizator> utilizatori = null;
+		ArrayList<Examen> examene = null;
 		try {
-			utilizatori=this.getObjects(Constants.USER_TABLE, whereClause);
+			examene=this.getObjects(Constants.EXAMEN_TABLE, whereClause);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
@@ -40,40 +40,40 @@ public class UtilizatorWrapper extends ObjectWrapper<Utilizator> {
 					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
 			e.printStackTrace();
 			return null;
-		} 
+		}
 		
-		return utilizatori;
+		return examene;
 	}
 	
 	/**
-	 * Gets the utilizator that has a given cnp.
+	 * Gets the examen that has a given 'zi','sala','ora'.
 	 *
-	 * @param cnp the cnp
-	 * @return the utilizator
+	 * @param cod the cod
+	 * @return the examen
 	 */
-	public Utilizator getUtilizator(String cnp)
+	public Examen getExamen(String zi, int ora, String sala)
 	{
-		List<Utilizator> utilizatori=this.getUtilizatori("cnp=\'"+cnp+"\'");
+		List<Examen> examene=this.getExamene("zi=\'"+zi+"\' AND ora=\'"+ora+"\' AND sala=\'"+sala+"\'");
 		
-		if(utilizatori==null || utilizatori.size()!=1)
+		if(examene==null || examene.size()!=1)
 			return null;
 		
-		return utilizatori.get(0);
+		return examene.get(0);
 	}
 	
 	/**
-	 * Inserts a new utilizator in the database
+	 * Inserts an examen in the database.
 	 *
-	 * @param utilizator the utilizator
+	 * @param examen the examen
 	 * @return true, if successful
 	 */
-	public boolean insertUtilizator(Utilizator utilizator)
+	public boolean insertExamen(Examen examen)
 	{
 		try {
-			this.insertObject(Constants.USER_TABLE, utilizator);
+			this.insertObject(Constants.EXAMEN_TABLE, examen);
 		} catch (MySQLIntegrityConstraintViolationException e){
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Aveti deja o intrare in baza de date pentru acelasi cnp.");	
+			JOptionPane.showMessageDialog(null,"Aveti deja o intrare in baza de date pentru aceeasi grupa si pentru aceeasi disciplina in aceeasi data.");	
 			return false;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -92,15 +92,15 @@ public class UtilizatorWrapper extends ObjectWrapper<Utilizator> {
 	
 	
 	/**
-	 * Deletes an utilizator from the database
+	 * Deletes an examen from the database.
 	 *
-	 * @param utilizator the utilizator
+	 * @param examen the examen
 	 * @return true, if successful
 	 */
-	public boolean deleteUtilizator(Utilizator utilizator)
+	public boolean deleteExamen(Examen examen)
 	{
 		try {
-			this.deleteObject(Constants.USER_TABLE, utilizator);
+			this.deleteObject(Constants.EXAMEN_TABLE, examen);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
@@ -117,18 +117,19 @@ public class UtilizatorWrapper extends ObjectWrapper<Utilizator> {
 	}
 	
 	/**
-	 * Updates an utilizator in the database
+	 * Updates an examen in the database.
 	 *
-	 * @param utilizator the utilizator
+	 * @param examenVechi the examen veche
+	 * @param examenNou the examen noua
 	 * @return true, if successful
 	 */
-	public boolean UpdateUtilizator(Utilizator utilizatorVechi, Utilizator utilizatorNou)
+	public boolean updateExamen(Examen examenVechi, Examen examenNou)
 	{
 		try {
-			this.updateObject(Constants.USER_TABLE, utilizatorVechi, utilizatorNou);
+			this.updateObject(Constants.EXAMEN_TABLE, examenVechi, examenNou);
 		} catch (MySQLIntegrityConstraintViolationException e){
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Aveti deja o intrare in baza de date pentru acelasi cnp.");	
+			JOptionPane.showMessageDialog(null,"Aveti deja o intrare in baza de date pentru aceeasi grupa si pentru aceeasi disciplina in aceeasi data.");		
 			return false;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -140,7 +141,7 @@ public class UtilizatorWrapper extends ObjectWrapper<Utilizator> {
 					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
 			e.printStackTrace();
 			return false;
-		} 
+		}
 		
 		return true;
 	}

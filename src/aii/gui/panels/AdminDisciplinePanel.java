@@ -205,7 +205,7 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 		//Some default values
 		textFieldCodDisciplina.setText(null);
 		textFieldCodDisciplina.setEnabled(false);	//if we create a new entity, we let the PK to be auto incremented
-		textFieldCodDisciplina.setText("Auto-Generated");
+		textFieldCodDisciplina.setText("AutoGenerat");
 		
 		
 	}
@@ -234,8 +234,7 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 			spinnerPctCredit.setValue(1);
 			spinnerSemestru.setValue(1);
 			
-			textFieldCodDisciplina.setEnabled(false);	//if we create a new entity, we let the PK to be auto incremented
-			textFieldCodDisciplina.setText("Auto-Generated");
+			textFieldCodDisciplina.setText("AutoGenerat");
 			
 			return;
 		}
@@ -251,8 +250,6 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 		spinnerPctCredit.setValue(object.pctCredit);
 		spinnerSemestru.setValue(object.semestru);
 		
-		textFieldCodDisciplina.setEnabled(true);
-
 		statusLbl.setText("Modfica datele disciplinei "+object.denumire+" si apasa 'Salveaza' pentru a face permanente modificarile.");
 	}
 
