@@ -45,7 +45,15 @@ public class Constants {
 																{ "cod_disciplina", "grupa", "data", "ora", "sala"},	//campuri baza de date
 																{ "codDisciplina",  "grupa", "data", "ora", "sala"}		//campuri obiect
 															};
-	final public static int			EXAMEN_TABLE_PK_COUNT	= 3;	//atat 'cod_disciplina' cat si 'grupa' si 'data' fac parte din cheie	
+	final public static int			EXAMEN_TABLE_PK_COUNT	= 3;	//atat 'cod_disciplina' cat si 'grupa' si 'data' fac parte din cheie
+	
+	/*******NOTA CATALOG********/
+	final public static String		CATALOG_TABLE			= "catalog";
+	final public static String[][]	CATALOG_FIELD_MATCH		= {
+																{ "cnp_student", "cod_disciplina", "data", "nota"},		//campuri baza de date
+																{ "cnpStudent",  "codDisciplina",  "data", "nota"}		//campuri obiect
+															};
+	final public static int			CATALOG_TABLE_PK_COUNT	= 3;	//atat 'cod_disciplina' cat si 'grupa' si 'data' fac parte din cheie	
 	
 	/*******TABELE********/
 	final public static String[][]	ADMIN_USER_COLUMN_FIELD_MATCH ={
