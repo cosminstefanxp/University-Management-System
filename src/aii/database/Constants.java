@@ -9,8 +9,8 @@ public class Constants {
 	/*******UTILIZATOR********/
 	final public static String		USER_TABLE			= "utilizatori";
 	final public static String[][]	USER_FIELD_MATCH	= {
-															{ "cnp", "parola", "tip", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare"},	//campuri obiect
-															{ "CNP", "parola", "tip", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare"}		//campuri baza de date
+															{ "cnp", "parola", "tip", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare", "contract_completat"},	//campuri obiect
+															{ "CNP", "parola", "tip", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare", "contractCompletat"}		//campuri baza de date
 														};
 	final public static int			USER_TABLE_PK_COUNT	= 1;		//doar cnp face parte din cheie
 	
@@ -18,8 +18,8 @@ public class Constants {
 	/*******DISCIPLINA********/
 	final public static String		DISCIPLINA_TABLE			= "disciplina";
 	final public static String[][]	DISCIPLINA_FIELD_MATCH		= {
-																{ "cod", "denumire", "tip", "nr_ore", "puncte_credit", "examinare", "an_studiu", "semestru"},	//campuri baza de date
-																{ "cod", "denumire", "tip", "nrOre",  "pctCredit",     "examinare", "anStudiu",  "semestru"}	//campuri obiect
+																{ "cod", "denumire", "tip", "nr_ore", "puncte_credit", "examinare", "an_studiu", "semestru", "grup"},	//campuri baza de date
+																{ "cod", "denumire", "tip", "nrOre",  "pctCredit",     "examinare", "anStudiu",  "semestru", "grup"}	//campuri obiect
 															};
 	final public static int			DISCIPLINA_TABLE_PK_COUNT	= 1;	//doar cod face parte din cheie
 	
@@ -57,12 +57,12 @@ public class Constants {
 	
 	/*******TABELE********/
 	final public static String[][]	ADMIN_USER_COLUMN_FIELD_MATCH ={
-															{ "tip",      "CNP", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare"},			//campuri obiect
-															{ "Tip Cont", "CNP", "Nume", "Prenume", "Email", "Adresa", "Titlu/Grupa", "Forma Finantare"}	//nume coloane
+															{ "tip",      "CNP", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare", "contractCompletat"},			//campuri obiect
+															{ "Tip Cont", "CNP", "Nume", "Prenume", "Email", "Adresa", "Titlu/Grupa", "Forma Finantare", "contract"}	//nume coloane
 														};
 	final public static String[][]	ADMIN_DISCIPLINA_COLUMN_FIELD_MATCH		= {
-															{ "cod", "denumire", "tip", "nrOre", "pctCredit", "examinare", "anStudiu", "semestru"},	//campuri obiect
-															{ "Cod Disciplina", "Denumire", "Tip", "Numar Ore", "Puncte Credit", "Examinare", "An Studiu", "Semestru"}	//nume coloane
+															{ "cod", "denumire", "tip", "nrOre", "pctCredit", "examinare", "anStudiu", "semestru", "grup"},	//campuri obiect
+															{ "Cod Disciplina", "Denumire", "Tip", "Numar Ore", "Puncte Credit", "Examinare", "An Studiu", "Semestru", "Grup"}	//nume coloane
 														};
 	final public static String[][]	ADMIN_ACTIVITATE_COLUMN_FIELD_MATCH 	= {
 															{ "id", "codDisciplina" , "cnpCadruDidactic",   "tip"},				//campuri obiect
@@ -76,7 +76,10 @@ public class Constants {
 															{ "grupa", "codDisciplina",  "data", "ora", "sala"},	//campuri obiect
 															{ "Grupa", "Cod Disciplina", "Data", "Ora", "Sala"}		//nume coloane
 														};
-
+	final public static String[][]	ADMIN_CATALOG_COLUMN_FIELD_MATCH 	= {
+															{ "codDisciplina", "cnpStudent", "data", "nota"},		//campuri obiect
+															{ "Cod Disciplina", "CNP Student", "Data", "Nota"}		//nume coloane
+														};
 	
 	/*******FIELD SIZES*********/
 	final public static int FIELD_SIZE_GRUPA=6;

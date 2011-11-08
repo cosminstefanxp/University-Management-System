@@ -21,14 +21,8 @@ public class Utilizator {
 	public String adresa;
 	public String titlu_grupa;
 	public Finantare finantare;
+	public boolean contractCompletat;
 	
-	@Override
-	public String toString() {
-		return "Utilizator [CNP=" + CNP + ", adresa=" + adresa + ", email=" + email
-				+ ", finantare=" + finantare + ", nume=" + nume + ", parola=" + parola
-				+ ", prenume=" + prenume + ", tip=" + tip + ", titlu_grupa=" + titlu_grupa + "]";
-	}
-
 	@Override
 	public Utilizator clone() {
 		Utilizator utilizator=new Utilizator();

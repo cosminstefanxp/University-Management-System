@@ -16,4 +16,11 @@ public class Orar {
 	public int idActivitate;
 	public Frecventa frecventa;
 	public String grupa;
+	
+	@Override
+	public String toString() {
+		return "Orar [durata=" + durata + ", frecventa=" + frecventa + ", grupa=" + grupa
+				+ ", idActivitate=" + idActivitate + ", ora=" + ora + ", sala=" + sala + ", zi="
+				+ zi + "]";
+	}
 }

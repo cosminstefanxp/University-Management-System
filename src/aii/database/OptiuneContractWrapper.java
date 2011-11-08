@@ -6,30 +6,30 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import aii.NotaCatalog;
+import aii.Orar;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 /**
- * The Class that wraps the access to database for NotaCatalog Objects.
+ * The Class that wraps the access to database for 'Orar' Objects.
  */
-public class NotaCatalogWrapper extends ObjectWrapper<NotaCatalog> {
+public class OptiuneContractWrapper extends ObjectWrapper<Orar> {
 
-	public NotaCatalogWrapper() {
-		super(NotaCatalog.class, Constants.CATALOG_FIELD_MATCH, Constants.CATALOG_TABLE_PK_COUNT);
+	public OptiuneContractWrapper() {
+		super(Orar.class, Constants.ORAR_FIELD_MATCH, Constants.ORAR_TABLE_PK_COUNT);
 	}
 
 	/**
-	 * Gets the nota that match a certain where clause.
+	 * Gets all the orar that match a certain where clause.
 	 *
 	 * @param whereClause the where clause
-	 * @return the note
+	 * @return the orare
 	 */
-	public ArrayList<NotaCatalog> getNoteCatalog(String whereClause)
+	public ArrayList<Orar> getOrare(String whereClause)
 	{
-		ArrayList<NotaCatalog> note = null;
+		ArrayList<Orar> orare = null;
 		try {
-			note=this.getObjects(Constants.CATALOG_TABLE, whereClause);
+			orare=this.getObjects(Constants.ORAR_TABLE, whereClause);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
@@ -42,39 +42,38 @@ public class NotaCatalogWrapper extends ObjectWrapper<NotaCatalog> {
 			return null;
 		}
 		
-		return note;
+		return orare;
 	}
 	
 	/**
-	 * Gets the nota that has a given cod.
+	 * Gets the orar that has a given 'zi','sala','ora'.
 	 *
-	 * @param codDisciplina the cod disciplina
-	 * @param cnpStudent the cnp student
-	 * @return the nota
+	 * @param cod the cod
+	 * @return the orar
 	 */
-	public NotaCatalog getNotaCatalog(int codDisciplina, String cnpStudent)
+	public Orar getOrar(String zi, int ora, String sala)
 	{
-		List<NotaCatalog> note=this.getNoteCatalog("codDisciplina=\'"+codDisciplina+"\' AND cnpStudent=\'"+cnpStudent+"\'");
+		List<Orar> orare=this.getOrare("zi=\'"+zi+"\' AND ora=\'"+ora+"\' AND sala=\'"+sala+"\'");
 		
-		if(note==null || note.size()!=1)
+		if(orare==null || orare.size()!=1)
 			return null;
 		
-		return note.get(0);
+		return orare.get(0);
 	}
 	
 	/**
-	 * Inserts a nota in the database.
+	 * Inserts an orar in the database.
 	 *
-	 * @param nota the nota
+	 * @param orar the orar
 	 * @return true, if successful
 	 */
-	public boolean insertNotaCatalog(NotaCatalog nota)
+	public boolean insertOrar(Orar orar)
 	{
 		try {
-			this.insertObject(Constants.CATALOG_TABLE, nota);
+			this.insertObject(Constants.ORAR_TABLE, orar);
 		} catch (MySQLIntegrityConstraintViolationException e){
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Aveti campuri invalide: "+e.getMessage());	
+			JOptionPane.showMessageDialog(null,"Aveti deja o intrare in baza de date pentru aceeasi grupa si pentru aceeasi activitate.");	
 			return false;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -93,15 +92,15 @@ public class NotaCatalogWrapper extends ObjectWrapper<NotaCatalog> {
 	
 	
 	/**
-	 * Deletes a nota from the database.
+	 * Deletes an orar from the database.
 	 *
-	 * @param nota the nota
+	 * @param orar the orar
 	 * @return true, if successful
 	 */
-	public boolean deleteNotaCatalog(NotaCatalog nota)
+	public boolean deleteOrar(Orar orar)
 	{
 		try {
-			this.deleteObject(Constants.CATALOG_TABLE, nota);
+			this.deleteObject(Constants.ORAR_TABLE, orar);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
@@ -118,19 +117,19 @@ public class NotaCatalogWrapper extends ObjectWrapper<NotaCatalog> {
 	}
 	
 	/**
-	 * Updates a nota in the database.
+	 * Updates an orar in the database.
 	 *
-	 * @param notaVeche the nota veche
-	 * @param notaNoua the nota noua
+	 * @param orarVechi the orar veche
+	 * @param orarNou the orar noua
 	 * @return true, if successful
 	 */
-	public boolean updateNotaCatalog(NotaCatalog notaVeche, NotaCatalog notaNoua)
+	public boolean updateOrar(Orar orarVechi, Orar orarNou)
 	{
 		try {
-			this.updateObject(Constants.CATALOG_TABLE, notaVeche, notaNoua);
+			this.updateObject(Constants.ORAR_TABLE, orarVechi, orarNou);
 		} catch (MySQLIntegrityConstraintViolationException e){
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Aveti deja introdusa o nota pentru acelasi student, la aceasta materie, in aceeasi data.");	
+			JOptionPane.showMessageDialog(null,"Aveti deja o intrare in baza de date pentru aceeasi grupa si pentru aceeasi activitate.");		
 			return false;
 		} catch (SQLException e) {
 			e.printStackTrace();

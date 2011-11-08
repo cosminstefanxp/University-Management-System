@@ -134,6 +134,13 @@ public class AuthenticationFrame implements ActionListener{
 				mainFrame=new SecretaryFrame(utilizator);
 				mainFrame.setVisible(true);
 				break;
+			case STUDENT:
+				mainFrame.dispose();
+				mainFrame=new StudentFrame(utilizator);
+				mainFrame.setVisible(true);
+				break;
+			default:
+				JOptionPane.showMessageDialog(null, "Tipul utilizatorului necunoscut");
 			}
 		}
 	}

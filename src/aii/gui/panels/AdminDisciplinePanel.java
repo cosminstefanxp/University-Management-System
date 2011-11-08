@@ -57,6 +57,8 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 	private JSpinner spinnerPctCredit;
 	private JSpinner spinnerNrOre;
 	private JComboBox comboBoxTip;
+	private JLabel lblGrupDisciplina;
+	private JSpinner spinnerGrup;
 
 	/**
 	 * Create the panel.
@@ -186,6 +188,17 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 		spinnerSemestru.setBounds(731, 43, 55, 28);
 		panelEditMainInfo.add(spinnerSemestru);
 		
+		lblGrupDisciplina = new JLabel("Grup: *");
+		lblGrupDisciplina.setToolTipText("Grupul este relevant doar in cazul in care materia este optionala");
+		lblGrupDisciplina.setHorizontalAlignment(SwingConstants.TRAILING);
+		lblGrupDisciplina.setBounds(475, 129, 49, 15);
+		panelEditMainInfo.add(lblGrupDisciplina);
+		
+		spinnerGrup = new JSpinner();
+		spinnerGrup.setModel(new SpinnerNumberModel(0, 0, 10, 1));
+		spinnerGrup.setBounds(542, 123, 48, 28);
+		panelEditMainInfo.add(spinnerGrup);
+		
 		btnSalveaza = new JButton("Salveaza");
 		btnSalveaza.addActionListener(this);
 		btnSalveaza.setBounds(681, 203, 117, 25);
@@ -206,6 +219,8 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 		textFieldCodDisciplina.setText(null);
 		textFieldCodDisciplina.setEnabled(false);	//if we create a new entity, we let the PK to be auto incremented
 		textFieldCodDisciplina.setText("AutoGenerat");
+		
+
 		
 		
 	}
@@ -233,6 +248,7 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 			spinnerNrOre.setValue(1);
 			spinnerPctCredit.setValue(1);
 			spinnerSemestru.setValue(1);
+			spinnerGrup.setValue(1);
 			
 			textFieldCodDisciplina.setText("AutoGenerat");
 			
@@ -249,6 +265,7 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 		spinnerNrOre.setValue(object.nrOre);
 		spinnerPctCredit.setValue(object.pctCredit);
 		spinnerSemestru.setValue(object.semestru);
+		spinnerGrup.setValue(object.grup);
 		
 		statusLbl.setText("Modfica datele disciplinei "+object.denumire+" si apasa 'Salveaza' pentru a face permanente modificarile.");
 	}
@@ -314,6 +331,10 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 			object.nrOre=(Integer) spinnerNrOre.getValue();
 			object.pctCredit=(Integer) spinnerPctCredit.getValue();
 			object.semestru=(Integer) spinnerSemestru.getValue();
+			if(object.tip==TipDisciplina.Optional)
+				object.grup=(Integer) spinnerGrup.getValue();
+			else
+				object.grup=0;
 			
 			//If it's a new entry
 			if(table.getSelectedRow()==-1)
@@ -331,10 +352,8 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 				try {
 					objects=disciplinaDAO.getObjects(Constants.DISCIPLINA_TABLE,"cod=cod");
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} 
 				tableModel.setObjects(objects);

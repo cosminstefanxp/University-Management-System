@@ -15,12 +15,14 @@ public class Disciplina {
 	public Examinare examinare;
 	public int anStudiu;
 	public int semestru;
+	public int grup;
 	
 	@Override
 	public String toString() {
-		return "Disciplina [an=" + anStudiu + ", cod=" + cod + ", denumire=" + denumire + ", examinare="
-				+ examinare + ", nrOre=" + nrOre + ", pctCredit=" + pctCredit + ", semestru="
-				+ semestru + ", tip=" + tip + "]";
+		return "Disciplina [anStudiu=" + anStudiu + ", cod=" + cod + ", denumire=" + denumire
+				+ ", examinare=" + examinare + ", grup=" + grup + ", nrOre=" + nrOre
+				+ ", pctCredit=" + pctCredit + ", semestru=" + semestru + ", tip=" + tip + "]";
 	}
+	
 	
 }

@@ -13,4 +13,10 @@ public class Examen {
 	public int codDisciplina;
 	public String sala;
 	public String grupa;
+	
+	@Override
+	public String toString() {
+		return "Examen [codDisciplina=" + codDisciplina + ", data=" + data + ", grupa=" + grupa
+				+ ", ora=" + ora + ", sala=" + sala + "]";
+	}
 }
