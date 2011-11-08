@@ -210,7 +210,6 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 			DatabaseConnection.openConnection();
 			results=DatabaseConnection.customQueryArray(query);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return;
 		}
@@ -276,7 +275,7 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 		tableActivitati.getSelectionModel().setSelectionInterval(0, indexActivitate);
 		
 		//Set the "Tip"
-		textFieldSala.setText(object.sala);
+		textFieldSala.setText(object.sala.toUpperCase());
 		comboBoxGrupa.setSelectedItem(object.grupa);
 		comboBoxZiua.setSelectedItem(object.zi);
 		comboBoxFrecventa.setSelectedItem(object.frecventa);
@@ -344,6 +343,8 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 			object.idActivitate=activitati.get(tableActivitati.getSelectedRow()).id;
 			object.zi=(Ziua) comboBoxZiua.getSelectedItem();
 			object.ora=(Integer)spinnerOra.getValue();
+			
+			//TODO: Verificare intrepatrundere cu alte ore
 			
 			//If it's a new entry
 			if(table.getSelectedRow()==-1)

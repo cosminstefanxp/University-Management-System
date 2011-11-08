@@ -177,7 +177,7 @@ public class AdminGrupePanel extends MainPanelAbstract implements ListSelectionL
 			
 			Utilizator object=objects.get(table.getSelectedRow());
 				
-			object.titlu_grupa=textFieldGrupa.getText();
+			object.titlu_grupa=textFieldGrupa.getText().toUpperCase();
 			if(!utilizatorDAO.UpdateUtilizator(object, object))
 				return;
 				

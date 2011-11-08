@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
@@ -25,13 +27,13 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
-import aii.Activitate;
-import aii.Orar;
+import aii.Disciplina;
+import aii.Examen;
 import aii.Utilizator;
-import aii.database.ActivitateWrapper;
 import aii.database.Constants;
 import aii.database.DatabaseConnection;
-import aii.database.OrarWrapper;
+import aii.database.DisciplinaWrapper;
+import aii.database.ExamenWrapper;
 import aii.gui.tools.FixedSizeDocument;
 import aii.gui.tools.ObjectTableModel;
 
@@ -42,12 +44,12 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 	@SuppressWarnings("unused")
 	private Utilizator utilizator;
 	private JTable table;
-	private ArrayList<Orar> objects;
-	private ArrayList<Activitate> activitati;
-	private ObjectTableModel<Orar> mainTableModel;
-	private ObjectTableModel<Activitate> activitatiTableModel;
-	private OrarWrapper orareDAO=new OrarWrapper();
-	private ActivitateWrapper activitatiDAO=new ActivitateWrapper();
+	private ArrayList<Examen> objects;
+	private ArrayList<Disciplina> discipline;
+	private ObjectTableModel<Examen> mainTableModel;
+	private ObjectTableModel<Disciplina> disciplineTableModel;
+	private ExamenWrapper exameneDAO=new ExamenWrapper();
+	private DisciplinaWrapper disciplineDAO=new DisciplinaWrapper();
 	
 	
 	private JLabel statusLbl;
@@ -55,7 +57,7 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 	private JButton btnSterge;
 	private JButton btnAdauga;
 	private JPanel panelEditInfo;
-	private JTable tableActivitati;
+	private JTable tableDiscipline;
 	private JTextField textFieldSala;
 	private JSpinner spinnerOra;
 	private JComboBox comboBoxGrupa;
@@ -73,18 +75,18 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 		
 		//Get the objects and prepare the table models		
 		try {
-			//Table model for "Orare"
-			objects=orareDAO.getObjects(Constants.ORAR_TABLE,"zi=zi");
-			mainTableModel=new ObjectTableModel<Orar>(Orar.class,
+			//Table model for "Examen"
+			objects=exameneDAO.getObjects(Constants.EXAMEN_TABLE,"ora=ora");
+			mainTableModel=new ObjectTableModel<Examen>(Examen.class,
 					objects,
-					Constants.ADMIN_ORAR_COLUMN_FIELD_MATCH[1],
-					Constants.ADMIN_ORAR_COLUMN_FIELD_MATCH[0]);
-			//Table model for "Activitate"
-			activitati=activitatiDAO.getObjects(Constants.ACTIVITATE_TABLE,"id=id");
-			activitatiTableModel=new ObjectTableModel<Activitate>(Activitate.class,
-					activitati,
-					new String[] {"ID","Cod Disciplina", "CNP Cadru Didactic"},
-					new String[] {"id","codDisciplina", "cnpCadruDidactic"});			
+					Constants.ADMIN_EXAMEN_COLUMN_FIELD_MATCH[1],
+					Constants.ADMIN_EXAMEN_COLUMN_FIELD_MATCH[0]);
+			//Table model for "Discipline"
+			discipline=disciplineDAO.getObjects(Constants.DISCIPLINA_TABLE,"cod=cod");
+			disciplineTableModel=new ObjectTableModel<Disciplina>(Disciplina.class,
+					discipline,
+					new String[] {"Cod","Denumire"},
+					new String[] {"cod","denumire"});			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -108,7 +110,7 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 		panelEdit.setLayout(null);
 		
 		panelEditInfo = new JPanel();
-		panelEditInfo.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Setari Orar", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
+		panelEditInfo.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Setari Examene", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
 		panelEditInfo.setBounds(7, -4, 756, 308);
 		panelEdit.add(panelEditInfo);
 		panelEditInfo.setLayout(null);
@@ -117,14 +119,14 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 		lblNewLabel.setBounds(11, 29, 273, 15);
 		panelEditInfo.add(lblNewLabel);
 		
-		JScrollPane scrollPaneActivitate = new JScrollPane();
-		scrollPaneActivitate.setBounds(11, 52, 368, 245);
-		panelEditInfo.add(scrollPaneActivitate);
+		JScrollPane scrollPaneDiscipline = new JScrollPane();
+		scrollPaneDiscipline.setBounds(11, 52, 368, 245);
+		panelEditInfo.add(scrollPaneDiscipline);
 		
-		tableActivitati = new JTable(activitatiTableModel);
-		tableActivitati.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableActivitati.setFillsViewportHeight(true);
-		scrollPaneActivitate.setViewportView(tableActivitati);
+		tableDiscipline = new JTable(disciplineTableModel);
+		tableDiscipline.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableDiscipline.setFillsViewportHeight(true);
+		scrollPaneDiscipline.setViewportView(tableDiscipline);
 		
 		btnSalveaza = new JButton("Salveaza");
 		btnSalveaza.setBounds(621, 271, 98, 25);
@@ -209,7 +211,6 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 			DatabaseConnection.openConnection();
 			results=DatabaseConnection.customQueryArray(query);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return;
 		}
@@ -246,44 +247,46 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 		if(row==-1)
 		{
 			System.out.println("Deselectie detectata.");
-			tableActivitati.getSelectionModel().clearSelection();
+			tableDiscipline.getSelectionModel().clearSelection();
 			textFieldSala.setText(null);
 			comboBoxGrupa.setSelectedIndex(0);
-			//comboBoxZiua.setSelectedIndex(0);
-			//comboBoxFrecventa.setSelectedItem(Frecventa.Saptamanal);
+			spinnerAn.setValue(2011);
+			spinnerLuna.setValue(11);
+			spinnerZi.setValue(1);
 			spinnerOra.setValue(8);
-			//spinnerDurata.setValue(1);			
-			
-			statusLbl.setText("Seteaza campurile corespunzatori si apasa 'Salveaza' pentru a crea o noua intrare in orar.");
+		
+			statusLbl.setText("Seteaza campurile corespunzatori si apasa 'Salveaza' pentru a crea o noua programare pentru examen.");
 			return;
 		}
 		
 		//Always Visible fields
-		Orar object=objects.get(table.getSelectedRow());
+		Examen object=objects.get(table.getSelectedRow());
 		
-		//Finding the associated 'Activitate'
-		int indexActivitate=-1;
-		for(int i=0;i<activitati.size();i++)
-			if(activitati.get(i).id==object.idActivitate)
+		//Finding the associated 'Disciplina'
+		int indexDisciplina=-1;
+		for(int i=0;i<discipline.size();i++)
+			if(discipline.get(i).cod==object.codDisciplina)
 			{
-				indexActivitate=i;
+				indexDisciplina=i;
 				break;
 			}
-		if(indexActivitate==-1)
+		if(indexDisciplina==-1)
 		{
-			JOptionPane.showMessageDialog(null, "Lipseste activitatea asociata.");
+			JOptionPane.showMessageDialog(null, "Lipseste disciplina asociata.");
 			return;
 		}
-		tableActivitati.getSelectionModel().setSelectionInterval(0, indexActivitate);
+		tableDiscipline.getSelectionModel().setSelectionInterval(0, indexDisciplina);
 		
-		//Set the "Tip"
+		//Set the "Values"
 		textFieldSala.setText(object.sala);
 		comboBoxGrupa.setSelectedItem(object.grupa);
-		//comboBoxZiua.setSelectedItem(object.zi);
-		//comboBoxFrecventa.setSelectedItem(object.frecventa);
+		Calendar calendar=new GregorianCalendar();
+		calendar.setTime(object.data);
+		spinnerAn.setValue(calendar.get(Calendar.YEAR));
+		spinnerLuna.setValue(calendar.get(Calendar.MONTH)+1);
+		spinnerZi.setValue(calendar.get(Calendar.DAY_OF_MONTH));
 		spinnerOra.setValue(object.ora);
-		//spinnerDurata.setValue(object.durata);		
-
+	
 		statusLbl.setText("Modifica campurile dorite si apasa 'Salveaza' pentru a face permanente modificarile.");
 	}
 
@@ -298,24 +301,24 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 		//Adding new entities
 		if(source==btnAdauga)
 		{
-			System.out.println("Adaugam o noua intrare in orar");
+			System.out.println("Adaugam o noua intrare in programarea examenelor");
 			table.getSelectionModel().clearSelection();
-			tableActivitati.getSelectionModel().clearSelection();
+			tableDiscipline.getSelectionModel().clearSelection();
 			
-			statusLbl.setText("Seteaza campurile dorite si apasa 'Salveaza' pentru a crea o noua intrare in orar.");
+			statusLbl.setText("Seteaza campurile dorite si apasa 'Salveaza' pentru a crea o noua programare de examene.");
 		} else	
 		if(source==btnSterge)
 		{
-			System.out.println("Stergem intrarea din orar");
+			System.out.println("Stergem programarea examenului.");
 			
 			if(table.getSelectedRow()==-1)
 				return;
 			
 			//Delete the orar
-			if(!orareDAO.deleteOrar(objects.get(table.getSelectedRow())))
+			if(!exameneDAO.deleteExamen(objects.get(table.getSelectedRow())))
 				return;
 			
-			statusLbl.setText("Orarul pentru "+objects.get(table.getSelectedRow()).grupa+"la activitate "+objects.get(table.getSelectedRow()).idActivitate+" a fost sters.");
+			statusLbl.setText("Examenul pentru "+objects.get(table.getSelectedRow()).grupa+" la disciplina "+objects.get(table.getSelectedRow()).codDisciplina+" a fost sters.");
 			
 			//Update JTable
 			objects.remove(table.getSelectedRow());
@@ -329,32 +332,36 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 			System.out.println("Salvam informatiile in DB");
 			
 			//Check fields
-			if(tableActivitati.getSelectedRow()==-1 ||
+			if(tableDiscipline.getSelectedRow()==-1 ||
 					textFieldSala.getText().isEmpty())
 			{
-				JOptionPane.showMessageDialog(null, "Va rugam sa completati toate campurile si sa alegeti o activitate.","Incomplet",JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Va rugam sa completati toate campurile si sa alegeti o disciplina.","Incomplet",JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			
 			//Create the new object
-			Orar object=new Orar();
-			//object.frecventa=(Frecventa) comboBoxFrecventa.getSelectedItem();
-			//object.durata=(Integer) spinnerDurata.getValue();
-			object.grupa=(String) comboBoxGrupa.getSelectedItem();
-			object.sala=textFieldSala.getText();
-			object.idActivitate=activitati.get(tableActivitati.getSelectedRow()).id;
-			//object.zi=(Ziua) comboBoxZiua.getSelectedItem();
+			Examen object=new Examen();
+			object.grupa=comboBoxGrupa.getSelectedItem().toString().toUpperCase();
+			object.sala=textFieldSala.getText().toUpperCase();
+			object.codDisciplina=discipline.get(tableDiscipline.getSelectedRow()).cod;
+			GregorianCalendar calendar=new GregorianCalendar();
+			calendar.set(Calendar.YEAR, (Integer) spinnerAn.getValue());
+			calendar.set(Calendar.MONTH, (Integer) spinnerLuna.getValue()-1);
+			calendar.set(Calendar.DAY_OF_MONTH, (Integer) spinnerZi.getValue());
+			object.data=new java.sql.Date(calendar.getTime().getTime());
 			object.ora=(Integer)spinnerOra.getValue();
+			
+			//TODO: Verificare intrepatrundere cu alte examene
 			
 			//If it's a new entry
 			if(table.getSelectedRow()==-1)
 			{
-				//Insert the new orar
-				System.out.println("Intrare noua in orar: "+object);
-				if(!orareDAO.insertOrar(object))
+				//Insert the new examen
+				System.out.println("Intrare noua in tabela de examene: "+object);
+				if(!exameneDAO.insertExamen(object))
 					return;
 			
-				statusLbl.setText("S-a creat o noua intrare in orar.");
+				statusLbl.setText("S-a creat o noua programare de examen.");
 				
 				objects.add(object);
 				mainTableModel.setObjects(objects);
@@ -364,11 +371,11 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 			else //If it's an old entry
 			{
 				
-				System.out.println("Orar existent -> modificat in " + object);
-				if(!orareDAO.updateOrar(objects.get(table.getSelectedRow()), object))
+				System.out.println("Examen existent -> modificat in " + object);
+				if(!exameneDAO.updateExamen(objects.get(table.getSelectedRow()), object))
 					return;
 				
-				statusLbl.setText("Orarul pentru grupa "+object.grupa +" la activitatea "+object.idActivitate+" a fost actualizat.");
+				statusLbl.setText("Examenul pentru grupa "+object.grupa +" la disciplina "+object.codDisciplina+" a fost actualizat.");
 				
 				//Update JTable
 				int curSelected=table.getSelectedRow();

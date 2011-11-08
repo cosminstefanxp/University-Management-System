@@ -1,6 +1,7 @@
 package aii;
 
-import java.util.Date;
+import java.sql.Date;
+
 
 /**
  * The Class Examen.

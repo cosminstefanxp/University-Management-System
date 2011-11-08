@@ -23,6 +23,7 @@ import net.miginfocom.swing.MigLayout;
 import aii.Utilizator;
 import aii.Utilizator.Tip;
 import aii.gui.panels.AdminActivitatiPanel;
+import aii.gui.panels.AdminCatalogPanel;
 import aii.gui.panels.AdminDisciplinePanel;
 import aii.gui.panels.PersonalDataPanel;
 
@@ -190,7 +191,7 @@ public class TeacherFrame extends JFrame implements ActionListener{
         		System.out.println("Meniu: Administrare Catalog");
         		
         		contentPane.remove(mainPanel);
-        		//mainPanel=new AdminUsersPanel(utilizator, statusLbl);
+        		mainPanel=new AdminCatalogPanel(utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -236,7 +237,7 @@ public class TeacherFrame extends JFrame implements ActionListener{
         		System.out.println("Buton: Catalog");
         		
         		contentPane.remove(mainPanel);
-        		//mainPanel=new AdminUsersPanel(utilizator, statusLbl);
+        		mainPanel=new AdminCatalogPanel(utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
