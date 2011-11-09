@@ -59,6 +59,7 @@ public class AdminContractStudiiPanel extends MainPanelAbstract implements Actio
 		{
 			JOptionPane.showMessageDialog(null,"Nu sunteti inregistrat la nici o grupa!");
 			optionaleTableModel=new ArrayList<ObjectTableModel<Disciplina>>();	//init in case the preparation fails
+			btnSalveaza.setEnabled(false);
 			return;
 		}
 		studyYear = utilizator.titlu_grupa.charAt(1) - '0';

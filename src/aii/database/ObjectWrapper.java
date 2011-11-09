@@ -25,6 +25,10 @@ public class ObjectWrapper<T> {
 	
 	
 		
+	public void setNameMatch(String[][] nameMatch) {
+		this.nameMatch = nameMatch;
+	}
+
 	/**
 	 * Instantiates a new object wrapper.
 	 *

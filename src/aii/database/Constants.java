@@ -37,6 +37,10 @@ public class Constants {
 																{ "id_activitate", "grupa", "zi", "ora", "sala", "durata", "frecventa"},	//campuri baza de date
 																{ "idActivitate",  "grupa",  "zi", "ora", "sala", "durata", "frecventa"}		//campuri obiect
 															};
+	final public static String[][]	ORAR_STUDENT_FIELD_MATCH = {
+																{ "grupa", "zi", "ora", "sala", "durata", "frecventa", "denumire", "tip"},						//campuri baza de date
+																{ "grupa", "zi", "ora", "sala", "durata", "frecventa", "denumireDisciplina", "tipActivitate"}	//campuri obiect
+															};
 	final public static int			ORAR_TABLE_PK_COUNT	= 2;	//atat 'id_activitate' cat si 'grupa' fac parte din cheie	
 	
 	/*******EXAMEN********/
@@ -87,6 +91,10 @@ public class Constants {
 															{ "cod", "denumire", "tip", "nrOre", "pctCredit", "examinare"},	//campuri obiect
 															{ "Cod Disciplina", "Denumire", "Tip", "Numar Ore", "Puncte Credit", "Examinare"}	//nume coloane
 														};
+	final public static String[][]	VIEW_ORAR_STUDENT_COLUMN_FIELD_MATCH = {
+															{ "zi", "ora", "sala", "denumireDisciplina", "durata", "frecventa",  "tipActivitate", "grupa"},	//campuri obiect
+															{ "Zi", "Ora", "Sala", "Denumire", "Durata (h)", "Frecventa",  "Tip", "Grupa"}	//nume coloane
+														};	
 	
 	
 	/*******FIELD SIZES*********/

@@ -20,6 +20,7 @@ import net.miginfocom.swing.MigLayout;
 import aii.Utilizator;
 import aii.gui.panels.AdminContractStudiiPanel;
 import aii.gui.panels.PersonalDataPanel;
+import aii.gui.panels.ViewOrarPanel;
 
 /**
  * The Administrator frame that contains all the features that the admin uses.
@@ -163,7 +164,7 @@ public class StudentFrame extends JFrame implements ActionListener{
         		System.out.println("Meniu: Vizualizare Orar");
         		
         		contentPane.remove(mainPanel);
-        		//mainPanel=new AdminOrarePanel(utilizator, statusLbl);
+        		mainPanel=new ViewOrarPanel(utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -230,7 +231,7 @@ public class StudentFrame extends JFrame implements ActionListener{
         		System.out.println("Buton: Vizualizare Orar");
         		
         		contentPane.remove(mainPanel);
-        		//mainPanel=new AdminOrarePanel(utilizator, statusLbl);
+        		mainPanel=new ViewOrarPanel(utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		

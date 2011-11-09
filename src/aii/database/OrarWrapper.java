@@ -46,6 +46,43 @@ public class OrarWrapper extends ObjectWrapper<Orar> {
 	}
 	
 	/**
+	 * Gets all the orar entries that are relevant for a given user
+	 *
+	 * @return the orare
+	 */
+	public ArrayList<Orar> getOrareParticularizat(String cnpStudent, int anStudiu, String grupa, int semestru)
+	{
+		String fields="o.zi, o.ora, o.sala, d.denumire, o.grupa, o.frecventa, o.durata, a.tip";
+		String from=Constants.CONTRACT_TABLE+" c, "+Constants.DISCIPLINA_TABLE+" d, "+Constants.ORAR_TABLE+" o, "+Constants.ACTIVITATE_TABLE+" a";
+		String where="c.cnp_student=\'"+cnpStudent+"\'" +
+				" AND c.an_studiu=\'"+anStudiu+"\'" +
+				" AND o.grupa=\'"+grupa+"\'" +
+				" AND d.semestru=\'"+semestru+"\'" +
+				" AND o.id_activitate=a.id" +
+				" AND a.cod_disciplina=c.cod_disciplina" +
+				" AND c.cod_disciplina=d.cod";
+		String extra="GROUP BY o.grupa, d.denumire ORDER BY o.zi";
+			
+		
+		ArrayList<Orar> orare = null;
+		try {
+			orare=this.getObjects(fields, from, where, extra);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"accesului la baza de date!");
+			return null;
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		
+		return orare;
+	}	
+	
+	/**
 	 * Gets the orar that has a given 'zi','sala','ora'.
 	 *
 	 * @param cod the cod

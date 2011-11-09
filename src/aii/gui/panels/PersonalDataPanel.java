@@ -162,6 +162,7 @@ public class PersonalDataPanel extends MainPanelAbstract implements ActionListen
 			comboBoxFinantare.setBounds(5, 187, 260, 34);
 			comboBoxFinantare.setModel(new DefaultComboBoxModel(Utilizator.Finantare.values()));
 			comboBoxFinantare.setSelectedItem(utilizator.finantare);
+			comboBoxFinantare.setEnabled(false);
 			panelSideInfo.add(comboBoxFinantare);
 			
 			JLabel lblTitluGrupa = new JLabel("Grupa:");
@@ -171,6 +172,7 @@ public class PersonalDataPanel extends MainPanelAbstract implements ActionListen
 			
 			textFieldTitluGrupa = new JTextField(utilizator.titlu_grupa);
 			textFieldTitluGrupa.setBounds(5, 120, 260, 28);
+			textFieldTitluGrupa.setEnabled(false);
 			panelSideInfo.add(textFieldTitluGrupa);
 			textFieldTitluGrupa.setColumns(10);	
 			textFieldTitluGrupa.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_GRUPA));
