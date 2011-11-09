@@ -2,7 +2,6 @@ package aii.database;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -19,6 +18,37 @@ public class OptiuneContractWrapper extends ObjectWrapper<Disciplina> {
 		super(Disciplina.class, Constants.DISCIPLINA_FIELD_MATCH, Constants.DISCIPLINA_TABLE_PK_COUNT);
 	}
 
+	
+	/**
+	 * Gets all the discipline that have been chosen by the student in his contract.
+	 *
+	 * @param cnpStudent the cnp student
+	 * @param anStudiu the an studiu
+	 * @return the orare
+	 */
+	public ArrayList<Disciplina> getOptiuni(String cnpStudent, int anStudiu)
+	{
+		ArrayList<Disciplina> discipline=new ArrayList<Disciplina>();
+		String fields = "b.*";
+		String from = Constants.CONTRACT_TABLE+" a, "+ Constants.DISCIPLINA_TABLE+" b ";
+		String whereClause =" a.cod_disciplina=b.cod AND a.an_studiu=\'"+anStudiu+"\' AND cnp_student=\'"+cnpStudent+"\' ";
+		try {
+			discipline=this.getObjects(fields, from, whereClause, null);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"accesului la baza de date!");
+			return null;
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		
+		return discipline;
+	}
+	
 	/**
 	 * Inserts an optiune in the database, starting from a Disciplina.
 	 *

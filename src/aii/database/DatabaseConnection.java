@@ -87,7 +87,34 @@ public class DatabaseConnection {
 		
 		
 		return result;
-	}	
+	}
+	
+	/**
+	 * Gets given fields from given tables, using the given where clause and adding the given extra parameters.
+	 * Equivalent to: SELECT fields FROM table [WHERE where [extra]]
+	 *
+	 * @param fields the fields to extract
+	 * @param tables the tables to query
+	 * @param where the where clause
+	 * @param extra the extra parameters, such as ORDER BY, GROUP BY, etc
+	 * @return the result
+	 */
+	public static ResultSet getCustom(String fields, String tables, String where, String extra) throws SQLException
+	{
+		openConnection();
+		
+		String expression = "SELECT "+fields+" FROM " + tables;
+		if(where!=null)
+			expression+= " WHERE " + where;
+		if(extra!=null)
+			expression+=" "+extra;
+		expression+=";";
+		
+		System.out.println("S-a apelat expresia SQL '"+expression+"'");
+		ResultSet result = statement.executeQuery(expression);
+		
+		return result;		
+	}
 	
 	/**
 	 * Performs a custom query and returns a result set with the results.

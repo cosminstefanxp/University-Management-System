@@ -40,30 +40,22 @@ public class ObjectWrapper<T> {
 		this.nameMatch = nameMatch;
 		this.privateKeyCount=privateKeyCount;
 	}
-
-
+	
 	/**
-	 * Creates a list of objects, by querying the database and then building Java objects from the database fields
+	 * Parses the result set entries, create the objects and insert them in the list
 	 *
-	 * @param table the database table containing the data
-	 * @param where the where clause that is used to restrict the number of fields
-	 * @return the list of objects
+	 * @param entries the result set entries
+	 * @return the array list with the constructed objects
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws IllegalAccessException the illegal access exception
 	 * @throws SQLException the sQL exception
 	 * @throws InstantiationException the instantiation exception
-	 * @throws IllegalAccessException the illegal access exception
 	 * @throws SecurityException the security exception
 	 * @throws NoSuchFieldException the no such field exception
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<T> getObjects(String table, String where) throws SQLException,
-			InstantiationException, IllegalAccessException, SecurityException, NoSuchFieldException 
-		{
-		ResultSet entries=null;
-		
-		//Get the result set from the database
-		DatabaseConnection.openConnection();
-		entries=DatabaseConnection.getRestrictedTable(table, where);			
-		
+	private ArrayList<T> parseResultSet(ResultSet entries) throws IllegalArgumentException, IllegalAccessException, SQLException, InstantiationException, SecurityException, NoSuchFieldException
+	{
 		//Parse the result set entries, create the objects and insert them in the list
 		ArrayList<T> objects=new ArrayList<T>();
 		while (entries.next()) 
@@ -104,6 +96,64 @@ public class ObjectWrapper<T> {
 			objects.add(instance);
 		}
 		
+		return objects;
+	}
+
+
+	/**
+	 * Creates a list of objects, by querying the database and then building Java objects from the database fields
+	 *
+	 * @param table the database table containing the data
+	 * @param where the where clause that is used to restrict the number of fields
+	 * @return the list of objects
+	 * @throws SQLException the sQL exception
+	 * @throws InstantiationException the instantiation exception
+	 * @throws IllegalAccessException the illegal access exception
+	 * @throws SecurityException the security exception
+	 * @throws NoSuchFieldException the no such field exception
+	 */
+	public ArrayList<T> getObjects(String table, String where) throws SQLException,
+			InstantiationException, IllegalAccessException, SecurityException, NoSuchFieldException 
+		{
+		ResultSet entries=null;
+		
+		//Get the result set from the database
+		DatabaseConnection.openConnection();
+		entries=DatabaseConnection.getRestrictedTable(table, where);			
+		
+		//Parse the results
+		ArrayList<T> objects=parseResultSet(entries);
+		
+		System.out.println("S-au obtinut obiectele:" + objects.toString());
+		return objects;
+	}
+	
+	/**
+	 * Gets given fields from given tables and creates the associated objects, using the given where clause and adding the given extra parameters.
+	 * Equivalent to: SELECT fields FROM table [WHERE where [extra]]
+	 *
+	 * @param fields the fields to get from table
+	 * @param tables the tables to query
+	 * @param where the where clause - can be null
+	 * @param extra the extra clauses - can be null
+	 * @return the objects that are build using data from the database
+	 * @throws SQLException the sQL exception
+	 * @throws InstantiationException the instantiation exception
+	 * @throws IllegalAccessException the illegal access exception
+	 * @throws SecurityException the security exception
+	 * @throws NoSuchFieldException the no such field exception
+	 */
+	public ArrayList<T> getObjects(String fields, String tables, String where, String extra) throws SQLException,
+			InstantiationException, IllegalAccessException, SecurityException, NoSuchFieldException {
+		ResultSet entries = null;
+
+		// Get the result set from the database
+		DatabaseConnection.openConnection();
+		entries = DatabaseConnection.getCustom(fields, tables, where, extra);
+
+		// Parse the results
+		ArrayList<T> objects = parseResultSet(entries);
+
 		System.out.println("S-au obtinut obiectele:" + objects.toString());
 		return objects;
 	}

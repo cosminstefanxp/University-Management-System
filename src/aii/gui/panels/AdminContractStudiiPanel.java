@@ -22,6 +22,7 @@ import aii.Utilizator;
 import aii.database.Constants;
 import aii.database.DisciplinaWrapper;
 import aii.database.OptiuneContractWrapper;
+import aii.database.UtilizatorWrapper;
 import aii.gui.tools.ObjectTableModel;
 
 
@@ -65,8 +66,11 @@ public class AdminContractStudiiPanel extends MainPanelAbstract implements Actio
 		
 		//Get the objects		
 		try {
-			//Get all the discipline
-			discipline=disciplineDAO.getObjects(Constants.DISCIPLINA_TABLE,"an_studiu=\'"+studyYear+"\'");
+			if(!utilizator.contractCompletat)
+				//Get all the discipline
+				discipline=disciplineDAO.getObjects(Constants.DISCIPLINA_TABLE,"an_studiu=\'"+studyYear+"\'");
+			else
+				discipline=optiuniDAO.getOptiuni(utilizator.CNP, studyYear);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -128,12 +132,17 @@ public class AdminContractStudiiPanel extends MainPanelAbstract implements Actio
 	public AdminContractStudiiPanel(Utilizator utilizator, JLabel statusLbl) {
 		this.utilizator=utilizator;
 		this.statusLbl=statusLbl;
-		this.statusLbl.setText("Completare contract studii. Te rugam selecteaza materiile optionale (cate una pe fiecare grup) si facultative pe care le doresti si apasa Salveaza.");
+		if(this.utilizator.contractCompletat)
+			this.statusLbl.setText("Contractul tau de studii a fost completat si nu mai poate fi modificat!");
+		else
+			this.statusLbl.setText("Completare contract studii. Te rugam selecteaza materiile optionale (cate una pe fiecare grup) si facultative pe care le doresti si apasa Salveaza.");
 		
 		//GUI
 		setLayout(new MigLayout("", "[638.00px:1022.00px,grow]", "[][469.00,grow][51.00px]"));
 		
 		lbl1 = new JLabel("Acesta este contractul tau de studii pentru anul scolar curent:");
+		if(this.utilizator.contractCompletat)
+			lbl1.setText("Acesta este contractul tau de studii completat pentru anul scolar curent:");
 		add(lbl1, "cell 0 0");
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
@@ -147,7 +156,9 @@ public class AdminContractStudiiPanel extends MainPanelAbstract implements Actio
 		tableObligatorii = new JTable(obligatoriiTableModel);
 		tableObligatorii.setEnabled(false);
 		tableObligatorii.setRowSelectionAllowed(false);
-		tableObligatorii.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableObligatorii.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		if(!utilizator.contractCompletat)
+			tableObligatorii.getSelectionModel().setSelectionInterval(0, disciplineObligatorii.size()-1);
 		tableObligatorii.setFillsViewportHeight(true);
 		scrollPaneObligatorii.setViewportView(tableObligatorii);
 		
@@ -162,6 +173,10 @@ public class AdminContractStudiiPanel extends MainPanelAbstract implements Actio
 			tableOptional[i] = new JTable(optionaleTableModel.get(i));
 			tableOptional[i].setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			tableOptional[i].setFillsViewportHeight(true);
+			if(utilizator.contractCompletat)
+			{
+				tableOptional[i].setEnabled(false);
+			}
 			scrollPaneOptional.setViewportView(tableOptional[i]);
 		}
 		
@@ -172,6 +187,8 @@ public class AdminContractStudiiPanel extends MainPanelAbstract implements Actio
 		tableFacultativ.setToolTipText("Foloseste CTRL+Click pentru a selecta mai multe randuri.");
 		tableFacultativ.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		tableFacultativ.setFillsViewportHeight(true);
+		if(utilizator.contractCompletat)
+			tableFacultativ.setEnabled(false);
 		scrollPaneFacultativ.setViewportView(tableFacultativ);
 		
 		JPanel panelEdit = new JPanel();
@@ -185,7 +202,10 @@ public class AdminContractStudiiPanel extends MainPanelAbstract implements Actio
 		btnSalveaza = new JButton("Salveaza");
 		lblOdataCe.setLabelFor(btnSalveaza);
 		panelEdit.add(btnSalveaza, BorderLayout.EAST);
-		btnSalveaza.addActionListener(this);
+		if(utilizator.contractCompletat)
+			btnSalveaza.setEnabled(false);
+		else
+			btnSalveaza.addActionListener(this);
 	}
 
 	/* Evenimente declansate la click pe cele butonul de salvare sau la schimbarea selectiei tipului
@@ -198,6 +218,13 @@ public class AdminContractStudiiPanel extends MainPanelAbstract implements Actio
 		
 		if(source.equals(btnSalveaza))
 		{
+			//Verificare selectii optionale
+			for(int i=0;i<tableOptional.length;i++)
+				if(tableOptional[i].getSelectedRowCount()!=1)
+				{
+					JOptionPane.showMessageDialog(null, "Trebuie aleasa cel putin o materie optionala pentru fiecare grup.", "Incomplet", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 			//Introducem disciplinele obligatorii
 			for(Disciplina disciplina : disciplineObligatorii)
 				optiuniDAO.insertOptiune(disciplina, utilizator.CNP, studyYear);
@@ -211,7 +238,20 @@ public class AdminContractStudiiPanel extends MainPanelAbstract implements Actio
 				
 			//Introducem disciplinele facultative
 			for(int i=0;i<tableFacultativ.getSelectedRowCount();i++)
-				optiuniDAO.insertOptiune(disciplineFacultative.get(tableFacultativ.getSelectedRows()[i]), utilizator.CNP, studyYear);				
+				optiuniDAO.insertOptiune(disciplineFacultative.get(tableFacultativ.getSelectedRows()[i]), utilizator.CNP, studyYear);
+			
+			//Salvam utilizatorul
+			UtilizatorWrapper utilizatorWrapper=new UtilizatorWrapper();
+			Utilizator utilizatorVechi=utilizator.clone();
+			utilizator.contractCompletat=true;
+			utilizatorWrapper.UpdateUtilizator(utilizatorVechi, utilizator);
+			
+			//Blocam optiunile
+			btnSalveaza.setEnabled(false);
+			for(int i=0;i<tableOptional.length;i++)
+				tableOptional[i].setEnabled(false);
+			tableFacultativ.setEnabled(false);
+			this.statusLbl.setText("Optiunile tale au fost salvate!");
 		}
 		
 	}
