@@ -54,6 +54,9 @@ public class Constants {
 																{ "cnpStudent",  "codDisciplina",  "data", "nota"}		//campuri obiect
 															};
 	final public static int			CATALOG_TABLE_PK_COUNT	= 3;	//atat 'cod_disciplina' cat si 'grupa' si 'data' fac parte din cheie	
+
+	/*******OPTIUNI CONTRACT********/
+	final public static String		CONTRACT_TABLE			= "optiuni_contract";
 	
 	/*******TABELE********/
 	final public static String[][]	ADMIN_USER_COLUMN_FIELD_MATCH ={
@@ -80,6 +83,11 @@ public class Constants {
 															{ "codDisciplina", "cnpStudent", "data", "nota"},		//campuri obiect
 															{ "Cod Disciplina", "CNP Student", "Data", "Nota"}		//nume coloane
 														};
+	final public static String[][]	VIEW_CONTRACT_DISCIPLINA_COLUMN_FIELD_MATCH		= {
+															{ "cod", "denumire", "tip", "nrOre", "pctCredit", "examinare"},	//campuri obiect
+															{ "Cod Disciplina", "Denumire", "Tip", "Numar Ore", "Puncte Credit", "Examinare"}	//nume coloane
+														};
+	
 	
 	/*******FIELD SIZES*********/
 	final public static int FIELD_SIZE_GRUPA=6;

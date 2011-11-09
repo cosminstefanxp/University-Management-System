@@ -107,6 +107,21 @@ public class DatabaseConnection {
 	}
 	
 	/**
+	 * Performs a custom query execution.
+	 *
+	 * @param sqlQuery the sql query
+	 * @return the result set
+	 * @throws SQLException the sQL exception
+	 */
+	public static void customExecute(String sqlQuery) throws SQLException
+	{
+		openConnection();
+		
+		System.out.println("S-a apelat expresia SQL '"+sqlQuery+"'");
+		statement.execute(sqlQuery);
+	}
+	
+	/**
 	 * Custom query array.
 	 *
 	 * @param sqlQuery the sql query

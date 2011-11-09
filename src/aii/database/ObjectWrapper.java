@@ -210,7 +210,15 @@ public class ObjectWrapper<T> {
 			//Prepare the field of the object which we are now getting info from
 			Field field=classType.getDeclaredField(nameMatch[1][i]);
 			
-			setClause+=nameMatch[0][i]+"=\'"+field.get(newObject)+"\', ";				
+			if(field.getType() == boolean.class)
+			{
+				if(field.getBoolean(newObject))
+					setClause+=nameMatch[0][i]+"=\'1\', ";
+				else
+					setClause+=nameMatch[0][i]+"=\'0\', ";
+			}
+			else
+				setClause+=nameMatch[0][i]+"=\'"+field.get(newObject)+"\', ";				
 		}
 		
 		//Clean the last ,

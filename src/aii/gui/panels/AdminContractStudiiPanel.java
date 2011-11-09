@@ -1,93 +1,123 @@
 package aii.gui.panels;
-import java.awt.Color;
+import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
-import aii.Activitate;
 import aii.Disciplina;
 import aii.Utilizator;
-import aii.Activitate.TipActivitate;
-import aii.Disciplina.TipDisciplina;
-import aii.database.ActivitateWrapper;
 import aii.database.Constants;
 import aii.database.DisciplinaWrapper;
 import aii.database.OptiuneContractWrapper;
-import aii.database.UtilizatorWrapper;
 import aii.gui.tools.ObjectTableModel;
-import javax.swing.JTabbedPane;
-import javax.swing.table.TableModel;
-import javax.swing.table.DefaultTableModel;
-import java.awt.Font;
-import java.awt.BorderLayout;
-import javax.swing.SwingConstants;
 
 
 @SuppressWarnings("serial")
-public class AdminContractStudiiPanel extends MainPanelAbstract implements ListSelectionListener, ActionListener {
+public class AdminContractStudiiPanel extends MainPanelAbstract implements ActionListener {
 	
-	@SuppressWarnings("unused")
 	private Utilizator utilizator;
 	private JTable tableObligatorii;
+	private ArrayList<Disciplina> discipline;
 	private ArrayList<Disciplina> disciplineObligatorii;
-	private ArrayList<ArrayList<Disciplina>> disciplineOptionale;
+	private Hashtable<Integer, ArrayList<Disciplina>> disciplineOptionale;
 	private ArrayList<Disciplina> disciplineFacultative;
+	
 	private ObjectTableModel<Disciplina> obligatoriiTableModel;
 	private ArrayList<ObjectTableModel<Disciplina>> optionaleTableModel;
 	private ObjectTableModel<Disciplina> facultativeTableModel;
+	
 	private OptiuneContractWrapper optiuniDAO=new OptiuneContractWrapper();
 	private DisciplinaWrapper disciplineDAO=new DisciplinaWrapper();
 	
 	private JLabel statusLbl;
 	private JButton btnSalveaza;
-	private JTable tableOptional;
+	private JTable tableOptional[];
 	private JScrollPane scrollPaneFacultativ;
 	private JTable tableFacultativ;
 	private JLabel lbl1;
-	private JLabel lbl2;
+	private JScrollPane scrollPaneOptional;
+	private int studyYear;
+	private ArrayList<Integer> keysHashtable;
 	
 	private void prepareData(Utilizator utilizator)
 	{
-		//Get the objects and prepare the table models		
+		if(utilizator.titlu_grupa==null || utilizator.titlu_grupa.isEmpty())
+		{
+			JOptionPane.showMessageDialog(null,"Nu sunteti inregistrat la nici o grupa!");
+			optionaleTableModel=new ArrayList<ObjectTableModel<Disciplina>>();	//init in case the preparation fails
+			return;
+		}
+		studyYear = utilizator.titlu_grupa.charAt(1) - '0';
+		System.out.println("Studentul este in anul "+studyYear);
+		
+		//Get the objects		
 		try {
-			//Table model for "Activitate"
-			disciplineObligatorii=activitatiDAO.getObjects(Constants.ACTIVITATE_TABLE,"id=id");
-			obligatoriiTableModel=new ObjectTableModel<Activitate>(Activitate.class,
-					disciplineObligatorii,
-					Constants.ADMIN_ACTIVITATE_COLUMN_FIELD_MATCH[1],
-					Constants.ADMIN_ACTIVITATE_COLUMN_FIELD_MATCH[0]);
-			//Table model for "Disciplina"
-			discipline=disciplineDAO.getObjects(Constants.DISCIPLINA_TABLE,"cod=cod");
-			optionaleTableModel=new ObjectTableModel<Disciplina>(Disciplina.class,
-					discipline,
-					new String[] {"Cod","Denumire"},
-					new String[] {"cod","denumire"});
-			//Table model for "Utilizator"
-			disciplineOptionale=utilizatoriDAO.getObjects(Constants.USER_TABLE,"tip=\'CADRU_DIDACTIC\' OR tip=\'SEF_CATEDRA\'");
-			facultativeTableModel=new ObjectTableModel<Utilizator>(Utilizator.class,
-					disciplineOptionale,
-					new String[] {"CNP","Nume","Prenume"},
-					new String[] {"CNP","nume","prenume"});
-			
+			//Get all the discipline
+			discipline=disciplineDAO.getObjects(Constants.DISCIPLINA_TABLE,"an_studiu=\'"+studyYear+"\'");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		//Prepare arrays
+		disciplineObligatorii=new ArrayList<Disciplina>();
+		disciplineFacultative=new ArrayList<Disciplina>();
+		disciplineOptionale=new Hashtable<Integer, ArrayList<Disciplina>>(10);
+		
+		//Iterate through the entries and put the in the proper container
+		for(Disciplina disciplina : discipline)
+		{
+			if(disciplina.tip.equals(Disciplina.TipDisciplina.Obligatoriu))
+				disciplineObligatorii.add(disciplina);
+			else if(disciplina.tip.equals(Disciplina.TipDisciplina.Facultativ))
+				disciplineFacultative.add(disciplina);
+			else
+			{
+				if(disciplineOptionale.get(disciplina.grup)==null)
+					disciplineOptionale.put(disciplina.grup, new ArrayList<Disciplina>());
+				disciplineOptionale.get(disciplina.grup).add(disciplina);
+			}
+		}
+		
+		//Create table models
+		try {
+			obligatoriiTableModel=new ObjectTableModel<Disciplina>(Disciplina.class,
+					disciplineObligatorii,
+					Constants.VIEW_CONTRACT_DISCIPLINA_COLUMN_FIELD_MATCH[1],
+					Constants.VIEW_CONTRACT_DISCIPLINA_COLUMN_FIELD_MATCH[0]);
+			
+			facultativeTableModel=new ObjectTableModel<Disciplina>(Disciplina.class,
+					disciplineFacultative,
+					Constants.VIEW_CONTRACT_DISCIPLINA_COLUMN_FIELD_MATCH[1],
+					Constants.VIEW_CONTRACT_DISCIPLINA_COLUMN_FIELD_MATCH[0]);
+			
+			optionaleTableModel=new ArrayList<ObjectTableModel<Disciplina>>();
+			keysHashtable=new ArrayList<Integer>();
+			for(Integer key : disciplineOptionale.keySet())
+			{
+				keysHashtable.add(key);
+				optionaleTableModel.add(new ObjectTableModel<Disciplina>(Disciplina.class,
+						disciplineOptionale.get(key),
+						Constants.VIEW_CONTRACT_DISCIPLINA_COLUMN_FIELD_MATCH[1],
+						Constants.VIEW_CONTRACT_DISCIPLINA_COLUMN_FIELD_MATCH[0]));
+			}
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
 			e.printStackTrace();
 		}
 	}
@@ -98,44 +128,45 @@ public class AdminContractStudiiPanel extends MainPanelAbstract implements ListS
 	public AdminContractStudiiPanel(Utilizator utilizator, JLabel statusLbl) {
 		this.utilizator=utilizator;
 		this.statusLbl=statusLbl;
-		this.statusLbl.setText("Completare contract studii. Alege materiile pe care doresti sa le urmezi in acest an de studiu.");
-		
-		
+		this.statusLbl.setText("Completare contract studii. Te rugam selecteaza materiile optionale (cate una pe fiecare grup) si facultative pe care le doresti si apasa Salveaza.");
 		
 		//GUI
-		setLayout(new MigLayout("", "[638.00px:1022.00px,grow]", "[][][469.00,grow][51.00px]"));
+		setLayout(new MigLayout("", "[638.00px:1022.00px,grow]", "[][469.00,grow][51.00px]"));
 		
-		lbl1 = new JLabel("Acesta este contractul tau de studii pentru anul scolar curent.");
+		lbl1 = new JLabel("Acesta este contractul tau de studii pentru anul scolar curent:");
 		add(lbl1, "cell 0 0");
 		
-		lbl2 = new JLabel("Te rugam selecteaza materiile optionale (cate una pe fiecare grup) si facultative pe care le doresti si apasa Salveaza:");
-		add(lbl2, "cell 0 1");
-		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		add(tabbedPane, "cell 0 2,grow");
+		add(tabbedPane, "cell 0 1,grow");
 		
 		JScrollPane scrollPaneObligatorii = new JScrollPane();
 		tabbedPane.addTab("Obligatorii", null, scrollPaneObligatorii, null);
+		
+		prepareData(utilizator);
 		
 		tableObligatorii = new JTable(obligatoriiTableModel);
 		tableObligatorii.setEnabled(false);
 		tableObligatorii.setRowSelectionAllowed(false);
 		tableObligatorii.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableObligatorii.setFillsViewportHeight(true);
-		tableObligatorii.getSelectionModel().addListSelectionListener(this);
 		scrollPaneObligatorii.setViewportView(tableObligatorii);
 		
-		JScrollPane scrollPaneOptional = new JScrollPane();
-		tabbedPane.addTab("Optional 1", null, scrollPaneOptional, null);
+		//Insert panes for optionale
+		tableOptional=new JTable[optionaleTableModel.size()];
 		
-		tableOptional = new JTable(optionaleTableModel);
-		tableOptional.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableOptional.setFillsViewportHeight(true);
-		scrollPaneOptional.setViewportView(tableOptional);
+		for(int i=0;i<optionaleTableModel.size();i++)
+		{
+			scrollPaneOptional = new JScrollPane();
+			tabbedPane.addTab("Optional "+i+1, null, scrollPaneOptional, null);
+			
+			tableOptional[i] = new JTable(optionaleTableModel.get(i));
+			tableOptional[i].setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			tableOptional[i].setFillsViewportHeight(true);
+			scrollPaneOptional.setViewportView(tableOptional[i]);
+		}
 		
 		scrollPaneFacultativ = new JScrollPane();
 		tabbedPane.addTab("Facultativ", null, scrollPaneFacultativ, null);
-		tabbedPane.setEnabledAt(2, true);
 		
 		tableFacultativ = new JTable(facultativeTableModel);
 		tableFacultativ.setToolTipText("Foloseste CTRL+Click pentru a selecta mai multe randuri.");
@@ -144,7 +175,7 @@ public class AdminContractStudiiPanel extends MainPanelAbstract implements ListS
 		scrollPaneFacultativ.setViewportView(tableFacultativ);
 		
 		JPanel panelEdit = new JPanel();
-		add(panelEdit, "cell 0 3,grow");
+		add(panelEdit, "cell 0 2,grow");
 		panelEdit.setLayout(new BorderLayout(0, 0));
 		
 		JLabel lblOdataCe = new JLabel("* Odata ce ai salvat optiunile tale, contractul de studii nu mai poate fi modificat!");
@@ -157,76 +188,31 @@ public class AdminContractStudiiPanel extends MainPanelAbstract implements ListS
 		btnSalveaza.addActionListener(this);
 	}
 
-	/* Eveniment declansat la schimbarea selectiei
-	 * (non-Javadoc)
-	 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
-	 */
-	@Override
-	public void valueChanged(ListSelectionEvent event) {
-		if (event.getValueIsAdjusting())
-            return;
-        
-		int row = tableObligatorii.getSelectedRow();
-		System.out.println("Selectie modificata pe randul "+row);
-		
-		//Nothing selected / deselection
-		if(row==-1)
-		{
-			System.out.println("Deselectie detectata.");
-			tableCadruDidactic.getSelectionModel().clearSelection();
-			tableDisciplina.getSelectionModel().clearSelection();
-			comboBoxTipActivitate.setSelectedItem(TipDisciplina.Obligatoriu);
-			
-			statusLbl.setText("Seteaza disciplina, cadrul didactic asociat si tipul activitatii si apasa 'Salveaza' pentru a crea o noua activitate didactica.");
-			return;
-		}
-		
-		//Always Visible fields
-		Activitate object=disciplineObligatorii.get(tableObligatorii.getSelectedRow());
-		
-		//Finding the associated 'Disciplina'
-		int indexDisciplina=-1;
-		for(int i=0;i<discipline.size();i++)
-			if(discipline.get(i).cod==object.codDisciplina)
-			{
-				indexDisciplina=i;
-				break;
-			}
-		if(indexDisciplina==-1)
-		{
-			JOptionPane.showMessageDialog(null, "Lipseste disciplina asociata.");
-			return;
-		}
-		tableDisciplina.getSelectionModel().setSelectionInterval(0, indexDisciplina);
-		
-		//Finding the associated 'Utilizator'
-		int indexCadruDidactic=-1;
-		for(int i=0;i<disciplineOptionale.size();i++)
-			if(disciplineOptionale.get(i).CNP.equals(object.cnpCadruDidactic))
-			{
-				indexCadruDidactic=i;
-				break;
-			}
-		if(indexCadruDidactic==-1)
-		{
-			JOptionPane.showMessageDialog(null, "Lipseste cadrul didactic asociat.");
-			return;
-		}
-		tableCadruDidactic.getSelectionModel().setSelectionInterval(0, indexCadruDidactic);
-
-		//Set the "Tip"
-		comboBoxTipActivitate.setSelectedItem(object.tip);
-
-		statusLbl.setText("Seteaza disciplina, cadrul didactic asociat si tipul activitatii si apasa 'Salveaza' pentru a face permanente modificarile.");
-	}
-
-	/* Evenimente declansate la click pe cele 3 butoane sau la schimbarea selectiei tipului
+	/* Evenimente declansate la click pe cele butonul de salvare sau la schimbarea selectiei tipului
 	 *  (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		Object source = event.getSource();
+		
+		if(source.equals(btnSalveaza))
+		{
+			//Introducem disciplinele obligatorii
+			for(Disciplina disciplina : disciplineObligatorii)
+				optiuniDAO.insertOptiune(disciplina, utilizator.CNP, studyYear);
+			
+			//Introducem disciplinele optionale
+			for(int i=0;i<tableOptional.length;i++)
+			{
+				int indexSelectat=tableOptional[i].getSelectedRow();
+				optiuniDAO.insertOptiune(disciplineOptionale.get(keysHashtable.get(i)).get(indexSelectat), utilizator.CNP, studyYear);
+			}
+				
+			//Introducem disciplinele facultative
+			for(int i=0;i<tableFacultativ.getSelectedRowCount();i++)
+				optiuniDAO.insertOptiune(disciplineFacultative.get(tableFacultativ.getSelectedRows()[i]), utilizator.CNP, studyYear);				
+		}
 		
 	}
 }
