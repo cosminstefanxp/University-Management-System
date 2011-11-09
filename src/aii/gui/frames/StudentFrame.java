@@ -20,7 +20,9 @@ import net.miginfocom.swing.MigLayout;
 import aii.Utilizator;
 import aii.gui.panels.AdminContractStudiiPanel;
 import aii.gui.panels.PersonalDataPanel;
+import aii.gui.panels.ViewExamenePanel;
 import aii.gui.panels.ViewOrarPanel;
+import aii.gui.panels.ViewSituatiePanel;
 
 /**
  * The Administrator frame that contains all the features that the admin uses.
@@ -174,7 +176,7 @@ public class StudentFrame extends JFrame implements ActionListener{
         		System.out.println("Meniu: Vizualizare situatie scolara");
         		
         		contentPane.remove(mainPanel);
-        		//mainPanel=new AdminGrupePanel(utilizator, statusLbl);
+        		mainPanel=new ViewSituatiePanel(utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -184,7 +186,7 @@ public class StudentFrame extends JFrame implements ActionListener{
         		System.out.println("Meniu: Vizualizare Programare Examene");
         		
         		contentPane.remove(mainPanel);
-        		//mainPanel=new AdminExamenePanel(utilizator, statusLbl);
+        		mainPanel=new ViewExamenePanel(utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -241,7 +243,7 @@ public class StudentFrame extends JFrame implements ActionListener{
         		System.out.println("Buton: Vizualizare Situatie Scolara");
         		
         		contentPane.remove(mainPanel);
-        		//mainPanel=new AdminExamenePanel(utilizator, statusLbl);
+        		mainPanel=new ViewSituatiePanel(utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -251,7 +253,7 @@ public class StudentFrame extends JFrame implements ActionListener{
         		System.out.println("Buton: Vizualizare Programare Examen");
         		
         		contentPane.remove(mainPanel);
-        		//mainPanel=new AdminExamenePanel(utilizator, statusLbl);
+        		mainPanel=new ViewExamenePanel(utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		

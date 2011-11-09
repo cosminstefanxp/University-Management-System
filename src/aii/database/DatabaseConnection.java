@@ -133,6 +133,17 @@ public class DatabaseConnection {
 		return result;
 	}
 	
+	public static float getSingleValueResult(String sqlQuery) throws SQLException
+	{
+		openConnection();
+		
+		System.out.println("S-a apelat expresia SQL '"+sqlQuery+"'");
+		ResultSet result = statement.executeQuery(sqlQuery);
+		
+		result.next();
+		return result.getFloat(1);
+	}
+	
 	/**
 	 * Performs a custom query execution.
 	 *

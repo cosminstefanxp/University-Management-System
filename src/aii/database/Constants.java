@@ -49,6 +49,10 @@ public class Constants {
 																{ "cod_disciplina", "grupa", "data", "ora", "sala"},	//campuri baza de date
 																{ "codDisciplina",  "grupa", "data", "ora", "sala"}		//campuri obiect
 															};
+	final public static String[][]	EXAMEN_STUDENT_FIELD_MATCH		= {
+																{ "denumire", "data", "ora", "sala"},				//campuri baza de date
+																{ "denumireDisciplina", "data", "ora", "sala"}		//campuri obiect
+															};
 	final public static int			EXAMEN_TABLE_PK_COUNT	= 3;	//atat 'cod_disciplina' cat si 'grupa' si 'data' fac parte din cheie
 	
 	/*******NOTA CATALOG********/
@@ -95,6 +99,10 @@ public class Constants {
 															{ "zi", "ora", "sala", "denumireDisciplina", "durata", "frecventa",  "tipActivitate", "grupa"},	//campuri obiect
 															{ "Zi", "Ora", "Sala", "Denumire", "Durata (h)", "Frecventa",  "Tip", "Grupa"}	//nume coloane
 														};	
+	final public static String[][]	VIEW_EXAMEN_STUDENT_COLUMN_FIELD_MATCH		= {
+															{ "denumireDisciplina", "data", "ora", "sala"},		//campuri obiect
+															{ "Disciplina", "Data", "Ora", "Sala"}		//nume coloane
+														};
 	
 	
 	/*******FIELD SIZES*********/

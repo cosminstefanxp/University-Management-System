@@ -46,8 +46,12 @@ public class OrarWrapper extends ObjectWrapper<Orar> {
 	}
 	
 	/**
-	 * Gets all the orar entries that are relevant for a given user
+	 * Gets all the orar entries that are relevant for a given user.
 	 *
+	 * @param cnpStudent the cnp student
+	 * @param anStudiu the an studiu
+	 * @param grupa the grupa
+	 * @param semestru the semestru
 	 * @return the orare
 	 */
 	public ArrayList<Orar> getOrareParticularizat(String cnpStudent, int anStudiu, String grupa, int semestru)

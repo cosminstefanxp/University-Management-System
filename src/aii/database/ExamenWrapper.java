@@ -46,6 +46,41 @@ public class ExamenWrapper extends ObjectWrapper<Examen> {
 	}
 	
 	/**
+	 * Gets all the examen entries that are relevant for a given user.
+	 *
+	 * @param whereClause the where clause
+	 * @return the examene
+	 */
+	public ArrayList<Examen> getExameneParticularizat(String grupa)
+	{
+		String fields="e.data, e.ora, d.denumire, e.sala";
+		String tables="optiuni_contract o, examen e, disciplina d";
+		String where="o.cod_disciplina=d.cod" +
+				"			AND o.cod_disciplina=e.cod_disciplina" +
+				"			AND grupa=\'"+grupa+"\'";
+		String extra="ORDER BY data, ora";
+
+		
+		
+		ArrayList<Examen> examene = null;
+		try {
+			examene=this.getObjects(fields, tables, where, extra);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"accesului la baza de date!");
+			return null;
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		
+		return examene;
+	}
+	
+	/**
 	 * Gets the examen that has a given 'zi','sala','ora'.
 	 *
 	 * @param cod the cod

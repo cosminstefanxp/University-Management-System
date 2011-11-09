@@ -1,5 +1,4 @@
 package aii.gui.panels;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -9,13 +8,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
-import aii.Activitate;
 import aii.Orar;
 import aii.Utilizator;
-import aii.database.ActivitateWrapper;
 import aii.database.Constants;
 import aii.database.OrarWrapper;
 import aii.gui.tools.ObjectTableModel;

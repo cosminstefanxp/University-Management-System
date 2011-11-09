@@ -14,6 +14,9 @@ public class Examen {
 	public String sala;
 	public String grupa;
 	
+	//Optional
+	public String denumireDisciplina;
+	
 	@Override
 	public String toString() {
 		return "Examen [codDisciplina=" + codDisciplina + ", data=" + data + ", grupa=" + grupa
