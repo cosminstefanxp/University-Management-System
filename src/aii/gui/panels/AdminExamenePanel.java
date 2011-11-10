@@ -64,6 +64,8 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 	private JSpinner spinnerZi;
 	private JSpinner spinnerLuna;
 	private JSpinner spinnerAn;
+	private JLabel lblExamenulLa;
+	private JLabel lblDisciplinaSePoate;
 
 	/**
 	 * Create the panel.
@@ -111,7 +113,7 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 		
 		panelEditInfo = new JPanel();
 		panelEditInfo.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Setari Examene", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
-		panelEditInfo.setBounds(7, -4, 756, 308);
+		panelEditInfo.setBounds(7, -4, 756, 316);
 		panelEdit.add(panelEditInfo);
 		panelEditInfo.setLayout(null);
 		
@@ -129,7 +131,7 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 		scrollPaneDiscipline.setViewportView(tableDiscipline);
 		
 		btnSalveaza = new JButton("Salveaza");
-		btnSalveaza.setBounds(621, 271, 98, 25);
+		btnSalveaza.setBounds(621, 279, 98, 25);
 		panelEditInfo.add(btnSalveaza);
 		
 		JLabel lblNewLabel_1 = new JLabel("Sala: *");
@@ -227,6 +229,18 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 		
 		comboBoxGrupa.setModel(new DefaultComboBoxModel(grupe));
 		
+		JLabel lblDurataAlocata = new JLabel("* Durata alocata unui examen este 3 ore");
+		lblDurataAlocata.setBounds(433, 252, 286, 15);
+		panelEditInfo.add(lblDurataAlocata);
+		
+		lblExamenulLa = new JLabel("* Examenul mai multor grupe la aceeasi ");
+		lblExamenulLa.setBounds(437, 214, 282, 15);
+		panelEditInfo.add(lblExamenulLa);
+		
+		lblDisciplinaSePoate = new JLabel("disciplina se poate suprapune");
+		lblDisciplinaSePoate.setBounds(504, 231, 215, 15);
+		panelEditInfo.add(lblDisciplinaSePoate);
+		
 		
 		
 	}
@@ -288,6 +302,30 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 		spinnerOra.setValue(object.ora);
 	
 		statusLbl.setText("Modifica campurile dorite si apasa 'Salveaza' pentru a face permanente modificarile.");
+	}
+	
+	/**
+	 * Checks if is a given time and place slot is busy.
+	 *
+	 * @param object the object
+	 * @return true, if is busy
+	 */
+	@SuppressWarnings("deprecation")
+	private boolean isBusy(Examen object)
+	{
+		for(Examen examenFixat:objects)
+		{
+			if(examenFixat!=null && examenFixat.sala.equalsIgnoreCase(object.sala))	//if it's the same exam room
+				if(examenFixat.codDisciplina != object.codDisciplina)				//if it's not the same class
+					if(examenFixat.data.getDay()==object.data.getDay() && 			//id it's the same day
+							examenFixat.data.getMonth()==object.data.getMonth() &&
+								examenFixat.data.getYear()==object.data.getYear())
+						if((examenFixat.ora <= object.ora && (examenFixat.ora + 3) > object.ora) ||
+								(examenFixat.ora < (object.ora+3) && (examenFixat.ora + 3) >= (object.ora+3)))	//if the hours overlap
+							return true;
+				
+		}
+		return false;		
 	}
 
 	/* Evenimente declansate la click pe cele 3 butoane sau la schimbarea selectiei tipului
@@ -351,7 +389,24 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 			object.data=new java.sql.Date(calendar.getTime().getTime());
 			object.ora=(Integer)spinnerOra.getValue();
 			
-			//TODO: Verificare intrepatrundere cu alte examene
+			
+			//Tweak to help the check
+			Examen backup=null;
+			if(table.getSelectedRow()!=-1)
+			{
+				backup=objects.get(table.getSelectedRow());
+				objects.set(table.getSelectedRow(),null);
+			}
+			
+			//Check if the exam room is free
+			if(isBusy(object))
+			{
+				JOptionPane.showMessageDialog(null, "Sala selectata este ocupata in intervalul selectat.","Ocupat",JOptionPane.ERROR_MESSAGE);
+				if(table.getSelectedRow()!=-1)
+					objects.set(table.getSelectedRow(), backup);
+				return;
+			}
+			
 			
 			//If it's a new entry
 			if(table.getSelectedRow()==-1)
@@ -372,8 +427,11 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 			{
 				
 				System.out.println("Examen existent -> modificat in " + object);
-				if(!exameneDAO.updateExamen(objects.get(table.getSelectedRow()), object))
+				if(!exameneDAO.updateExamen(backup, object))
+				{
+					objects.set(table.getSelectedRow(), backup);	//restore previous exam
 					return;
+				}
 				
 				statusLbl.setText("Examenul pentru grupa "+object.grupa +" la disciplina "+object.codDisciplina+" a fost actualizat.");
 				

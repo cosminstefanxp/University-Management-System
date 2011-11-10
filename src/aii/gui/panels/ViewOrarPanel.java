@@ -62,7 +62,7 @@ public class ViewOrarPanel extends MainPanelAbstract {
 			this.statusLbl.setText("Se vizualizeaza orarul pentru al doilea semestru.");
 			semestru=2;			
 		}
-			
+		
 		
 		//Get the objects and prepare the table models		
 		try {
