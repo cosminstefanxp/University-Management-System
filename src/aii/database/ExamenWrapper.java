@@ -45,6 +45,26 @@ public class ExamenWrapper extends ObjectWrapper<Examen> {
 		return examene;
 	}
 	
+	public ArrayList<Examen> getExameneJoined(String fields, String from, String whereClause)
+	{
+		ArrayList<Examen> examene = null;
+		try {
+			examene=this.getObjects(fields, from, whereClause, null);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"accesului la baza de date!");
+			return null;
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		
+		return examene;
+	}
+	
 	/**
 	 * Gets all the examen entries that are relevant for a given user.
 	 *

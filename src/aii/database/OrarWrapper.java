@@ -46,6 +46,32 @@ public class OrarWrapper extends ObjectWrapper<Orar> {
 	}
 	
 	/**
+	 * Gets the orare joined with class name.
+	 *
+	 * @param whereClause the where clause
+	 * @return the orare joined
+	 */
+	public ArrayList<Orar> getOrareJoined(String fields, String from, String where)
+	{
+		ArrayList<Orar> orare = null;
+		try {
+			orare=this.getObjects(fields, from, where, null);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"accesului la baza de date!");
+			return null;
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		
+		return orare;
+	}
+	
+	/**
 	 * Gets all the orar entries that are relevant for a given user.
 	 *
 	 * @param cnpStudent the cnp student

@@ -78,7 +78,7 @@ public class ViewOrarPanel extends MainPanelAbstract {
 		}
 		
 		//GUI
-		setLayout(new MigLayout("", "[799.00px:1022.00px]", "[][132.00px:605.00px]"));
+		setLayout(new MigLayout("", "[799.00px:1022.00px]", "[][132.00px:541.00px][]"));
 		
 		lblOrarulTauEste = new JLabel("Orarul tau este:");
 		add(lblOrarulTauEste, "cell 0 0");
@@ -86,9 +86,13 @@ public class ViewOrarPanel extends MainPanelAbstract {
 		JScrollPane scrollPaneTable = new JScrollPane();
 		add(scrollPaneTable, "cell 0 1,grow");
 		
+		JLabel lblDisclaimer = new JLabel("* Se afiseaza doar orarul pentru grupa ta si materiile alese de tine.");
+		add(lblDisclaimer, "cell 0 2");
+		
 		table = new JTable(mainTableModel);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setFillsViewportHeight(true);
+		table.setEnabled(false);
 		scrollPaneTable.setViewportView(table);
 		
 	}

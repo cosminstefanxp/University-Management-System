@@ -77,19 +77,24 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 		//Get the objects and prepare the table models		
 		try {
 			//Table model for "Orare"
-			objects=orareDAO.getObjects(Constants.ORAR_TABLE,"zi=zi");
+			orareDAO.setNameMatch(Constants.ORAR_FIELD_MATCH_FULL);
+			objects=orareDAO.getOrareJoined("o.zi, o.ora, o.sala, d.denumire, o.grupa, o.frecventa, o.durata, o.id_activitate, a.tip",
+					Constants.DISCIPLINA_TABLE+" d, "+Constants.ORAR_TABLE+" o, "+Constants.ACTIVITATE_TABLE+" a",
+					"o.id_activitate=a.id AND a.cod_disciplina=d.cod");
+			orareDAO.setNameMatch(Constants.ORAR_FIELD_MATCH);
 			mainTableModel=new ObjectTableModel<Orar>(Orar.class,
 					objects,
 					Constants.ADMIN_ORAR_COLUMN_FIELD_MATCH[1],
 					Constants.ADMIN_ORAR_COLUMN_FIELD_MATCH[0]);
 			//Table model for "Activitate"
-			activitati=activitatiDAO.getObjects(Constants.ACTIVITATE_TABLE,"id=id");
+			activitatiDAO.setNameMatch(Constants.ACTIVITATE_FIELD_MATCH_FULL);
+			activitati=activitatiDAO.getActivitatiJoined("a.id, a.cod_disciplina, a.cnp_cadru_didactic, a.tip, d.denumire, concat(u.nume,concat(\" \",u.prenume)) nume", 
+					Constants.ACTIVITATE_TABLE+" a, "+Constants.DISCIPLINA_TABLE+" d, "+Constants.USER_TABLE+" u",
+					"a.cod_disciplina=d.cod AND u.cnp=a.cnp_cadru_didactic");
 			activitatiTableModel=new ObjectTableModel<Activitate>(Activitate.class,
 					activitati,
-					new String[] {"ID","Cod Disciplina", "CNP Cadru Didactic"},
-					new String[] {"id","codDisciplina", "cnpCadruDidactic"});			
-		} catch (SQLException e) {
-			e.printStackTrace();
+					new String[] {"ID","Tip","Denumire Disciplina", "Cadru Didactic"},
+					new String[] {"id","tip","denumireDisciplina", "numeCadruDidactic"});			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -112,7 +117,7 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 		
 		panelEditInfo = new JPanel();
 		panelEditInfo.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Setari Orar", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
-		panelEditInfo.setBounds(7, -4, 777, 308);
+		panelEditInfo.setBounds(7, -4, 845, 308);
 		panelEdit.add(panelEditInfo);
 		panelEditInfo.setLayout(null);
 		
@@ -121,7 +126,7 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 		panelEditInfo.add(lblNewLabel);
 		
 		JScrollPane scrollPaneActivitate = new JScrollPane();
-		scrollPaneActivitate.setBounds(11, 52, 368, 245);
+		scrollPaneActivitate.setBounds(11, 52, 428, 245);
 		panelEditInfo.add(scrollPaneActivitate);
 		
 		tableActivitati = new JTable(activitatiTableModel);
@@ -130,77 +135,77 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 		scrollPaneActivitate.setViewportView(tableActivitati);
 		
 		comboBoxFrecventa = new JComboBox();
-		comboBoxFrecventa.setBounds(578, 204, 187, 33);
+		comboBoxFrecventa.setBounds(641, 204, 187, 33);
 		comboBoxFrecventa.setModel(new DefaultComboBoxModel(Frecventa.values()));
 		panelEditInfo.add(comboBoxFrecventa);
 		
 		btnSalveaza = new JButton("Salveaza");
-		btnSalveaza.setBounds(667, 276, 98, 25);
+		btnSalveaza.setBounds(730, 276, 98, 25);
 		panelEditInfo.add(btnSalveaza);
 		
 		JLabel lblNewLabel_1 = new JLabel("Sala: *");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblNewLabel_1.setBounds(514, 81, 46, 15);
+		lblNewLabel_1.setBounds(577, 81, 46, 15);
 		panelEditInfo.add(lblNewLabel_1);
 		
 		JLabel lblZiua = new JLabel("Ziua: *");
 		lblZiua.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblZiua.setBounds(513, 123, 47, 15);
+		lblZiua.setBounds(576, 123, 47, 15);
 		panelEditInfo.add(lblZiua);
 		
 		JLabel lblOra = new JLabel("Ora: *");
 		lblOra.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblOra.setBounds(514, 167, 46, 15);
+		lblOra.setBounds(577, 167, 46, 15);
 		panelEditInfo.add(lblOra);
 		
 		JLabel lblDurata = new JLabel("Durata: *");
-		lblDurata.setBounds(650, 167, 64, 15);
+		lblDurata.setBounds(713, 167, 64, 15);
 		panelEditInfo.add(lblDurata);
 		
 		JLabel lblGrupa = new JLabel("Grupa: *");
 		lblGrupa.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblGrupa.setBounds(502, 38, 58, 15);
+		lblGrupa.setBounds(565, 38, 58, 15);
 		panelEditInfo.add(lblGrupa);
 		
 		textFieldSala = new JTextField();
-		textFieldSala.setBounds(578, 72, 187, 33);
+		textFieldSala.setBounds(641, 72, 187, 33);
 		panelEditInfo.add(textFieldSala);
 		textFieldSala.setColumns(10);
 		textFieldSala.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_SALA));
 		
 		comboBoxZiua = new JComboBox();
 		comboBoxZiua.setModel(new DefaultComboBoxModel(Ziua.values()));
-		comboBoxZiua.setBounds(578, 114, 187, 33);
+		comboBoxZiua.setBounds(641, 114, 187, 33);
 		panelEditInfo.add(comboBoxZiua);
 		
 		spinnerOra = new JSpinner();
 		spinnerOra.setModel(new SpinnerNumberModel(8, 7, 22, 1));
-		spinnerOra.setBounds(578, 159, 46, 33);
+		spinnerOra.setBounds(641, 159, 46, 33);
 		panelEditInfo.add(spinnerOra);
 		
 		spinnerDurata = new JSpinner();
 		spinnerDurata.setModel(new SpinnerNumberModel(1, 1, 10, 1));
-		spinnerDurata.setBounds(719, 159, 46, 33);
+		spinnerDurata.setBounds(782, 159, 46, 33);
 		panelEditInfo.add(spinnerDurata);
 		
 		comboBoxGrupa = new JComboBox();
-		comboBoxGrupa.setBounds(578, 29, 187, 33);
+		comboBoxGrupa.setBounds(641, 29, 187, 33);
 		panelEditInfo.add(comboBoxGrupa);
 		
 		JLabel lblFrecventa = new JLabel("Frecventa: *");
 		lblFrecventa.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblFrecventa.setBounds(456, 211, 104, 18);
+		lblFrecventa.setBounds(519, 211, 104, 18);
 		panelEditInfo.add(lblFrecventa);
 		btnSalveaza.addActionListener(this);
 		
 		btnSterge = new JButton("Sterge");
 		btnSterge.addActionListener(this);
-		btnSterge.setBounds(805, 49, 117, 25);
+		btnSterge.setBounds(864, 49, 117, 25);
 		panelEdit.add(btnSterge);
 		
 		btnAdauga = new JButton("Adauga");
 		btnAdauga.addActionListener(this);
-		btnAdauga.setBounds(805, 12, 117, 25);
+		btnAdauga.setBounds(864, 12, 117, 25);
 		panelEdit.add(btnAdauga);
 		
 		/* Pregatire date despre grupa. */
@@ -228,7 +233,7 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 		comboBoxGrupa.setModel(new DefaultComboBoxModel(grupe));
 		
 		lblNuSe = new JLabel("* Nu se pot desfasura mai multe clase in aceeasi sala");
-		lblNuSe.setBounds(384, 249, 468, 15);
+		lblNuSe.setBounds(447, 249, 378, 15);
 		panelEditInfo.add(lblNuSe);
 		
 	}
@@ -301,10 +306,11 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 		for(Orar orarFixat:objects)
 		{
 			if(orarFixat!=null && orarFixat.sala.equalsIgnoreCase(object.sala) && orarFixat.zi.equals(object.zi))
-				if(orarFixat.frecventa==Frecventa.Saptamanal || object.frecventa==Frecventa.Saptamanal || object.frecventa==orarFixat.frecventa)
-					if((orarFixat.ora <= object.ora && (orarFixat.ora + orarFixat.durata) > object.ora) ||
-							(orarFixat.ora < (object.ora+object.durata) && (orarFixat.ora + orarFixat.durata) >= (object.ora+object.durata)))
-						return true;
+				if(orarFixat.idActivitate!=object.idActivitate)
+					if(orarFixat.frecventa==Frecventa.Saptamanal || object.frecventa==Frecventa.Saptamanal || object.frecventa==orarFixat.frecventa)
+						if((orarFixat.ora <= object.ora && (orarFixat.ora + orarFixat.durata) > object.ora) ||
+								(orarFixat.ora < (object.ora+object.durata) && (orarFixat.ora + orarFixat.durata) >= (object.ora+object.durata)))
+							return true;
 				
 		}
 		return false;		
@@ -368,6 +374,8 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 			object.idActivitate=activitati.get(tableActivitati.getSelectedRow()).id;
 			object.zi=(Ziua) comboBoxZiua.getSelectedItem();
 			object.ora=(Integer)spinnerOra.getValue();
+			object.tipActivitate=activitati.get(tableActivitati.getSelectedRow()).tip;
+			object.denumireDisciplina=activitati.get(tableActivitati.getSelectedRow()).denumireDisciplina;
 			
 			//Tweak to help the check
 			Orar backup=null;

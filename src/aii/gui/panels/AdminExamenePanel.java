@@ -78,7 +78,11 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 		//Get the objects and prepare the table models		
 		try {
 			//Table model for "Examen"
-			objects=exameneDAO.getObjects(Constants.EXAMEN_TABLE,"ora=ora");
+			exameneDAO.setNameMatch(Constants.EXAMEN_FIELD_MATCH_FULL);
+			objects=exameneDAO.getExameneJoined("e.data, e.ora, d.denumire, e.sala, e.grupa, e.cod_disciplina",
+					"disciplina d, examen e",
+					"d.cod=e.cod_disciplina");
+			exameneDAO.setNameMatch(Constants.EXAMEN_FIELD_MATCH);
 			mainTableModel=new ObjectTableModel<Examen>(Examen.class,
 					objects,
 					Constants.ADMIN_EXAMEN_COLUMN_FIELD_MATCH[1],
@@ -388,6 +392,7 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 			calendar.set(Calendar.DAY_OF_MONTH, (Integer) spinnerZi.getValue());
 			object.data=new java.sql.Date(calendar.getTime().getTime());
 			object.ora=(Integer)spinnerOra.getValue();
+			object.denumireDisciplina=discipline.get(tableDiscipline.getSelectedRow()).denumire;
 			
 			
 			//Tweak to help the check

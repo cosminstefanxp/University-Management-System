@@ -60,7 +60,7 @@ public class ViewExamenePanel extends MainPanelAbstract {
 		}
 		
 		//GUI
-		setLayout(new MigLayout("", "[799.00px:1022.00px]", "[][132.00px:605.00px]"));
+		setLayout(new MigLayout("", "[799.00px:1022.00px]", "[][132.00px:546.00px][]"));
 		
 		lblSesiuneaTaEste = new JLabel("Programul examenelor tale este:");
 		add(lblSesiuneaTaEste, "cell 0 0");
@@ -68,9 +68,13 @@ public class ViewExamenePanel extends MainPanelAbstract {
 		JScrollPane scrollPaneTable = new JScrollPane();
 		add(scrollPaneTable, "cell 0 1,grow");
 		
+		JLabel lblDisclaimer = new JLabel("* Se afiseaza doar programarile de examen pentru grupa ta.");
+		add(lblDisclaimer, "cell 0 2");
+		
 		table = new JTable(mainTableModel);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setFillsViewportHeight(true);
+		table.setEnabled(false);
 		scrollPaneTable.setViewportView(table);
 		
 	}

@@ -45,6 +45,10 @@ public class Constants {
 																{ "id_activitate", "grupa", "zi", "ora", "sala", "durata", "frecventa"},	//campuri baza de date
 																{ "idActivitate",  "grupa",  "zi", "ora", "sala", "durata", "frecventa"}		//campuri obiect
 															};
+	final public static String[][]	ORAR_FIELD_MATCH_FULL	= {
+															{ "id_activitate", "grupa", "zi", "ora", "sala", "durata", "frecventa", "denumire", "tip"},					//campuri baza de date
+															{ "idActivitate",  "grupa",  "zi", "ora", "sala", "durata", "frecventa", "denumireDisciplina", "tipActivitate"}	//campuri obiect
+														};
 	final public static String[][]	ORAR_STUDENT_FIELD_MATCH = {
 																{ "grupa", "zi", "ora", "sala", "durata", "frecventa", "denumire", "tip"},						//campuri baza de date
 																{ "grupa", "zi", "ora", "sala", "durata", "frecventa", "denumireDisciplina", "tipActivitate"}	//campuri obiect
@@ -57,6 +61,11 @@ public class Constants {
 																{ "cod_disciplina", "grupa", "data", "ora", "sala"},	//campuri baza de date
 																{ "codDisciplina",  "grupa", "data", "ora", "sala"}		//campuri obiect
 															};
+	final public static String[][]	EXAMEN_FIELD_MATCH_FULL		= {
+																{ "cod_disciplina", "grupa", "data", "ora", "sala", "denumire"},			//campuri baza de date
+																{ "codDisciplina",  "grupa", "data", "ora", "sala", "denumireDisciplina"}	//campuri obiect
+															};
+	
 	final public static String[][]	EXAMEN_STUDENT_FIELD_MATCH		= {
 																{ "denumire", "data", "ora", "sala"},				//campuri baza de date
 																{ "denumireDisciplina", "data", "ora", "sala"}		//campuri obiect
@@ -92,12 +101,12 @@ public class Constants {
 															{ "ID", "Cod Disciplina", "Denumire", "CNP Cadru Didactic", "Nume Cadru", "Tip Activitate"}			//nume coloane
 														};
 	final public static String[][]	ADMIN_ORAR_COLUMN_FIELD_MATCH 	= {
-															{ "grupa", "idActivitate", "zi", "ora", "sala", "durata",   "frecventa"},	//campuri obiect
-															{ "Grupa", "ID Activitate", "Zi", "Ora", "Sala", "Durata", "Frecventa"}	//nume coloane
+															{ "grupa", "idActivitate", "tipActivitate", "denumireDisciplina", "zi", "ora", "sala", "durata",   "frecventa"},	//campuri obiect
+															{ "Grupa", "ID Activitate", "Tip", "Disciplina", "Zi", "Ora", "Sala", "Durata", "Frecventa"}	//nume coloane
 														};
 	final public static String[][]	ADMIN_EXAMEN_COLUMN_FIELD_MATCH 	= {
-															{ "grupa", "codDisciplina",  "data", "ora", "sala"},	//campuri obiect
-															{ "Grupa", "Cod Disciplina", "Data", "Ora", "Sala"}		//nume coloane
+															{ "grupa", "codDisciplina", "denumireDisciplina", "data", "ora", "sala"},	//campuri obiect
+															{ "Grupa", "Cod Disciplina", "Denumire", "Data", "Ora", "Sala"}		//nume coloane
 														};
 	final public static String[][]	ADMIN_CATALOG_COLUMN_FIELD_MATCH 	= {
 															{ "codDisciplina", "denumireDisciplina" , "cnpStudent", "numeStudent", "data", "nota"},		//campuri obiect
