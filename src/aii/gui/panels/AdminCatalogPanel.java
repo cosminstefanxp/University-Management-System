@@ -248,7 +248,8 @@ public class AdminCatalogPanel extends MainPanelAbstract implements ListSelectio
 			}
 		if(indexActivitate==-1)
 		{
-			JOptionPane.showMessageDialog(null, "Lipseste disciplina asociata.");
+			JOptionPane.showMessageDialog(null, "Nu aveti dreptul sa editati aceasta intrare. Nu sunteti titular de curs al disciplinei.");
+			table.getSelectionModel().clearSelection();
 			return;
 		}
 		tableActivitate.getSelectionModel().setSelectionInterval(0, indexActivitate);
@@ -263,7 +264,8 @@ public class AdminCatalogPanel extends MainPanelAbstract implements ListSelectio
 			}
 		if(indexStudent==-1)
 		{
-			JOptionPane.showMessageDialog(null, "Lipseste studentul asociat.");
+			JOptionPane.showMessageDialog(null, "Nu aveti dreptul sa editati aceasta intrare. Lipseste studentul asociat.");
+			table.getSelectionModel().clearSelection();
 			return;
 		}
 		tableStudent.getSelectionModel().setSelectionInterval(0, indexStudent);
@@ -338,6 +340,8 @@ public class AdminCatalogPanel extends MainPanelAbstract implements ListSelectio
 			calendar.set(Calendar.MONTH, (Integer) spinnerLuna.getValue()-1);
 			calendar.set(Calendar.DAY_OF_MONTH, (Integer) spinnerZi.getValue());
 			object.data=new java.sql.Date(calendar.getTime().getTime());
+			object.denumireDisciplina=activitati.get(tableActivitate.getSelectedRow()).denumireDisciplina;
+			object.numeStudent=utilizatori.get(tableStudent.getSelectedRow()).nume+" "+utilizatori.get(tableStudent.getSelectedRow()).prenume;
 			
 			//If it's a new entry
 			if(table.getSelectedRow()==-1)
