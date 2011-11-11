@@ -46,6 +46,35 @@ public class NotaCatalogWrapper extends ObjectWrapper<NotaCatalog> {
 	}
 	
 	/**
+	 * Gets the note catalog joined with student and class name.
+	 *
+	 * @param fields the fields
+	 * @param from the from
+	 * @param whereClause the where clause
+	 * @return the note catalog joined
+	 */
+	public ArrayList<NotaCatalog> getNoteCatalogJoined(String fields, String from, String whereClause)
+	{
+		ArrayList<NotaCatalog> note = null;
+		try {
+			note=this.getObjects(fields, from, whereClause, null);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"accesului la baza de date!");
+			return null;
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		
+		return note;
+	}
+	
+	
+	/**
 	 * Gets the nota that has a given cod.
 	 *
 	 * @param codDisciplina the cod disciplina

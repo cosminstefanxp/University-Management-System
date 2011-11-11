@@ -75,17 +75,27 @@ public class AdminCatalogPanel extends MainPanelAbstract implements ListSelectio
 		//Get the objects and prepare the table models		
 		try {
 			//Table model for "Note"
-			objects=noteDAO.getObjects(Constants.CATALOG_TABLE,"nota=nota");
+			//Temporary set the Field Match to get more info (nume disciplina & nume student)
+			noteDAO.setNameMatch(Constants.CATALOG_FIELD_MATCH_FULL);
+			objects=noteDAO.getNoteCatalogJoined("c.cnp_student, c.cod_disciplina, c.data, c.nota, concat(u.nume,concat(\" \",u.prenume)) nume, d.denumire",
+					"catalog c, utilizatori u, disciplina d",
+					"c.cnp_student=u.cnp AND c.cod_disciplina=d.cod");
+			//Restore Field Match
+			noteDAO.setNameMatch(Constants.CATALOG_FIELD_MATCH);
 			mainTableModel=new ObjectTableModel<NotaCatalog>(NotaCatalog.class,
 					objects,
 					Constants.ADMIN_CATALOG_COLUMN_FIELD_MATCH[1],
 					Constants.ADMIN_CATALOG_COLUMN_FIELD_MATCH[0]);
+			
 			//Table model for "Activitate"
-			activitati=activitatiDAO.getObjects(Constants.ACTIVITATE_TABLE,"cnp_cadru_didactic='"+utilizator.CNP+"\' AND tip=\'"+Activitate.TipActivitate.Curs+"\'");
+			activitatiDAO.setNameMatch(Constants.ACTIVITATE_FIELD_MATCH_SHORT);
+			activitati=activitatiDAO.getActivitatiJoined("a.id, a.cod_disciplina, d.denumire",
+					Constants.ACTIVITATE_TABLE+" a, "+Constants.DISCIPLINA_TABLE+" d",
+					"a.cnp_cadru_didactic='"+utilizator.CNP+"\' AND a.tip=\'"+Activitate.TipActivitate.Curs+"\' AND d.cod=a.cod_disciplina");
 			activitatiTableModel=new ObjectTableModel<Activitate>(Activitate.class,
 					activitati,
-					new String[] {"Cod disciplina"},
-					new String[] {"codDisciplina"});
+					new String[] {"Cod disciplina", "Nume Disciplina"},
+					new String[] {"codDisciplina", "denumireDisciplina"});
 			//Table model for "Utilizator"
 			utilizatori=utilizatoriDAO.getObjects(Constants.USER_TABLE,"tip=\'STUDENT\'");
 			utilizatoriTableModel=new ObjectTableModel<Utilizator>(Utilizator.class,

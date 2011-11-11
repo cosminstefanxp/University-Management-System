@@ -29,6 +29,10 @@ public class Constants {
 																{ "id", "cod_disciplina", "cnp_cadru_didactic", "tip"},	//campuri baza de date
 																{ "id", "codDisciplina", "cnpCadruDidactic", "tip"}		//campuri obiect
 															};
+	final public static String[][]	ACTIVITATE_FIELD_MATCH_SHORT= {
+																{ "id", "cod_disciplina", "denumire"},	//campuri baza de date
+																{ "id", "codDisciplina", "denumireDisciplina"}		//campuri obiect
+															};	
 	final public static String[][]	ACTIVITATE_FIELD_MATCH_FULL		= {
 																{ "id", "cod_disciplina", "cnp_cadru_didactic", "tip", "denumire", "nume"},							//campuri baza de date
 																{ "id", "codDisciplina", "cnpCadruDidactic", "tip", "denumireDisciplina", "numeCadruDidactic"}		//campuri obiect
@@ -65,6 +69,10 @@ public class Constants {
 																{ "cnp_student", "cod_disciplina", "data", "nota"},		//campuri baza de date
 																{ "cnpStudent",  "codDisciplina",  "data", "nota"}		//campuri obiect
 															};
+	final public static String[][]	CATALOG_FIELD_MATCH_FULL= {
+																{ "cnp_student", "cod_disciplina", "data", "nota", "nume", "denumire"},		//campuri baza de date
+																{ "cnpStudent",  "codDisciplina",  "data", "nota", "numeStudent", "denumireDisciplina"}		//campuri obiect
+															};	
 	final public static int			CATALOG_TABLE_PK_COUNT	= 3;	//atat 'cod_disciplina' cat si 'grupa' si 'data' fac parte din cheie	
 
 	/*******OPTIUNI CONTRACT********/
@@ -92,8 +100,8 @@ public class Constants {
 															{ "Grupa", "Cod Disciplina", "Data", "Ora", "Sala"}		//nume coloane
 														};
 	final public static String[][]	ADMIN_CATALOG_COLUMN_FIELD_MATCH 	= {
-															{ "codDisciplina", "cnpStudent", "data", "nota"},		//campuri obiect
-															{ "Cod Disciplina", "CNP Student", "Data", "Nota"}		//nume coloane
+															{ "codDisciplina", "denumireDisciplina" , "cnpStudent", "numeStudent", "data", "nota"},		//campuri obiect
+															{ "Cod Disciplina", "Denumire", "CNP Student", "Nume", "Data", "Nota"}		//nume coloane
 														};
 	final public static String[][]	VIEW_CONTRACT_DISCIPLINA_COLUMN_FIELD_MATCH		= {
 															{ "cod", "denumire", "tip", "nrOre", "pctCredit", "examinare"},	//campuri obiect
