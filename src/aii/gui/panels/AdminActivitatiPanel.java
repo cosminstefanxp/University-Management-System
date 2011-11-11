@@ -69,7 +69,14 @@ public class AdminActivitatiPanel extends MainPanelAbstract implements ListSelec
 		//Get the objects and prepare the table models		
 		try {
 			//Table model for "Activitate"
-			objects=activitatiDAO.getObjects(Constants.ACTIVITATE_TABLE,"id=id");
+			//Special Field Match to join to get more details
+			activitatiDAO.setNameMatch(Constants.ACTIVITATE_FIELD_MATCH_FULL);
+			objects=activitatiDAO.getActivitatiJoined("a.id, a.cod_disciplina, a.cnp_cadru_didactic, a.tip, d.denumire, concat(u.nume,concat(\" \",u.prenume)) nume", 
+					Constants.ACTIVITATE_TABLE+" a, "+Constants.DISCIPLINA_TABLE+" d, "+Constants.USER_TABLE+" u",
+					"a.cod_disciplina=d.cod AND u.cnp=a.cnp_cadru_didactic");
+			//Normal FieldMatch
+			activitatiDAO.setNameMatch(Constants.ACTIVITATE_FIELD_MATCH);
+			
 			mainTableModel=new ObjectTableModel<Activitate>(Activitate.class,
 					objects,
 					Constants.ADMIN_ACTIVITATE_COLUMN_FIELD_MATCH[1],
@@ -291,10 +298,13 @@ public class AdminActivitatiPanel extends MainPanelAbstract implements ListSelec
 				
 				//Update JTable - need new pull from database, as a new id was generated
 				try {
-					objects=activitatiDAO.getObjects(Constants.ACTIVITATE_TABLE,"id=id");
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//Special Field Match to join to get more details
+					activitatiDAO.setNameMatch(Constants.ACTIVITATE_FIELD_MATCH_FULL);
+					objects=activitatiDAO.getActivitatiJoined("a.id, a.cod_disciplina, a.cnp_cadru_didactic, a.tip, d.denumire, concat(u.nume,concat(\" \",u.prenume)) nume", 
+							Constants.ACTIVITATE_TABLE+" a, "+Constants.DISCIPLINA_TABLE+" d, "+Constants.USER_TABLE+" u",
+							"a.cod_disciplina=d.cod AND u.cnp=a.cnp_cadru_didactic");
+					//Normal FieldMatch
+					activitatiDAO.setNameMatch(Constants.ACTIVITATE_FIELD_MATCH);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -307,6 +317,8 @@ public class AdminActivitatiPanel extends MainPanelAbstract implements ListSelec
 			else //If it's an old entry
 			{
 				object.id=objects.get(table.getSelectedRow()).id;
+				object.denumireDisciplina=discipline.get(tableDisciplina.getSelectedRow()).denumire;
+				object.numeCadruDidactic=utilizatori.get(tableCadruDidactic.getSelectedRow()).nume+" "+utilizatori.get(tableCadruDidactic.getSelectedRow()).prenume;
 				
 				System.out.println("Activitate existenta -> modificata in " + object);
 				if(!activitatiDAO.updateActivitate(objects.get(table.getSelectedRow()), object))

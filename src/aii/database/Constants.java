@@ -29,6 +29,10 @@ public class Constants {
 																{ "id", "cod_disciplina", "cnp_cadru_didactic", "tip"},	//campuri baza de date
 																{ "id", "codDisciplina", "cnpCadruDidactic", "tip"}		//campuri obiect
 															};
+	final public static String[][]	ACTIVITATE_FIELD_MATCH_FULL		= {
+																{ "id", "cod_disciplina", "cnp_cadru_didactic", "tip", "denumire", "nume"},							//campuri baza de date
+																{ "id", "codDisciplina", "cnpCadruDidactic", "tip", "denumireDisciplina", "numeCadruDidactic"}		//campuri obiect
+															};
 	final public static int			ACTIVITATE_TABLE_PK_COUNT	= 1;	//doar id face parte din cheie
 	
 	/*******ORAR********/
@@ -76,8 +80,8 @@ public class Constants {
 															{ "Cod Disciplina", "Denumire", "Tip", "Numar Ore", "Puncte Credit", "Examinare", "An Studiu", "Semestru", "Grup"}	//nume coloane
 														};
 	final public static String[][]	ADMIN_ACTIVITATE_COLUMN_FIELD_MATCH 	= {
-															{ "id", "codDisciplina" , "cnpCadruDidactic",   "tip"},				//campuri obiect
-															{ "ID", "Cod Disciplina", "CNP Cadru Didactic", "Tip Activitate"}	//nume coloane
+															{ "id", "codDisciplina", "denumireDisciplina" , "cnpCadruDidactic", "numeCadruDidactic",  "tip"},		//campuri obiect
+															{ "ID", "Cod Disciplina", "Denumire", "CNP Cadru Didactic", "Nume Cadru", "Tip Activitate"}			//nume coloane
 														};
 	final public static String[][]	ADMIN_ORAR_COLUMN_FIELD_MATCH 	= {
 															{ "grupa", "idActivitate", "zi", "ora", "sala", "durata",   "frecventa"},	//campuri obiect
@@ -97,7 +101,7 @@ public class Constants {
 														};
 	final public static String[][]	VIEW_ORAR_STUDENT_COLUMN_FIELD_MATCH = {
 															{ "zi", "ora", "sala", "denumireDisciplina", "durata", "frecventa",  "tipActivitate", "grupa"},	//campuri obiect
-															{ "Zi", "Ora", "Sala", "Denumire", "Durata (h)", "Frecventa",  "Tip", "Grupa"}	//nume coloane
+															{ "Zi", "Ora", "Sala", "Denumire Disciplina", "Durata (h)", "Frecventa",  "Tip", "Grupa"}	//nume coloane
 														};	
 	final public static String[][]	VIEW_EXAMEN_STUDENT_COLUMN_FIELD_MATCH		= {
 															{ "denumireDisciplina", "data", "ora", "sala"},		//campuri obiect
@@ -107,6 +111,7 @@ public class Constants {
 	
 	/*******FIELD SIZES*********/
 	final public static int FIELD_SIZE_GRUPA=6;
+	final public static int FIELD_SIZE_TITLU=12;
 	final public static int FIELD_SIZE_SALA=10;
 	final public static int FIELD_SIZE_NUME=45;
 	final public static int FIELD_SIZE_PRENUME=45;

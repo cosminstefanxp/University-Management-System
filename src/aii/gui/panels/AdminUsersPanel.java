@@ -293,19 +293,24 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 			comboBoxFinantare.setVisible(true);
 			lblFormaFinantare.setVisible(true);
 			
-			textFieldTitluGrupa.setText(object.titlu_grupa);
+			
 			lblTitluGrupa.setText("Grupa");
 			lblTitluGrupa.setVisible(true);
 			textFieldTitluGrupa.setVisible(true);
+			textFieldTitluGrupa.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_GRUPA));
+			textFieldTitluGrupa.setText(object.titlu_grupa);
 		}
 		else if(object.tip==Tip.CADRU_DIDACTIC || object.tip==Tip.SEF_CATEDRA)
 		{
 			lblTitluGrupa.setText("Titulatura");
 			lblTitluGrupa.setVisible(true);
 			textFieldTitluGrupa.setVisible(true);
+			textFieldTitluGrupa.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_TITLU));
+			textFieldTitluGrupa.setText(object.titlu_grupa);
 			
 			comboBoxFinantare.setVisible(false);
 			lblFormaFinantare.setVisible(false);
+			
 		}
 		else
 		{
@@ -446,12 +451,14 @@ public class AdminUsersPanel extends MainPanelAbstract implements ListSelectionL
 				lblTitluGrupa.setText("Grupa");
 				lblTitluGrupa.setVisible(true);
 				textFieldTitluGrupa.setVisible(true);
+				textFieldTitluGrupa.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_GRUPA));
 			}
 			else if(comboBoxTipUtilizator.getSelectedItem()==Tip.CADRU_DIDACTIC || comboBoxTipUtilizator.getSelectedItem()==Tip.SEF_CATEDRA)
 			{
 				lblTitluGrupa.setText("Titulatura");
 				lblTitluGrupa.setVisible(true);
 				textFieldTitluGrupa.setVisible(true);
+				textFieldTitluGrupa.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_TITLU));
 				
 				comboBoxFinantare.setVisible(false);
 				lblFormaFinantare.setVisible(false);

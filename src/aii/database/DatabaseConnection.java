@@ -216,7 +216,14 @@ public class DatabaseConnection {
 		//Insert field values
 		expression += ") VALUES (";
 		for (String value : values)
+		{
+			if(value.equals("false"))
+				value="0";
+			if(value.equals("true"))
+				value="1";
+			
 			expression += "\'" + value + "\',";
+		}
 		expression = expression.substring(0, expression.length() - 1);
 		expression += ")";
 		

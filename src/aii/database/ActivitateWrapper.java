@@ -46,6 +46,34 @@ public class ActivitateWrapper extends ObjectWrapper<Activitate> {
 	}
 	
 	/**
+	 * Gets the activitati joined with other tables.
+	 *
+	 * @param fields the fields
+	 * @param tables the tables
+	 * @param whereClause the where clause
+	 * @return the activitati joined
+	 */
+	public ArrayList<Activitate> getActivitatiJoined(String fields, String tables, String whereClause)
+	{
+		ArrayList<Activitate> activitati = null;
+		try {
+			activitati = this.getObjects(fields, tables, whereClause, null);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"accesului la baza de date!");
+			return null;
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		
+		return activitati;
+	}
+	
+	/**
 	 * Gets the activitate that has a given cod.
 	 *
 	 * @param cod the cod

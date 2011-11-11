@@ -190,7 +190,7 @@ public class PersonalDataPanel extends MainPanelAbstract implements ActionListen
 			textFieldTitluGrupa.setBounds(5, 120, 260, 28);
 			panelSideInfo.add(textFieldTitluGrupa);
 			textFieldTitluGrupa.setColumns(10);
-			textFieldTitluGrupa.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_GRUPA));
+			textFieldTitluGrupa.setDocument(new FixedSizeDocument(Constants.FIELD_SIZE_TITLU));
 			textFieldTitluGrupa.setText(utilizator.titlu_grupa);
 		}
 		

@@ -11,9 +11,17 @@ public class Activitate {
 	public String cnpCadruDidactic;
 	public TipActivitate tip;
 	
+	//Optional
+	public String denumireDisciplina;
+	public String numeCadruDidactic;
+	
 	@Override
 	public String toString() {
 		return "Activitate [cnpCadruDidactic=" + cnpCadruDidactic + ", codDisciplina="
-				+ codDisciplina + ", id=" + id + ", tip=" + tip + "]";
+				+ codDisciplina + ", denumireDisciplina=" + denumireDisciplina + ", id=" + id
+				+ ", numeCadruDidactic=" + numeCadruDidactic + ", tip=" + tip + "]";
 	}
+
+	
+
 }
