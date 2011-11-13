@@ -1,0 +1,52 @@
+/****************************************************************
+ * Stefan-Dobrin Cosmin
+ * 342C4
+ * Aplicatii Integrate pentru Intreprinderi 
+ * Tema 1
+ ****************************************************************/
+ 
+ Detalii Proiect:
+ 	* proiectul a fost implementat folosind tehnologiile Java
+ 	* compilarea si rularea s-a facut folosind Eclipse 3.5 cu Java 1.6 si baze de date MySQL
+ 	* dezvoltarea interfetei grafice s-a realizat cu ajutorul Window Builder
+ 	* dezvoltarea s-a realizat pe sistemul de operare Ubuntu 11.04
+ Detalii implementare:
+	* utilizatorul super-administrator este: 111, cu parola 111
+ 	* aplicatia este impartita in 5 pachete:
+ 		o aii - contine clasele container pentru diversele tipuri de obiecte (utilizatori, discipline, examene, etc)
+ 		o aii.database - contine clasa de acces la baza de date (DatabaseConnector), clasa wrapper peste obiecte pentru scriere/citire/stergere/actualizare din/in baza de date (ObjectWrapper) si particularizari ale acesteia pentru tipurile de obiect folosite
+ 		o aii.gui.frames - contine cele 5 frame-uri folosite in aplicatie: Autentificare, Administrator, Student, Cadru Didactic si Secretar
+ 		o aii.gui.panels - contine implementarile panel-urilor folosite in aplicatie
+ 		o aii.gui.tools - clase ajutatoare pentru GUI
+ 	* in baza de date, am folosit modelul bazelor dat in enuntul problemelor, cu spargerea tabelei orar in 2 sectiuni:
+ 		o activitate - pentru asocierea 'cadru didactic'-'disciplina'-'tip activitate' 
+		o orar - pentru restul informatiilor particularizate - asocierea activitate - grupa - sala -ora
+	* toate tipurile de utilizatori sunt tinute intr-o baza de date comuna, eventual cu alte semnificatii ale campurilor, pentru a usura sectiune de setari personale si de interogari
+	* am folosit clasa ObjectWrapper, implementata cu Java Reflection, pentru a abstractiza citirea/scrierea/stergerea/actualizarea unor obiecte Java in baza de date. Dandu-se o asociere nume_camp_baza_date - nume_camp_obiect_java, se creaza automat interogarile/cererile SQL care realizeaza operatiile mentionate
+	* pentru interfata grafica, am folosit cate un frame pentru fiecare tip de control panel (per tip utilizator)
+		o la schimbarea tipului de actiune dorit, se schimba doar panelul central din formularul respectiv
+		o acest panel central implementeaza MainPanelAbstract ce poate fi introdus in frame-uri
+		o acest procedeu a usurat foarte mult realizarea programului si a scazut cantitatea de cod necesara
+	* am incercat sa abstractizez/generalizez cat mai mult fiecare sectiune a programului, cu scopul de a scadea cantitatea de cod necesara
+	* cererile realizate pentru popularea/obtinerea tabelelor sunt in principal generate dinamic de ObjectWrapper, cu mici exceptii pentru cazurile particulare (de exemplu obtinerea situatiei studentului)
+	* baza de date a fost populata cu utilizatori cu CNP-uri invalide (si e dezactivata momentan verificarea pentru lungime CNP) pentru a usura si accelera testarea.
+Detalii bonus:
+	* am realizat si bonusul de trecere a studentilor in anul universitar urmator. 
+	* ca implementare, am selectat studentii folosind expresia SQL de mai jos (care obtine studentii ce trebuie sa promoveze) si am actualizat grupele acestora
+	* expresie SQL:
+		SELECT u.*, o.an_studiu
+		FROM catalog c
+		INNER JOIN disciplina d
+			ON d.cod=c.cod_disciplina
+		RIGHT JOIN optiuni_contract o
+			ON c.cod_disciplina=o.cod_disciplina AND o.cnp_student=c.cnp_student
+		RIGHT JOIN utilizatori u
+			ON u.cnp=o.cnp_student
+		WHERE c.nota >= 5
+		GROUP BY o.an_studiu, u.nume, u.prenume
+		HAVING sum(IFNULL(d.puncte_credit,0)) > (SELECT sum(d1.puncte_credit)
+											FROM optiuni_contract o1, disciplina d1
+											WHERE o1.cod_disciplina=d1.cod
+												AND o1.an_studiu = o.an_studiu
+												AND o1.cnp_student =u.cnp		
+											GROUP BY d1.an_studiu) / 2
