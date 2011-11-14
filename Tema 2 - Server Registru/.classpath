@@ -2,5 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Tema 2 - Commons/tema2_commons.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
