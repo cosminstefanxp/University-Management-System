@@ -1,3 +1,9 @@
+/*
+ * Aplicatii Integrate pentru Intreprinderi
+ * 
+ * Stefan-Dobrin Cosmin
+ * 342C4
+ */
 package aii.database;
 
 import java.sql.SQLException;
@@ -127,6 +133,36 @@ public class DisciplinaWrapper extends ObjectWrapper<Disciplina> {
 	{
 		try {
 			this.updateObject(Constants.DISCIPLINA_TABLE, disciplinaVeche, disciplinaNoua);
+		} catch (MySQLIntegrityConstraintViolationException e){
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,"Aveti campuri invalide: "+e.getMessage());	
+			return false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"accesului la baza de date!");
+			return false;
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Updates a disciplina in the database.
+	 *
+	 * @param whereClause the where clause
+	 * @param disciplinaNoua the disciplina noua
+	 * @return true, if successful
+	 */
+	public boolean updateDisciplina(String whereClause, Disciplina disciplinaNoua)
+	{
+		try {
+			this.updateObject(Constants.DISCIPLINA_TABLE, whereClause, disciplinaNoua);
 		} catch (MySQLIntegrityConstraintViolationException e){
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null,"Aveti campuri invalide: "+e.getMessage());	

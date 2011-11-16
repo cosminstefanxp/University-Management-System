@@ -12,141 +12,174 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
+import javax.imageio.IIOException;
+
 import aii.Activitate;
 import aii.Examen;
 import aii.Orar;
 import aii.OrarComplet;
+import aii.Utilizator;
+import aii.Utilizator.Tip;
+import aii.database.ActivitateWrapper;
+import aii.database.ExamenWrapper;
+import aii.database.OrarWrapper;
+import aii.database.UtilizatorWrapper;
 
 /**
  * The Class RegistruActivitatiDidacticeServer.
  */
 public class RegistruActivitatiDidacticeServer implements RegistruActivitatiDidactice {
 
-	/** The Constant PUBLISH_NAME. */
-	public static final String PUBLISH_NAME = "RADServiciu";
+	private static UtilizatorWrapper utilizatorDAO=new UtilizatorWrapper();
+	private static OrarWrapper orarDAO=new OrarWrapper();
+	private static ActivitateWrapper activitateDAO=new ActivitateWrapper();
+	private static ExamenWrapper examenDAO=new ExamenWrapper();
+	
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * aii.rad.RegistruActivitatiDidactice#adaugareActivitateOrar(java.util.
-	 * ArrayList)
+
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#adaugareActivitateOrar(java.lang.String, java.util.ArrayList)
 	 */
 	@Override
-	public int adaugareActivitateOrar(ArrayList<Orar> activitatiDidactice) throws RemoteException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * aii.rad.RegistruActivitatiDidactice#adaugareExamen(java.util.ArrayList)
-	 */
-	@Override
-	public int adaugareExamen(ArrayList<Examen> examene) throws RemoteException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * aii.rad.RegistruActivitatiDidactice#editareActivitateOrar(java.util.ArrayList
-	 * )
-	 */
-	@Override
-	public int editareActivitateOrar(ArrayList<Orar> activitatiDidactice) throws RemoteException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * aii.rad.RegistruActivitatiDidactice#editareExamen(java.util.ArrayList)
-	 */
-	@Override
-	public int editareExamen(ArrayList<Examen> examene) throws RemoteException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see aii.rad.RegistruActivitatiDidactice#obtineOrarComplet(int)
-	 */
-	@Override
-	public ArrayList<OrarComplet> obtineOrarComplet(int CNPStudent) throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see aii.rad.RegistruActivitatiDidactice#obtineProgramareExamene(int)
-	 */
-	@Override
-	public ArrayList<Examen> obtineProgramareExamene(int CNPStudent) throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeaii.rad.RegistruActivitatiDidactice#stabilesteActivitatePredare(aii.
-	 * Activitate)
-	 */
-	@Override
-	public boolean stabilesteActivitatePredare(Activitate activitate) throws RemoteException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * aii.rad.RegistruActivitatiDidactice#stabilesteFormatieDeStudiu(java.util
-	 * .ArrayList, int)
-	 */
-	@Override
-	public int stabilesteFormatieDeStudiu(ArrayList<String> CNPStudent, int grupa)
+	public int adaugareActivitateOrar(String cnpSecretar, ArrayList<Orar> activitatiDidactice)
 			throws RemoteException {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * aii.rad.RegistruActivitatiDidactice#stergereActivitateOrar(java.util.
-	 * ArrayList)
+
+
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#adaugareExamen(java.lang.String, java.util.ArrayList)
 	 */
 	@Override
-	public int stergereActivitateOrar(ArrayList<Orar> activitatiDidactice) throws RemoteException {
+	public int adaugareExamen(String cnpSecretar, ArrayList<Examen> examene) throws RemoteException {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * aii.rad.RegistruActivitatiDidactice#stergereExamen(java.util.ArrayList)
+
+
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#editareActivitateOrar(java.lang.String, java.util.ArrayList)
 	 */
 	@Override
-	public int stergereExamen(ArrayList<Examen> examene) throws RemoteException {
+	public int editareActivitateOrar(String cnpSecretar, ArrayList<Orar> activitatiDidactice)
+			throws RemoteException {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+
+
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#editareExamen(java.lang.String, java.util.ArrayList)
+	 */
+	@Override
+	public int editareExamen(String cnpSecretar, ArrayList<Examen> examene) throws RemoteException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#obtineOrarComplet(java.lang.String)
+	 */
+	@Override
+	public ArrayList<OrarComplet> obtineOrarComplet(String CNPStudent) throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#obtineProgramareExamene(java.lang.String)
+	 */
+	@Override
+	public ArrayList<Examen> obtineProgramareExamene(String CNPStudent) throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#stabilesteActivitatePredare(java.lang.String, aii.Activitate)
+	 */
+	@Override
+	public boolean stabilesteActivitatePredare(String cnpSefCatedra, Activitate activitate)
+			throws RemoteException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#stabilesteFormatieDeStudiu(java.lang.String, java.util.ArrayList, int)
+	 */
+	@Override
+	public int stabilesteFormatieDeStudiu(String cnpSecretar, ArrayList<String> CNPStudent,
+			int grupa) throws RemoteException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#stergereActivitateOrar(java.lang.String, java.util.ArrayList)
+	 */
+	@Override
+	public int stergereActivitateOrar(String cnpSecretar, ArrayList<Orar> activitatiDidactice)
+			throws RemoteException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#stergereExamen(java.lang.String, java.util.ArrayList)
+	 */
+	@Override
+	public int stergereExamen(String cnpSecretar, ArrayList<Examen> examene) throws RemoteException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#autentificaUtilizator(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public Utilizator autentificaUtilizator(String CNP, String parola) throws RemoteException {
+		Utilizator utilizator;
+
+		//obtine utilizatorul. daca a fost intampinata o eroare, intoarce null
+		utilizator=utilizatorDAO.getUtilizator(CNP);
+		if(utilizator==null || !utilizator.parola.equals(parola))
+			return null;
+		
+		return utilizator;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#autentificaUtilizator(java.lang.String, aii.Utilizator.Tip)
+	 */
+	@Override
+	public boolean autentificaUtilizator(String CNP, Tip permisiuni) throws RemoteException {
+		
+		Utilizator utilizator;
+		//obtine utilizatorul. daca a fost intampinata o eroare, intoarce null
+		utilizator=utilizatorDAO.getUtilizator(CNP);
+		if(utilizator==null || utilizator.tip!=permisiuni)
+			return false;
+		return true;
+	}
+
 
 	/**
 	 * The main method.
@@ -174,5 +207,9 @@ public class RegistruActivitatiDidacticeServer implements RegistruActivitatiDida
 
 		System.out.println("Initializare completa a serverului pentru " + PUBLISH_NAME);
 	}
+
+
+
+
 
 }

@@ -4,7 +4,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -19,9 +19,6 @@ import javax.swing.border.LineBorder;
 import net.miginfocom.swing.MigLayout;
 import aii.Utilizator;
 import aii.Utilizator.Tip;
-import aii.gui.panels.AdminUsersPanel;
-import aii.gui.panels.PersonalDataPanel;
-import javax.swing.JCheckBoxMenuItem;
 
 /**
  * The Administrator frame that contains all the features that the admin uses.
@@ -31,8 +28,6 @@ public class AdminFrame extends JFrame implements ActionListener{
 
 	private JPanel contentPane;
 	private JPanel mainPanel;
-	private JButton btnSetariPersonale;
-	private JButton btnAdminUtilizatori;
 	private Utilizator utilizator;
 	public JLabel statusLbl;
 
@@ -54,6 +49,7 @@ public class AdminFrame extends JFrame implements ActionListener{
 		menuBar.add(mnAdministrare);
 		
 		JMenuItem mntmAdminUtilizatori = new JMenuItem("Administrare Utilizatori");
+		mntmAdminUtilizatori.setEnabled(false);
 		mntmAdminUtilizatori.addActionListener(this);
 		mnAdministrare.add(mntmAdminUtilizatori);
 		
@@ -69,6 +65,7 @@ public class AdminFrame extends JFrame implements ActionListener{
 		menuBar.add(mnSetari);
 		
 		JMenuItem mntmSetariPersonale = new JMenuItem("Setari Personale");
+		mntmSetariPersonale.setEnabled(false);
 		mntmSetariPersonale.addActionListener(this);
 		mnSetari.add(mntmSetariPersonale);
 		
@@ -96,17 +93,7 @@ public class AdminFrame extends JFrame implements ActionListener{
 		mainPanel.setLayout(null);
 		contentPane.add(mainPanel, "cell 0 2,grow");
 		
-		btnSetariPersonale = new JButton("Setari personale");
-		btnSetariPersonale.setBounds(25, 50, 198, 25);
-		btnSetariPersonale.addActionListener(this);
-		mainPanel.add(btnSetariPersonale);
-		
-		btnAdminUtilizatori = new JButton("Administrare utilizatori");
-		btnAdminUtilizatori.setBounds(25, 88, 198, 25);
-		btnAdminUtilizatori.addActionListener(this);
-		mainPanel.add(btnAdminUtilizatori);
-		
-		JLabel lblFolositiMeniulSau = new JLabel("Folositi meniul sau unul dintre butoanele de mai jos pentru a interactiona cu sistemul:");
+		JLabel lblFolositiMeniulSau = new JLabel("Pentru cerinta curenta a temei, interfata de administrator a fost dezactivata.");
 		lblFolositiMeniulSau.setBounds(25, 23, 613, 15);
 		mainPanel.add(lblFolositiMeniulSau);
 	}
@@ -120,59 +107,5 @@ public class AdminFrame extends JFrame implements ActionListener{
         if (source instanceof JMenu)
             System.out.println (((JMenu)source).getText());
         
-        // Check menu item events
-        if (source instanceof JMenuItem)
-        {
-        	//Date personale
-        	JMenuItem sourceItem=(JMenuItem)source;
-        	if(sourceItem.getText().toLowerCase().equals("setari personale"))
-        	{
-        		System.out.println("Menu: Setari personale");
-        		
-        		contentPane.remove(mainPanel);
-        		mainPanel=new PersonalDataPanel(utilizator, statusLbl);
-        		
-        		contentPane.add(mainPanel, "cell 0 2,grow");
-        		contentPane.revalidate();        		
-        	}
-        	if(sourceItem.getText().toLowerCase().equals("administrare utilizatori"))
-        	{
-        		System.out.println("Meniu: Administrare Utilizatori");
-        		
-        		contentPane.remove(mainPanel);
-        		mainPanel=new AdminUsersPanel(utilizator, statusLbl);
-        		
-        		contentPane.add(mainPanel, "cell 0 2,grow");
-        		contentPane.revalidate();        		
-        	}
-        
-        }
-        
-        // Check buttons
-        if(source instanceof JButton)
-        {
-        	if(source==this.btnSetariPersonale)
-        	{
-        		System.out.println("Buton: Setari personale");
-        		
-        		contentPane.remove(mainPanel);
-        		mainPanel=new PersonalDataPanel(utilizator, statusLbl);
-        		
-        		contentPane.add(mainPanel, "cell 0 2,grow");
-        		contentPane.revalidate();        		
-        	}
-        	
-        	if(source==this.btnAdminUtilizatori)
-        	{
-        		System.out.println("Buton: Administrare Utilizatori");
-        		
-        		contentPane.remove(mainPanel);
-        		mainPanel=new AdminUsersPanel(utilizator, statusLbl);
-        		
-        		contentPane.add(mainPanel, "cell 0 2,grow");
-        		contentPane.revalidate();        		
-        	}
-        }
-		
 	}
 }

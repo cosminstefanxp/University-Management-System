@@ -15,82 +15,115 @@ import java.util.Calendar;
 
 import aii.Disciplina;
 import aii.SituatieScolara;
+import aii.database.DisciplinaWrapper;
+import aii.database.NotaCatalogWrapper;
+import aii.database.OptiuneContractWrapper;
 
 /**
  * The Class ArhivaServer.
  */
 public class ArhivaServer implements Arhiva {
 
-	public static final String PUBLISH_NAME="ServiciuArhiva";
+	static DisciplinaWrapper disciplinaDAO=new DisciplinaWrapper();
+	static NotaCatalogWrapper notaCatalogDAO=new NotaCatalogWrapper();
+	static OptiuneContractWrapper optiuneContractDAO=new OptiuneContractWrapper();
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see aii.arhiva.Arhiva#adaugareDisciplina(java.util.ArrayList)
+	/* (non-Javadoc)
+	 * @see aii.arhiva.Arhiva#adaugareDisciplina(java.lang.String, java.util.ArrayList)
 	 */
 	@Override
-	public int adaugareDisciplina(ArrayList<Disciplina> discipline) throws RemoteException {
-		// TODO Auto-generated method stub
-		return 0;
+	public int adaugareDisciplina(String CNPCadruDidactic, ArrayList<Disciplina> discipline)
+			throws RemoteException {
+		
+		int count=0;
+		boolean success;
+		//introducem fiecare disciplina in baza de date si numaram cate insertii au avut succes
+		for(Disciplina disciplina : discipline)
+		{
+			success=disciplinaDAO.insertDisciplina(disciplina);
+			if(success)
+				count++;
+		}
+		return count;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see aii.arhiva.Arhiva#editareDisciplina(java.util.ArrayList)
+
+
+	/* (non-Javadoc)
+	 * @see aii.arhiva.Arhiva#editareDisciplina(java.lang.String, java.util.ArrayList)
 	 */
 	@Override
-	public int editareDisciplina(ArrayList<Disciplina> discipline) throws RemoteException {
-		// TODO Auto-generated method stub
-		return 0;
+	public int editareDisciplina(String CNPCadruDidactic, ArrayList<Disciplina> discipline)
+			throws RemoteException {
+		
+		int count=0;
+		boolean success;
+		//editam fiecare disciplina in baza de date si numaram cate editari au avut succes
+		for(Disciplina disciplina : discipline)
+		{
+			success=disciplinaDAO.updateDisciplina("cod=\'"+disciplina.cod+"\'", disciplina);
+			if(success)
+				count++;
+		}
+		return count;
+	}
+	
+	/* (non-Javadoc)
+	 * @see aii.arhiva.Arhiva#stergereDisciplina(java.lang.String, java.util.ArrayList)
+	 */
+	@Override
+	public int stergereDisciplina(String CNPCadruDidactic, ArrayList<Disciplina> discipline)
+			throws RemoteException {
+		
+		int count=0;
+		boolean success;
+		//stergem fiecare disciplina din baza de date si numaram cate stergeri au avut succes
+		for(Disciplina disciplina : discipline)
+		{
+			success=disciplinaDAO.deleteDisciplina(disciplina);
+			if(success)
+				count++;
+		}
+		return count;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see aii.arhiva.Arhiva#obtineNota(int, java.util.ArrayList)
+
+	/* (non-Javadoc)
+	 * @see aii.arhiva.Arhiva#obtineNota(java.lang.String, java.util.ArrayList)
 	 */
 	@Override
-	public ArrayList<Integer> obtineNota(int CNPStudent, ArrayList<Integer> codDisciplina)
+	public ArrayList<Integer> obtineNota(String CNPStudent, ArrayList<Integer> codDisciplina)
 			throws RemoteException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see aii.arhiva.Arhiva#obtineSituatieScolara(int)
+
+
+	/* (non-Javadoc)
+	 * @see aii.arhiva.Arhiva#obtineSituatieScolara(java.lang.String)
 	 */
 	@Override
-	public SituatieScolara obtineSituatieScolara(int CNPStudent) throws RemoteException {
+	public SituatieScolara obtineSituatieScolara(String CNPStudent) throws RemoteException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see aii.arhiva.Arhiva#stabilesteNota(int, int, int, int,
-	 * java.util.Calendar)
+
+
+	/* (non-Javadoc)
+	 * @see aii.arhiva.Arhiva#stabilesteNota(java.lang.String, int, java.lang.String, int, java.util.Calendar)
 	 */
 	@Override
-	public boolean stabilesteNota(int CNPCadruDidactic, int codDisciplina, int CNPStudent,
+	public boolean stabilesteNota(String CNPCadruDidactic, int codDisciplina, String CNPStudent,
 			int nota, Calendar data) throws RemoteException {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see aii.arhiva.Arhiva#stergereDisciplina(java.util.ArrayList)
-	 */
-	@Override
-	public int stergereDisciplina(ArrayList<Disciplina> discipline) throws RemoteException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+
+
+
 
 	/**
 	 * The main method.
@@ -117,4 +150,8 @@ public class ArhivaServer implements Arhiva {
 		
 		System.out.println("Initializare completa a serverului pentru "+PUBLISH_NAME);
 	}
+
+
+
+	
 }
