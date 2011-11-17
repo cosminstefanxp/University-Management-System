@@ -18,11 +18,13 @@ import javax.swing.border.LineBorder;
 
 import net.miginfocom.swing.MigLayout;
 import aii.Utilizator;
+import aii.arhiva.Arhiva;
 import aii.gui.panels.AdminContractStudiiPanel;
 import aii.gui.panels.PersonalDataPanel;
 import aii.gui.panels.ViewExamenePanel;
 import aii.gui.panels.ViewOrarPanel;
 import aii.gui.panels.ViewSituatiePanel;
+import aii.rad.RegistruActivitatiDidactice;
 
 /**
  * The Administrator frame that contains all the features that the admin uses.
@@ -39,13 +41,17 @@ public class StudentFrame extends JFrame implements ActionListener{
 	private JButton btnOrar;
 	private JButton btnSituatieScolara;
 	private JButton btnProgramareExamene;
+	private Arhiva arhivaService;
+	private RegistruActivitatiDidactice radService;
 
 
 	/**
 	 * Create the frame.
 	 */
-	public StudentFrame(Utilizator utilizator) {
+	public StudentFrame(Arhiva arhivaService, RegistruActivitatiDidactice radService, Utilizator utilizator) {
 		this.utilizator=utilizator;
+		this.arhivaService=arhivaService;
+		this.radService=radService;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1052, 800);

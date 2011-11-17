@@ -22,17 +22,22 @@ import aii.database.OptiuneContractWrapper;
 /**
  * The Class ArhivaServer.
  */
-public class ArhivaServer implements Arhiva {
+public class ArhivaServer implements Arhiva{
 
+	/** The disciplina dao. */
 	static DisciplinaWrapper disciplinaDAO=new DisciplinaWrapper();
+	
+	/** The nota catalog dao. */
 	static NotaCatalogWrapper notaCatalogDAO=new NotaCatalogWrapper();
+	
+	/** The optiune contract dao. */
 	static OptiuneContractWrapper optiuneContractDAO=new OptiuneContractWrapper();
 	
 	/* (non-Javadoc)
 	 * @see aii.arhiva.Arhiva#adaugareDisciplina(java.lang.String, java.util.ArrayList)
 	 */
 	@Override
-	public int adaugareDisciplina(String CNPCadruDidactic, ArrayList<Disciplina> discipline)
+	public int adaugareDisciplina(ArrayList<Disciplina> discipline)
 			throws RemoteException {
 		
 		int count=0;
@@ -53,7 +58,7 @@ public class ArhivaServer implements Arhiva {
 	 * @see aii.arhiva.Arhiva#editareDisciplina(java.lang.String, java.util.ArrayList)
 	 */
 	@Override
-	public int editareDisciplina(String CNPCadruDidactic, ArrayList<Disciplina> discipline)
+	public int editareDisciplina(ArrayList<Disciplina> discipline)
 			throws RemoteException {
 		
 		int count=0;
@@ -72,7 +77,7 @@ public class ArhivaServer implements Arhiva {
 	 * @see aii.arhiva.Arhiva#stergereDisciplina(java.lang.String, java.util.ArrayList)
 	 */
 	@Override
-	public int stergereDisciplina(String CNPCadruDidactic, ArrayList<Disciplina> discipline)
+	public int stergereDisciplina(ArrayList<Disciplina> discipline)
 			throws RemoteException {
 		
 		int count=0;
@@ -121,9 +126,42 @@ public class ArhivaServer implements Arhiva {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see aii.arhiva.Arhiva#adaugareDisciplina(aii.Disciplina)
+	 */
+	@Override
+	public boolean adaugareDisciplina(Disciplina disciplina) throws RemoteException {
+		return disciplinaDAO.insertDisciplina(disciplina);
+	}
 
 
 
+	/* (non-Javadoc)
+	 * @see aii.arhiva.Arhiva#editareDisciplina(aii.Disciplina)
+	 */
+	@Override
+	public boolean editareDisciplina(Disciplina disciplina) throws RemoteException {
+		return disciplinaDAO.updateDisciplina("cod=\'"+disciplina.cod+"\'", disciplina);
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see aii.arhiva.Arhiva#stergereDisciplina(aii.Disciplina)
+	 */
+	@Override
+	public boolean stergereDisciplina(Disciplina disciplina) throws RemoteException {
+		return disciplinaDAO.deleteDisciplina(disciplina);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see aii.arhiva.Arhiva#obtineDiscipline()
+	 */
+	@Override
+	public ArrayList<Disciplina> obtineDiscipline() throws RemoteException {
+		return disciplinaDAO.getDiscipline("cod=cod");	//toate disciplinele
+	}
 
 	/**
 	 * The main method.
@@ -150,6 +188,11 @@ public class ArhivaServer implements Arhiva {
 		
 		System.out.println("Initializare completa a serverului pentru "+PUBLISH_NAME);
 	}
+
+
+
+
+
 
 
 

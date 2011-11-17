@@ -152,17 +152,17 @@ public class AuthenticationFrame implements ActionListener {
 		case CADRU_DIDACTIC:
 		case SEF_CATEDRA:
 			mainFrame.dispose();
-			mainFrame = new TeacherFrame(utilizator);
+			mainFrame = new TeacherFrame(arhivaService, radService, utilizator);
 			mainFrame.setVisible(true);
 			break;
 		case SECRETAR:
 			mainFrame.dispose();
-			mainFrame = new SecretaryFrame(utilizator);
+			mainFrame = new SecretaryFrame(arhivaService, radService, utilizator);
 			mainFrame.setVisible(true);
 			break;
 		case STUDENT:
 			mainFrame.dispose();
-			mainFrame = new StudentFrame(utilizator);
+			mainFrame = new StudentFrame(arhivaService, radService, utilizator);
 			mainFrame.setVisible(true);
 			break;
 		default:

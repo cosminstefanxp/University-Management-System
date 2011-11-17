@@ -173,4 +173,34 @@ public class ActivitateWrapper extends ObjectWrapper<Activitate> {
 		
 		return true;
 	}
+	
+	/**
+	 * Updates an activitate in the database.
+	 *
+	 * @param activitateVeche the activitate veche
+	 * @param activitateNoua the activitate noua
+	 * @return true, if successful
+	 */
+	public boolean updateActivitate(String whereClause, Activitate activitateNoua)
+	{
+		try {
+			this.updateObject(Constants.ACTIVITATE_TABLE, whereClause, activitateNoua);
+		} catch (MySQLIntegrityConstraintViolationException e){
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,"Aveti campuri invalide: "+e.getMessage());	
+			return false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"accesului la baza de date!");
+			return false;
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
 }

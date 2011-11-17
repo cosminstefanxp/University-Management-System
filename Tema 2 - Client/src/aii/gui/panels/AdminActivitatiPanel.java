@@ -2,7 +2,7 @@ package aii.gui.panels;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
@@ -21,15 +21,14 @@ import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
 import aii.Activitate;
+import aii.Constants;
 import aii.Disciplina;
 import aii.Utilizator;
 import aii.Activitate.TipActivitate;
 import aii.Disciplina.TipDisciplina;
-import aii.database.ActivitateWrapper;
-import aii.database.Constants;
-import aii.database.DisciplinaWrapper;
-import aii.database.UtilizatorWrapper;
+import aii.arhiva.Arhiva;
 import aii.gui.tools.ObjectTableModel;
+import aii.rad.RegistruActivitatiDidactice;
 
 
 @SuppressWarnings("serial")
@@ -44,11 +43,8 @@ public class AdminActivitatiPanel extends MainPanelAbstract implements ListSelec
 	private ObjectTableModel<Activitate> mainTableModel;
 	private ObjectTableModel<Disciplina> disciplineTableModel;
 	private ObjectTableModel<Utilizator> utilizatoriTableModel;
-	private ActivitateWrapper activitatiDAO=new ActivitateWrapper();
-	private DisciplinaWrapper disciplineDAO=new DisciplinaWrapper();
-	private UtilizatorWrapper utilizatoriDAO=new UtilizatorWrapper();
 	
-	private JLabel statusLbl;
+
 	private JButton btnSalveaza;
 	private JButton btnSterge;
 	private JButton btnAdauga;
@@ -61,41 +57,35 @@ public class AdminActivitatiPanel extends MainPanelAbstract implements ListSelec
 	/**
 	 * Create the panel.
 	 */
-	public AdminActivitatiPanel(Utilizator utilizator, JLabel statusLbl) {
-		this.utilizator=utilizator;
-		this.statusLbl=statusLbl;
+	public AdminActivitatiPanel(Arhiva arhivaService, RegistruActivitatiDidactice radService,
+			Utilizator utilizator, JLabel statusLabel) {
+		//Initialize the MainPanelAbstract object
+		super(arhivaService, radService, utilizator, statusLabel);
+		
 		this.statusLbl.setText("Administrare activitati de predare. Selecteaza valorile dorite pentru a crea o noua disciplina sau selecteaza un rand pentru a il modifica.");
 		
 		//Get the objects and prepare the table models		
 		try {
 			//Table model for "Activitate"
-			//Special Field Match to join to get more details
-			activitatiDAO.setNameMatch(Constants.ACTIVITATE_FIELD_MATCH_FULL);
-			objects=activitatiDAO.getActivitatiJoined("a.id, a.cod_disciplina, a.cnp_cadru_didactic, a.tip, d.denumire, concat(u.nume,concat(\" \",u.prenume)) nume", 
-					Constants.ACTIVITATE_TABLE+" a, "+Constants.DISCIPLINA_TABLE+" d, "+Constants.USER_TABLE+" u",
-					"a.cod_disciplina=d.cod AND u.cnp=a.cnp_cadru_didactic");
-			//Normal FieldMatch
-			activitatiDAO.setNameMatch(Constants.ACTIVITATE_FIELD_MATCH);
+			objects=radService.obtinereActivitatePredare();
 			
 			mainTableModel=new ObjectTableModel<Activitate>(Activitate.class,
 					objects,
 					Constants.ADMIN_ACTIVITATE_COLUMN_FIELD_MATCH[1],
 					Constants.ADMIN_ACTIVITATE_COLUMN_FIELD_MATCH[0]);
 			//Table model for "Disciplina"
-			discipline=disciplineDAO.getObjects(Constants.DISCIPLINA_TABLE,"cod=cod");
+			discipline=arhivaService.obtineDiscipline();
 			disciplineTableModel=new ObjectTableModel<Disciplina>(Disciplina.class,
 					discipline,
-					new String[] {"Cod","Denumire"},
-					new String[] {"cod","denumire"});
+					new String[] {"Cod"},
+					new String[] {"cod"});
 			//Table model for "Utilizator"
-			utilizatori=utilizatoriDAO.getObjects(Constants.USER_TABLE,"tip=\'CADRU_DIDACTIC\' OR tip=\'SEF_CATEDRA\'");
+			utilizatori=radService.obtineUtilizatori("tip=\'SEF_CATEDRA\' OR tip=\'CADRU_DIDACTIC\'");
 			utilizatoriTableModel=new ObjectTableModel<Utilizator>(Utilizator.class,
 					utilizatori,
 					new String[] {"CNP","Nume","Prenume"},
 					new String[] {"CNP","nume","prenume"});
 			
-		} catch (SQLException e) {
-			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -255,8 +245,13 @@ public class AdminActivitatiPanel extends MainPanelAbstract implements ListSelec
 				return;
 			
 			//Delete the disciplina
-			if(!activitatiDAO.deleteActivitate(objects.get(table.getSelectedRow())))
-				return;
+			try {
+				if(!radService.stergereActivitatePredare(objects.get(table.getSelectedRow())))
+					return;
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			statusLbl.setText("Activitatea "+objects.get(table.getSelectedRow()).id+" a fost stearsa.");
 			
@@ -289,22 +284,22 @@ public class AdminActivitatiPanel extends MainPanelAbstract implements ListSelec
 			{
 				object.id=0;
 				
-				//Insert the new user
+				//Insert the new activitate
 				System.out.println("Activitate noua: "+object);
-				if(!activitatiDAO.insertActivitate(object))
-					return;
+				try {
+					if(!radService.stabilesteActivitatePredare(object))
+						return;
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			
 				statusLbl.setText("S-a creat o activitate noua.");
 				
 				//Update JTable - need new pull from database, as a new id was generated
 				try {
 					//Special Field Match to join to get more details
-					activitatiDAO.setNameMatch(Constants.ACTIVITATE_FIELD_MATCH_FULL);
-					objects=activitatiDAO.getActivitatiJoined("a.id, a.cod_disciplina, a.cnp_cadru_didactic, a.tip, d.denumire, concat(u.nume,concat(\" \",u.prenume)) nume", 
-							Constants.ACTIVITATE_TABLE+" a, "+Constants.DISCIPLINA_TABLE+" d, "+Constants.USER_TABLE+" u",
-							"a.cod_disciplina=d.cod AND u.cnp=a.cnp_cadru_didactic");
-					//Normal FieldMatch
-					activitatiDAO.setNameMatch(Constants.ACTIVITATE_FIELD_MATCH);
+					objects=radService.obtinereActivitatePredare();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -317,12 +312,15 @@ public class AdminActivitatiPanel extends MainPanelAbstract implements ListSelec
 			else //If it's an old entry
 			{
 				object.id=objects.get(table.getSelectedRow()).id;
-				object.denumireDisciplina=discipline.get(tableDisciplina.getSelectedRow()).denumire;
-				object.numeCadruDidactic=utilizatori.get(tableCadruDidactic.getSelectedRow()).nume+" "+utilizatori.get(tableCadruDidactic.getSelectedRow()).prenume;
 				
 				System.out.println("Activitate existenta -> modificata in " + object);
-				if(!activitatiDAO.updateActivitate(objects.get(table.getSelectedRow()), object))
-					return;
+				try {
+					if(!radService.editareActivitatePredare(object))
+						return;
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 				statusLbl.setText("Activitatea "+object.id+" a fost actualizata.");
 				

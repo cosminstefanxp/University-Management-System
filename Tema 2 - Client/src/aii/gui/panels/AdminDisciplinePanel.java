@@ -2,6 +2,7 @@ package aii.gui.panels;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -24,27 +25,24 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
+import aii.Constants;
 import aii.Disciplina;
 import aii.Utilizator;
 import aii.Disciplina.Examinare;
 import aii.Disciplina.TipDisciplina;
-import aii.database.Constants;
-import aii.database.DisciplinaWrapper;
+import aii.arhiva.Arhiva;
 import aii.gui.tools.FixedSizeDocument;
 import aii.gui.tools.ObjectTableModel;
+import aii.rad.RegistruActivitatiDidactice;
 
 
 @SuppressWarnings("serial")
 public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelectionListener, ActionListener {
 	
-	@SuppressWarnings("unused")
-	private Utilizator utilizator;
 	private JTable table;
 	private ArrayList<Disciplina> objects;
 	private ObjectTableModel<Disciplina> tableModel;
-	private DisciplinaWrapper disciplinaDAO=new DisciplinaWrapper();
 	
-	private JLabel statusLbl;
 	private JTextField textFieldCodDisciplina;
 	private JButton btnSalveaza;
 	private JButton btnSterge;
@@ -63,21 +61,21 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 	/**
 	 * Create the panel.
 	 */
-	public AdminDisciplinePanel(Utilizator utilizator, JLabel statusLbl) {
-		this.utilizator=utilizator;
-		this.statusLbl=statusLbl;
+	public AdminDisciplinePanel(Arhiva arhivaService, RegistruActivitatiDidactice radService,
+			Utilizator utilizator, JLabel statusLabel) {
+		//Initialize the MainPanelAbstract object
+		super(arhivaService, radService, utilizator, statusLabel);
+		
 		this.statusLbl.setText("Administrare discipline. Completeaza campurile pentru a crea o noua disciplina sau selecteaza un rand pentru a il modifica.");
 		
 		//Get the objects		
 		try {
-			objects=disciplinaDAO.getObjects(Constants.DISCIPLINA_TABLE,"cod=cod");
+			objects = arhivaService.obtineDiscipline();
 			tableModel=new ObjectTableModel<Disciplina>(Disciplina.class,
 					objects,
 					Constants.ADMIN_DISCIPLINA_COLUMN_FIELD_MATCH[1],
 					Constants.ADMIN_DISCIPLINA_COLUMN_FIELD_MATCH[0]);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
+		}catch (Exception e) {
 			e.printStackTrace();
 		}
 		setLayout(new MigLayout("", "[799.00px:1022.00px]", "[132.00px:370.00px][245.00px:243.00px]"));
@@ -292,9 +290,15 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 			if(table.getSelectedRow()==-1)
 				return;
 			
+			
 			//Delete the disciplina
-			if(!disciplinaDAO.deleteDisciplina(objects.get(table.getSelectedRow())))
-				return;
+			try {
+				if(!arhivaService.stergereDisciplina(objects.get(table.getSelectedRow())))
+					return;
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			statusLbl.setText("Disciplina "+objects.get(table.getSelectedRow()).denumire+" a fost stearsa.");
 			
@@ -343,16 +347,19 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 				
 				//Insert the new user
 				System.out.println("Disciplina noua: "+object);
-				if(!disciplinaDAO.insertDisciplina(object))
-					return;
+				try {
+					if(!arhivaService.adaugareDisciplina(object))
+						return;
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			
 				statusLbl.setText("S-a creat o disciplina noua.");
 				
 				//Update JTable - need new pull from database, as a new id was generated
 				try {
-					objects=disciplinaDAO.getObjects(Constants.DISCIPLINA_TABLE,"cod=cod");
-				} catch (SQLException e) {
-					e.printStackTrace();
+					objects=arhivaService.obtineDiscipline();
 				} catch (Exception e) {
 					e.printStackTrace();
 				} 
@@ -365,8 +372,12 @@ public class AdminDisciplinePanel extends MainPanelAbstract implements ListSelec
 				object.cod=Integer.parseInt(textFieldCodDisciplina.getText());
 				
 				System.out.println("Disciplina existenta -> modificata in " + object);
-				if(!disciplinaDAO.updateDisciplina(objects.get(table.getSelectedRow()), object))
-					return;
+				try {
+					if(!arhivaService.editareDisciplina(object))
+						return;
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
 				
 				statusLbl.setText("Disciplina "+object.denumire+" a fost actualizata.");
 				

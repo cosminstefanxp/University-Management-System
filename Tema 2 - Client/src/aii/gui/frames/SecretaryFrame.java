@@ -19,11 +19,12 @@ import javax.swing.border.LineBorder;
 
 import net.miginfocom.swing.MigLayout;
 import aii.Utilizator;
-import aii.database.UtilizatorWrapper;
+import aii.arhiva.Arhiva;
 import aii.gui.panels.AdminExamenePanel;
 import aii.gui.panels.AdminGrupePanel;
 import aii.gui.panels.AdminOrarePanel;
 import aii.gui.panels.PersonalDataPanel;
+import aii.rad.RegistruActivitatiDidactice;
 
 /**
  * The Administrator frame that contains all the features that the admin uses.
@@ -40,13 +41,17 @@ public class SecretaryFrame extends JFrame implements ActionListener{
 	private JButton btnAdminOrar;
 	private JButton btnProgramareExamene;
 	private JButton btnTrecereAn;
+	private Arhiva arhivaService;
+	private RegistruActivitatiDidactice radService;
 
 
 	/**
 	 * Create the frame.
 	 */
-	public SecretaryFrame(Utilizator utilizator) {
+	public SecretaryFrame(Arhiva arhivaService, RegistruActivitatiDidactice radService, Utilizator utilizator) {
 		this.utilizator=utilizator;
+		this.arhivaService=arhivaService;
+		this.radService=radService;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1052, 800);

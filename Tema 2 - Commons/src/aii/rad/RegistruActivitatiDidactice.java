@@ -36,87 +36,105 @@ public interface RegistruActivitatiDidactice extends Remote {
 	/**
 	 * Stabileste repartizare cadru didactic la o disciplina pentru un tip de activitate didactica.
 	 *
-	 * @param cnpSefCatedra the cnp sef catedra, used for checking permissions
 	 * @param activitate the activitate
 	 * @return true, if successful
 	 * @throws RemoteException the remote exception
 	 */
-	public boolean stabilesteActivitatePredare(String cnpSefCatedra, Activitate activitate) throws RemoteException;
+	public boolean stabilesteActivitatePredare(Activitate activitate) throws RemoteException;
+	
+	/**
+	 * Sterge o repartizare cadru didactic la o disciplina pentru un tip de activitate didactica.
+	 *
+	 * @param activitate the activitate
+	 * @return true, if successful
+	 * @throws RemoteException the remote exception
+	 */
+	public boolean stergereActivitatePredare(Activitate activitate) throws RemoteException;
+	
+	/**
+	 * Editeaza o repartizare cadru didactic la o disciplina pentru un tip de activitate didactica.
+	 *
+	 * @param activitate the activitate
+	 * @return true, if successful
+	 * @throws RemoteException the remote exception
+	 */
+	public boolean editareActivitatePredare(Activitate activitate) throws RemoteException;
+	
+	/**
+	 * Obtine repartizare cadru didactic la o disciplina pentru un tip de activitate didactica.
+	 *
+	 * @return true, if successful
+	 * @throws RemoteException the remote exception
+	 */
+	public ArrayList<Activitate> obtinereActivitatePredare() throws RemoteException;
 
 	/**
 	 * Stabileste formatie de studiu.
 	 *
-	 * @param cnpSecretar the cnp secretar, used for checking permissions
 	 * @param CNPStudent the CNP student
 	 * @param grupa the grupa
 	 * @return the int
 	 * @throws RemoteException the remote exception
 	 */
-	public int stabilesteFormatieDeStudiu(String cnpSecretar, ArrayList<String> CNPStudent, int grupa)
+	public int stabilesteFormatieDeStudiu(ArrayList<String> CNPStudent, int grupa)
 			throws RemoteException;
 
 	/**
 	 * Adaugare activitate didactica in orar.
 	 *
-	 * @param cnpSecretar the cnp secretar, used for checking permissions
 	 * @param activitatiDidactice the activitati didactice
 	 * @return the int
 	 * @throws RemoteException the remote exception
 	 */
-	public int adaugareActivitateOrar(String cnpSecretar, ArrayList<Orar> activitatiDidactice)
+	public int adaugareActivitateOrar(ArrayList<Orar> activitatiDidactice)
 			throws RemoteException;
 
 	/**
 	 * Editare activitate didactica in orar.
 	 *
-	 * @param cnpSecretar the cnp secretar, used for checking permissions
 	 * @param activitatiDidactice the activitati didactice
 	 * @return the int
 	 * @throws RemoteException the remote exception
 	 */
-	public int editareActivitateOrar(String cnpSecretar, ArrayList<Orar> activitatiDidactice)
+	public int editareActivitateOrar(ArrayList<Orar> activitatiDidactice)
 			throws RemoteException;
 
 	/**
 	 * Stergere activitate didactica din orar.
 	 *
-	 * @param cnpSecretar the cnp secretar, used for checking permissions
 	 * @param activitatiDidactice the activitati didactice
 	 * @return the int
 	 * @throws RemoteException the remote exception
 	 */
-	public int stergereActivitateOrar(String cnpSecretar, ArrayList<Orar> activitatiDidactice)
+	public int stergereActivitateOrar(ArrayList<Orar> activitatiDidactice)
 			throws RemoteException;
 
 	/**
 	 * Adaugare examen in calendarul de examene.
 	 *
-	 * @param cnpSecretar the cnp secretar, used for checking permissions
 	 * @param examene the examene
 	 * @return the int
 	 * @throws RemoteException the remote exception
 	 */
-	public int adaugareExamen(String cnpSecretar, ArrayList<Examen> examene) throws RemoteException;
+	public int adaugareExamen(ArrayList<Examen> examene) throws RemoteException;
 
 	/**
 	 * Editare examen in calendarul de examene.
 	 *
-	 * @param cnpSecretar the cnp secretar, used for checking permissions
 	 * @param examene the examene
 	 * @return the int
 	 * @throws RemoteException the remote exception
 	 */
-	public int editareExamen(String cnpSecretar, ArrayList<Examen> examene) throws RemoteException;
+	public int editareExamen(ArrayList<Examen> examene) throws RemoteException;
 
 	/**
 	 * Stergere examen din calendarul de examene.
 	 *
-	 * @param cnpSecretar the cnp secretar, used for checking permissions
 	 * @param examene the examene
 	 * @return the int
 	 * @throws RemoteException the remote exception
 	 */
-	public int stergereExamen(String cnpSecretar, ArrayList<Examen> examene) throws RemoteException;
+	public int stergereExamen(ArrayList<Examen> examene) throws RemoteException;
 
 	/**
 	 * Obţine orarul complet al activităţilor didactice pentru semestrul în curs.
@@ -153,6 +171,16 @@ public interface RegistruActivitatiDidactice extends Remote {
 	 * @param cnp the cnp
 	 * @param permisiuni the permisiuni
 	 * @return true, if successful
+	 * @throws RemoteException the remote exception
 	 */
 	public boolean autentificaUtilizator(String cnp, Utilizator.Tip permisiuni) throws RemoteException;
+	
+	/**
+	 * Obtine utilizatorii din baza de date, dandu'se o clauza de selectie.
+	 *
+	 * @param whereClause the where clause
+	 * @return the array list
+	 * @throws RemoteException the remote exception
+	 */
+	public ArrayList<Utilizator> obtineUtilizatori(String whereClause) throws RemoteException;
 }

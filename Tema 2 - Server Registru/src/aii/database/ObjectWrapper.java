@@ -1,3 +1,9 @@
+/*
+ * Aplicatii Integrate pentru Intreprinderi
+ * 
+ * Stefan-Dobrin Cosmin
+ * 342C4
+ */
 package aii.database;
 
 import java.lang.reflect.Field;
@@ -257,6 +263,48 @@ public class ObjectWrapper<T> {
 		
 		//Clean the last ,
 		whereClause=whereClause.substring(0,whereClause.length()-4);
+		
+		//For every field in the object, we put the value in the set clause
+		for(int i=0;i<nameMatch[0].length;i++)
+		{
+			//Prepare the field of the object which we are now getting info from
+			Field field=classType.getDeclaredField(nameMatch[1][i]);
+			
+			if(field.getType() == boolean.class)
+			{
+				if(field.getBoolean(newObject))
+					setClause+=nameMatch[0][i]+"=\'1\', ";
+				else
+					setClause+=nameMatch[0][i]+"=\'0\', ";
+			}
+			else
+				setClause+=nameMatch[0][i]+"=\'"+field.get(newObject)+"\', ";				
+		}
+		
+		//Clean the last ,
+		setClause=setClause.substring(0,setClause.length()-2);
+
+		//Run the SQL deletion query
+		System.out.println("Actualizam un obiect din baza de date: "+whereClause);
+		DatabaseConnection.openConnection();
+		DatabaseConnection.updateEntities(table, setClause, whereClause);	
+	}
+	
+	/**
+	 * Updates an object from the given table. The selection of the objects to update is done using the provided where clause.
+	 *
+	 * @param table the table
+	 * @param whereClause the where clause
+	 * @param newObject the new object
+	 * @throws SecurityException the security exception
+	 * @throws NoSuchFieldException the no such field exception
+	 * @throws SQLException the sQL exception
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws IllegalAccessException the illegal access exception
+	 */
+	public void updateObject(String table, String whereClause, T newObject) throws SecurityException, NoSuchFieldException, SQLException, IllegalArgumentException, IllegalAccessException
+	{
+		String setClause="";
 		
 		//For every field in the object, we put the value in the set clause
 		for(int i=0;i<nameMatch[0].length;i++)

@@ -30,9 +30,16 @@ import aii.database.UtilizatorWrapper;
  */
 public class RegistruActivitatiDidacticeServer implements RegistruActivitatiDidactice {
 
+	/** The utilizator dao. */
 	private static UtilizatorWrapper utilizatorDAO=new UtilizatorWrapper();
+	
+	/** The orar dao. */
 	private static OrarWrapper orarDAO=new OrarWrapper();
+	
+	/** The activitate dao. */
 	private static ActivitateWrapper activitateDAO=new ActivitateWrapper();
+	
+	/** The examen dao. */
 	private static ExamenWrapper examenDAO=new ExamenWrapper();
 	
 
@@ -41,7 +48,7 @@ public class RegistruActivitatiDidacticeServer implements RegistruActivitatiDida
 	 * @see aii.rad.RegistruActivitatiDidactice#adaugareActivitateOrar(java.lang.String, java.util.ArrayList)
 	 */
 	@Override
-	public int adaugareActivitateOrar(String cnpSecretar, ArrayList<Orar> activitatiDidactice)
+	public int adaugareActivitateOrar(ArrayList<Orar> activitatiDidactice)
 			throws RemoteException {
 		// TODO Auto-generated method stub
 		return 0;
@@ -53,7 +60,7 @@ public class RegistruActivitatiDidacticeServer implements RegistruActivitatiDida
 	 * @see aii.rad.RegistruActivitatiDidactice#adaugareExamen(java.lang.String, java.util.ArrayList)
 	 */
 	@Override
-	public int adaugareExamen(String cnpSecretar, ArrayList<Examen> examene) throws RemoteException {
+	public int adaugareExamen(ArrayList<Examen> examene) throws RemoteException {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -64,7 +71,7 @@ public class RegistruActivitatiDidacticeServer implements RegistruActivitatiDida
 	 * @see aii.rad.RegistruActivitatiDidactice#editareActivitateOrar(java.lang.String, java.util.ArrayList)
 	 */
 	@Override
-	public int editareActivitateOrar(String cnpSecretar, ArrayList<Orar> activitatiDidactice)
+	public int editareActivitateOrar(ArrayList<Orar> activitatiDidactice)
 			throws RemoteException {
 		// TODO Auto-generated method stub
 		return 0;
@@ -76,7 +83,7 @@ public class RegistruActivitatiDidacticeServer implements RegistruActivitatiDida
 	 * @see aii.rad.RegistruActivitatiDidactice#editareExamen(java.lang.String, java.util.ArrayList)
 	 */
 	@Override
-	public int editareExamen(String cnpSecretar, ArrayList<Examen> examene) throws RemoteException {
+	public int editareExamen(ArrayList<Examen> examene) throws RemoteException {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -109,10 +116,10 @@ public class RegistruActivitatiDidacticeServer implements RegistruActivitatiDida
 	 * @see aii.rad.RegistruActivitatiDidactice#stabilesteActivitatePredare(java.lang.String, aii.Activitate)
 	 */
 	@Override
-	public boolean stabilesteActivitatePredare(String cnpSefCatedra, Activitate activitate)
+	public boolean stabilesteActivitatePredare(Activitate activitate)
 			throws RemoteException {
-		// TODO Auto-generated method stub
-		return false;
+		return activitateDAO.insertActivitate(activitate);
+		
 	}
 
 
@@ -121,7 +128,7 @@ public class RegistruActivitatiDidacticeServer implements RegistruActivitatiDida
 	 * @see aii.rad.RegistruActivitatiDidactice#stabilesteFormatieDeStudiu(java.lang.String, java.util.ArrayList, int)
 	 */
 	@Override
-	public int stabilesteFormatieDeStudiu(String cnpSecretar, ArrayList<String> CNPStudent,
+	public int stabilesteFormatieDeStudiu(ArrayList<String> CNPStudent,
 			int grupa) throws RemoteException {
 		// TODO Auto-generated method stub
 		return 0;
@@ -133,7 +140,7 @@ public class RegistruActivitatiDidacticeServer implements RegistruActivitatiDida
 	 * @see aii.rad.RegistruActivitatiDidactice#stergereActivitateOrar(java.lang.String, java.util.ArrayList)
 	 */
 	@Override
-	public int stergereActivitateOrar(String cnpSecretar, ArrayList<Orar> activitatiDidactice)
+	public int stergereActivitateOrar(ArrayList<Orar> activitatiDidactice)
 			throws RemoteException {
 		// TODO Auto-generated method stub
 		return 0;
@@ -145,7 +152,7 @@ public class RegistruActivitatiDidacticeServer implements RegistruActivitatiDida
 	 * @see aii.rad.RegistruActivitatiDidactice#stergereExamen(java.lang.String, java.util.ArrayList)
 	 */
 	@Override
-	public int stergereExamen(String cnpSecretar, ArrayList<Examen> examene) throws RemoteException {
+	public int stergereExamen(ArrayList<Examen> examene) throws RemoteException {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -206,6 +213,43 @@ public class RegistruActivitatiDidacticeServer implements RegistruActivitatiDida
 		}
 
 		System.out.println("Initializare completa a serverului pentru " + PUBLISH_NAME);
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#editareActivitatePredare(aii.Activitate)
+	 */
+	@Override
+	public boolean editareActivitatePredare(Activitate activitate) throws RemoteException {
+		return activitateDAO.updateActivitate("id=\'"+activitate.id+"\'",activitate);
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#obtinereActivitatePredare()
+	 */
+	@Override
+	public ArrayList<Activitate> obtinereActivitatePredare() throws RemoteException {
+		return activitateDAO.getActivitati("id=id");	//toate activitatile
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#stergereActivitatePredare(aii.Activitate)
+	 */
+	@Override
+	public boolean stergereActivitatePredare(Activitate activitate) throws RemoteException {
+		return activitateDAO.deleteActivitate(activitate);
+	}
+
+
+
+	@Override
+	public ArrayList<Utilizator> obtineUtilizatori(String whereClause) throws RemoteException {
+		return utilizatorDAO.getUtilizatori(whereClause);
 	}
 
 

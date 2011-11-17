@@ -34,32 +34,65 @@ public interface Arhiva extends Remote {
 	/**
 	 * Adaugare disciplina in planul de învăţământ.
 	 *
-	 * @param CNPCadruDidactic the cNP cadru didactic, used for checking permissions
 	 * @param discipline the discipline
 	 * @return the int
 	 * @throws RemoteException the remote exception
 	 */
-	public int adaugareDisciplina(String CNPCadruDidactic, ArrayList<Disciplina> discipline) throws RemoteException;
+	public int adaugareDisciplina(ArrayList<Disciplina> discipline) throws RemoteException;
 
 	/**
 	 * Editare disciplina in planul de învăţământ.
 	 *
-	 * @param CNPCadruDidactic the cNP cadru didactic, used for checking permissions
 	 * @param discipline the discipline
 	 * @return the int
 	 * @throws RemoteException the remote exception
 	 */
-	public int editareDisciplina(String CNPCadruDidactic, ArrayList<Disciplina> discipline) throws RemoteException;
+	public int editareDisciplina(ArrayList<Disciplina> discipline) throws RemoteException;
 
 	/**
 	 * Stergere disciplina din planul de învăţământ.
 	 *
-	 * @param CNPCadruDidactic the cNP cadru didactic, used for checking permissions
 	 * @param discipline the discipline
 	 * @return the int
 	 * @throws RemoteException the remote exception
 	 */
-	public int stergereDisciplina(String CNPCadruDidactic, ArrayList<Disciplina> discipline) throws RemoteException;
+	public int stergereDisciplina(ArrayList<Disciplina> discipline) throws RemoteException;
+	
+	/**
+	 * Adaugare disciplina in planul de învăţământ.
+	 *
+	 * @param disciplina the disciplina
+	 * @return the int
+	 * @throws RemoteException the remote exception
+	 */
+	public boolean adaugareDisciplina(Disciplina disciplina) throws RemoteException;
+
+	/**
+	 * Editare disciplina in planul de învăţământ.
+	 *
+	 * @param discipline the discipline
+	 * @return the int
+	 * @throws RemoteException the remote exception
+	 */
+	public boolean editareDisciplina(Disciplina disciplina) throws RemoteException;
+	
+	
+	/**
+	 * Obtine disciplinele din planul de invatamant.
+	 *
+	 * @return the array list
+	 * @throws RemoteException the remote exception
+	 */
+	public ArrayList<Disciplina> obtineDiscipline() throws RemoteException;
+
+	/**
+	 * Stergere disciplina din planul de învăţământ.
+	 *
+	 * @param discipline the discipline
+	 * @return the int
+	 * @throws RemoteException the remote exception
+	 */
+	public boolean stergereDisciplina(Disciplina disciplina) throws RemoteException;
 
 	/**
 	 * Specifica nota obţinută de un student la un examen.

@@ -22,10 +22,12 @@ import javax.swing.border.LineBorder;
 import net.miginfocom.swing.MigLayout;
 import aii.Utilizator;
 import aii.Utilizator.Tip;
+import aii.arhiva.Arhiva;
 import aii.gui.panels.AdminActivitatiPanel;
 import aii.gui.panels.AdminCatalogPanel;
 import aii.gui.panels.AdminDisciplinePanel;
 import aii.gui.panels.PersonalDataPanel;
+import aii.rad.RegistruActivitatiDidactice;
 
 /**
  * The Administrator frame that contains all the features that the admin uses.
@@ -41,13 +43,17 @@ public class TeacherFrame extends JFrame implements ActionListener{
 	public JLabel statusLbl;
 	private JButton btnOrar;
 	private JButton btnDiscipline;
+	private Arhiva arhivaService;
+	private RegistruActivitatiDidactice radService;
 
 
 	/**
 	 * Create the frame.
 	 */
-	public TeacherFrame(Utilizator utilizator) {
+	public TeacherFrame(Arhiva arhivaService, RegistruActivitatiDidactice radService, Utilizator utilizator) {
 		this.utilizator=utilizator;
+		this.arhivaService=arhivaService;
+		this.radService=radService;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1052, 800);
@@ -201,7 +207,7 @@ public class TeacherFrame extends JFrame implements ActionListener{
         		System.out.println("Meniu: Administrare Discipline");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new AdminDisciplinePanel(utilizator, statusLbl);
+        		mainPanel=new AdminDisciplinePanel(arhivaService, radService, utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -211,7 +217,7 @@ public class TeacherFrame extends JFrame implements ActionListener{
         		System.out.println("Meniu: Administrare Orare");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new AdminActivitatiPanel(utilizator, statusLbl);
+        		mainPanel=new AdminActivitatiPanel(arhivaService, radService, utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -247,7 +253,7 @@ public class TeacherFrame extends JFrame implements ActionListener{
         		System.out.println("Buton: Orar");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new AdminActivitatiPanel(utilizator, statusLbl);
+        		mainPanel=new AdminActivitatiPanel(arhivaService, radService, utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -257,7 +263,7 @@ public class TeacherFrame extends JFrame implements ActionListener{
         		System.out.println("Buton: Discipline");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new AdminDisciplinePanel(utilizator, statusLbl);
+        		mainPanel=new AdminDisciplinePanel(arhivaService, radService, utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
