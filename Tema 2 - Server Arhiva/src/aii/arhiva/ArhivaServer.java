@@ -10,13 +10,18 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
 import aii.Disciplina;
 import aii.NotaCatalog;
 import aii.SituatieScolara;
+import aii.Utilizator;
+import aii.database.Constants;
+import aii.database.DatabaseConnection;
 import aii.database.DisciplinaWrapper;
 import aii.database.NotaCatalogWrapper;
 import aii.database.OptiuneContractWrapper;
@@ -127,10 +132,40 @@ public class ArhivaServer implements Arhiva{
 	 * @see aii.arhiva.Arhiva#obtineNota(java.lang.String, java.util.ArrayList)
 	 */
 	@Override
-	public ArrayList<Integer> obtineNoteStudent(String CNPStudent, ArrayList<Integer> codDisciplina)
+	public ArrayList<Float> obtineNoteStudent(String CNPStudent, ArrayList<Integer> codDisciplina)
 			throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		Vector<Object[]> results=null;
+		//Pregatim query-ul
+		String from=Constants.CATALOG_TABLE;
+		String where="cnp_student=\'"+CNPStudent+"\'" +
+				" AND cod_disciplina IN (";
+		for(Integer cod : codDisciplina)
+			where+=cod+", ";
+		where=where.substring(0,where.length()-2);	//stergem virgula
+		where+=")";
+		
+		String query="SELECT nota FROM "+from+" WHERE "+where;
+		
+		//Executam query-ul
+		try {
+			DatabaseConnection.openConnection();
+			results=DatabaseConnection.customQueryArray(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		//Construim lista rezultat
+		ArrayList<Float> note=new ArrayList<Float>();
+		for(int i=0;i<results.size();i++)
+		{
+			String value=(String) results.get(i)[0];
+			if(!value.isEmpty())	//Skip empty values
+				note.add(Float.parseFloat(value));
+		}
+		System.out.println("Obtinute notele: "+note);
+		
+		return note;
 	}
 
 

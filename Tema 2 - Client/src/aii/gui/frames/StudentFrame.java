@@ -19,8 +19,6 @@ import javax.swing.border.LineBorder;
 import net.miginfocom.swing.MigLayout;
 import aii.Utilizator;
 import aii.arhiva.Arhiva;
-import aii.gui.panels.AdminContractStudiiPanel;
-import aii.gui.panels.PersonalDataPanel;
 import aii.gui.panels.ViewExamenePanel;
 import aii.gui.panels.ViewOrarPanel;
 import aii.gui.panels.ViewSituatiePanel;
@@ -34,8 +32,6 @@ public class StudentFrame extends JFrame implements ActionListener{
 
 	private JPanel contentPane;
 	private JPanel mainPanel;
-	private JButton btnSetariPersonale;
-	private JButton btnContractStudii;
 	private Utilizator utilizator;
 	public JLabel statusLbl;
 	private JButton btnOrar;
@@ -75,17 +71,6 @@ public class StudentFrame extends JFrame implements ActionListener{
 		mntmProgramareExamene.addActionListener(this);
 		mnVizualizare.add(mntmProgramareExamene);
 		
-		JMenu mnSetari = new JMenu("Setari");
-		menuBar.add(mnSetari);
-		
-		JMenuItem mntmSetariPersonale = new JMenuItem("Setari Personale");
-		mntmSetariPersonale.addActionListener(this);
-		mnSetari.add(mntmSetariPersonale);
-		
-		JMenuItem mntmContractDeStudii = new JMenuItem("Contract de Studii");
-		mntmContractDeStudii.addActionListener(this);
-		mnSetari.add(mntmContractDeStudii);
-		
 		/******* FULL CONTENT PANEL ********/
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -110,28 +95,18 @@ public class StudentFrame extends JFrame implements ActionListener{
 		mainPanel.setLayout(null);
 		contentPane.add(mainPanel, "cell 0 2,grow");
 		
-		btnSetariPersonale = new JButton("Setari personale");
-		btnSetariPersonale.setBounds(25, 50, 198, 25);
-		btnSetariPersonale.addActionListener(this);
-		mainPanel.add(btnSetariPersonale);
-		
-		btnContractStudii = new JButton("Contract de Studii");
-		btnContractStudii.setBounds(25, 88, 198, 25);
-		btnContractStudii.addActionListener(this);
-		mainPanel.add(btnContractStudii);
-		
 		btnOrar = new JButton("Vizualizare Orar");
 		btnOrar.setBounds(25, 125, 198, 25);
 		btnOrar.addActionListener(this);
 		mainPanel.add(btnOrar);
 		
 		btnSituatieScolara = new JButton("Situatie Scolara");
-		btnSituatieScolara.setBounds(25, 162, 198, 25);
+		btnSituatieScolara.setBounds(25, 88, 198, 25);
 		btnSituatieScolara.addActionListener(this);
 		mainPanel.add(btnSituatieScolara);
 		
 		btnProgramareExamene = new JButton("Programare Examene");
-		btnProgramareExamene.setBounds(25, 199, 198, 25);
+		btnProgramareExamene.setBounds(25, 51, 198, 25);
 		btnProgramareExamene.addActionListener(this);
 		mainPanel.add(btnProgramareExamene);
 		
@@ -157,22 +132,12 @@ public class StudentFrame extends JFrame implements ActionListener{
         {
         	//Date personale
         	JMenuItem sourceItem=(JMenuItem)source;
-        	if(sourceItem.getText().toLowerCase().equals("setari personale"))
-        	{
-        		System.out.println("Menu: Setari personale");
-        		
-        		contentPane.remove(mainPanel);
-        		mainPanel=new PersonalDataPanel(utilizator, statusLbl);
-        		
-        		contentPane.add(mainPanel, "cell 0 2,grow");
-        		contentPane.revalidate();        		
-        	} 
-        	else if(sourceItem.getText().toLowerCase().equals("orar"))
+        	if(sourceItem.getText().toLowerCase().equals("orar"))
         	{
         		System.out.println("Meniu: Vizualizare Orar");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new ViewOrarPanel(utilizator, statusLbl);
+        		mainPanel=new ViewOrarPanel(arhivaService, radService, utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -192,54 +157,23 @@ public class StudentFrame extends JFrame implements ActionListener{
         		System.out.println("Meniu: Vizualizare Programare Examene");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new ViewExamenePanel(utilizator, statusLbl);
+        		mainPanel=new ViewExamenePanel(arhivaService, radService, utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
         	}
-        	else if(sourceItem.getText().toLowerCase().equals("contract de studii"))
-        	{
-        		System.out.println("Meniu: Editare Contract de Studii");
-        		
-        		contentPane.remove(mainPanel);
-        		mainPanel=new AdminContractStudiiPanel(utilizator, statusLbl);
-        		
-        		contentPane.add(mainPanel, "cell 0 2,grow");
-        		contentPane.revalidate();        		
-        	}
-
-        
+       
         }
         
         // Check buttons
         if(source instanceof JButton)
         {
-        	if(source==this.btnSetariPersonale)
-        	{
-        		System.out.println("Buton: Setari personale");
-        		
-        		contentPane.remove(mainPanel);
-        		mainPanel=new PersonalDataPanel(utilizator, statusLbl);
-        		
-        		contentPane.add(mainPanel, "cell 0 2,grow");
-        		contentPane.revalidate();        		
-        	}
-        	else if(source==this.btnContractStudii)
-        	{
-        		System.out.println("Buton: Contract de Studii");
-        		
-        		contentPane.remove(mainPanel);
-        		mainPanel=new AdminContractStudiiPanel(utilizator, statusLbl);
-        		
-        		contentPane.add(mainPanel, "cell 0 2,grow");
-        		contentPane.revalidate();        		
-        	}
-        	else if(source==this.btnOrar)
+        	if(source==this.btnOrar)
         	{
         		System.out.println("Buton: Vizualizare Orar");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new ViewOrarPanel(utilizator, statusLbl);
+        		mainPanel=new ViewOrarPanel(arhivaService, radService, utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -259,7 +193,7 @@ public class StudentFrame extends JFrame implements ActionListener{
         		System.out.println("Buton: Vizualizare Programare Examen");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new ViewExamenePanel(utilizator, statusLbl);
+        		mainPanel=new ViewExamenePanel(arhivaService, radService, utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		

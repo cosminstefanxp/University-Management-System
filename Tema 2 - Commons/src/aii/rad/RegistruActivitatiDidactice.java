@@ -160,10 +160,12 @@ public interface RegistruActivitatiDidactice extends Remote {
 	 * Obţine orarul complet al activităţilor didactice pentru semestrul în curs.
 	 *
 	 * @param CNPStudent the CNP student, used for checking permissions
+	 * @param grupa the grupa
+	 * @param semestru the semestru
 	 * @return the array list of OrarComplet entities
 	 * @throws RemoteException the remote exception
 	 */
-	public ArrayList<OrarComplet> obtineOrarComplet(String CNPStudent) throws RemoteException;
+	public ArrayList<OrarComplet> obtineOrarComplet(String CNPStudent, String grupa, int semestru) throws RemoteException;
 	
 	/**
 	 * Obtine orarul complet al tuturor activitatile. De folosit in interfata de secretar.
@@ -174,13 +176,14 @@ public interface RegistruActivitatiDidactice extends Remote {
 	public ArrayList<OrarComplet> obtineOrarComplet() throws RemoteException;
 
 	/**
-	 * Obţine calendarul examenelor pentru sesiunea în curs.
+	 * Obţine calendarul examenelor pentru sesiunea în curs. Se completeaza si campul denumireDisciplina din obiectele Examen.
 	 *
 	 * @param CNPStudent the CNP student
+	 * @param grupa the grupa
 	 * @return the array list
 	 * @throws RemoteException the remote exception
 	 */
-	public ArrayList<Examen> obtineProgramareExamene(String CNPStudent) throws RemoteException;
+	public ArrayList<Examen> obtineProgramareExamene(String CNPStudent, String grupa) throws RemoteException;
 
 	
 	/**

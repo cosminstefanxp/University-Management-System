@@ -10,33 +10,31 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
 import net.miginfocom.swing.MigLayout;
-import aii.Orar;
+import aii.Constants;
+import aii.OrarComplet;
 import aii.Utilizator;
-import aii.database.Constants;
-import aii.database.OrarWrapper;
+import aii.arhiva.Arhiva;
 import aii.gui.tools.ObjectTableModel;
+import aii.rad.RegistruActivitatiDidactice;
 
 
 @SuppressWarnings("serial")
 public class ViewOrarPanel extends MainPanelAbstract {
 	
-	@SuppressWarnings("unused")
-	private Utilizator utilizator;
 	private JTable table;
-	private ArrayList<Orar> objects;
-	private ObjectTableModel<Orar> mainTableModel;
-	private OrarWrapper orareDAO=new OrarWrapper();
+	private ArrayList<OrarComplet> objects;
+	private ObjectTableModel<OrarComplet> mainTableModel;
 	
-	
-	private JLabel statusLbl;
 	private JLabel lblOrarulTauEste;
 
 	/**
 	 * Create the panel.
 	 */
-	public ViewOrarPanel(Utilizator utilizator, JLabel statusLbl) {
-		this.utilizator=utilizator;
-		this.statusLbl=statusLbl;
+	public ViewOrarPanel(Arhiva arhivaService, RegistruActivitatiDidactice radService,
+			Utilizator utilizator, JLabel statusLabel) {
+		//Initialize the MainPanelAbstract object
+		super(arhivaService, radService, utilizator, statusLabel);
+		
 		
 		//Prepare study year
 		if(utilizator.titlu_grupa==null || utilizator.titlu_grupa.isEmpty())
@@ -72,9 +70,8 @@ public class ViewOrarPanel extends MainPanelAbstract {
 		//Get the objects and prepare the table models		
 		try {
 			//Table model for "Orare"
-			orareDAO.setNameMatch(Constants.ORAR_STUDENT_FIELD_MATCH);
-			objects=orareDAO.getOrareParticularizat(utilizator.CNP, studyYear, utilizator.titlu_grupa, semestru);
-			mainTableModel=new ObjectTableModel<Orar>(Orar.class,
+			objects=radService.obtineOrarComplet(utilizator.CNP, utilizator.titlu_grupa, semestru);
+			mainTableModel=new ObjectTableModel<OrarComplet>(OrarComplet.class,
 					objects,
 					Constants.VIEW_ORAR_STUDENT_COLUMN_FIELD_MATCH[1],
 					Constants.VIEW_ORAR_STUDENT_COLUMN_FIELD_MATCH[0]);

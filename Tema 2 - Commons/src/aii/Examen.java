@@ -31,6 +31,9 @@ public class Examen implements Serializable{
 	
 	/** The grupa. */
 	public String grupa;
+	
+	/** The denumire disciplina. Camp optional completat doar in anumite cazuri.*/
+	public String denumireDisciplina;
 
 	//****************** METHODS ********************/
 	
@@ -132,6 +135,24 @@ public class Examen implements Serializable{
 	 */
 	public void setGrupa(String grupa) {
 		this.grupa = grupa;
+	}
+
+	/**
+	 * Gets the denumire disciplina.
+	 *
+	 * @return the denumire disciplina
+	 */
+	public String getDenumireDisciplina() {
+		return denumireDisciplina;
+	}
+
+	/**
+	 * Sets the denumire disciplina.
+	 *
+	 * @param denumireDisciplina the new denumire disciplina
+	 */
+	public void setDenumireDisciplina(String denumireDisciplina) {
+		this.denumireDisciplina = denumireDisciplina;
 	}
 	
 }

@@ -50,10 +50,6 @@ public class Constants {
 															{ "id_activitate", "grupa", "zi", "ora", "sala", "durata", "frecventa", "cod_disciplina", "denumire", "tip", "nume", "cnp"},									//campuri baza de date
 															{ "idActivitate",  "grupa",  "zi", "ora", "sala", "durata", "frecventa", "codDisciplina", "denumireDisciplina", "tip", "numeCadruDidactic", "cnpCadruDidactic"}	//campuri obiect
 														};
-	final public static String[][]	ORAR_STUDENT_FIELD_MATCH = {
-																{ "grupa", "zi", "ora", "sala", "durata", "frecventa", "denumire", "tip"},						//campuri baza de date
-																{ "grupa", "zi", "ora", "sala", "durata", "frecventa", "denumireDisciplina", "tip"}	//campuri obiect
-															};
 	final public static int			ORAR_TABLE_PK_COUNT	= 2;	//atat 'id_activitate' cat si 'grupa' fac parte din cheie	
 	
 	/*******EXAMEN********/

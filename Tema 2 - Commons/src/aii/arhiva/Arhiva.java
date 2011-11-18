@@ -128,7 +128,7 @@ public interface Arhiva extends Remote {
 	 * @return the array list
 	 * @throws RemoteException the remote exception
 	 */
-	public ArrayList<Integer> obtineNoteStudent(String CNPStudent, ArrayList<Integer> codDisciplina)
+	public ArrayList<Float> obtineNoteStudent(String CNPStudent, ArrayList<Integer> codDisciplina)
 			throws RemoteException;
 
 	/**

@@ -53,18 +53,18 @@ public class OrarCompletWrapper extends ObjectWrapper<OrarComplet> {
 	 */
 	public ArrayList<OrarComplet> getOrareParticularizat(String cnpStudent, int anStudiu, String grupa, int semestru)
 	{
-		String fields="o.zi, o.ora, o.sala, d.denumire, o.grupa, o.frecventa, o.durata, a.tip";
-		String from=Constants.CONTRACT_TABLE+" c, "+Constants.DISCIPLINA_TABLE+" d, "+Constants.ORAR_TABLE+" o, "+Constants.ACTIVITATE_TABLE+" a";
+		String fields="o.zi, o.ora, o.sala, o.grupa, o.frecventa, o.durata, o.id_activitate, a.tip, a.cod_disciplina, d.denumire, u.cnp, concat(u.nume,concat(' ',u.prenume)) nume";
+		String from=Constants.CONTRACT_TABLE+" c, "+Constants.DISCIPLINA_TABLE+" d, "+Constants.ORAR_TABLE+" o, "+Constants.ACTIVITATE_TABLE+" a, "+Constants.USER_TABLE+" u";
 		String where="c.cnp_student=\'"+cnpStudent+"\'" +
 				" AND c.an_studiu=\'"+anStudiu+"\'" +
 				" AND o.grupa=\'"+grupa+"\'" +
 				" AND d.semestru=\'"+semestru+"\'" +
 				" AND o.id_activitate=a.id" +
 				" AND a.cod_disciplina=c.cod_disciplina" +
-				" AND c.cod_disciplina=d.cod";
+				" AND c.cod_disciplina=d.cod" +
+				" AND u.cnp=a.cnp_cadru_didactic";
 		String extra="GROUP BY o.grupa, d.denumire ORDER BY o.zi";
 			
-		
 		ArrayList<OrarComplet> orare = null;
 		try {
 			orare=this.getObjects(fields, from, where, extra);

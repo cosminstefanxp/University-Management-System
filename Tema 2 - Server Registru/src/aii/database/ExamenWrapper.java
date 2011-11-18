@@ -71,13 +71,14 @@ public class ExamenWrapper extends ObjectWrapper<Examen> {
 	 * @param whereClause the where clause
 	 * @return the examene
 	 */
-	public ArrayList<Examen> getExameneParticularizat(String grupa)
+	public ArrayList<Examen> getExameneParticularizat(String cnpStudent, String grupa)
 	{
 		String fields="e.data, e.ora, d.denumire, e.sala";
 		String tables="optiuni_contract o, examen e, disciplina d";
 		String where="o.cod_disciplina=d.cod" +
-				"			AND o.cod_disciplina=e.cod_disciplina" +
-				"			AND grupa=\'"+grupa+"\'";
+				" AND o.cnp_student=\'"+cnpStudent+"\'" +
+				" AND o.cod_disciplina=e.cod_disciplina" +
+				" AND e.grupa=\'"+grupa+"\'";
 		String extra="ORDER BY data, ora";
 
 		

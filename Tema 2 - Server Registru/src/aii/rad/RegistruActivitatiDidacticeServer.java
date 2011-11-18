@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
 import aii.Activitate;
 import aii.Examen;
 import aii.Orar;
@@ -55,9 +57,20 @@ public class RegistruActivitatiDidacticeServer implements RegistruActivitatiDida
 	 * @see aii.rad.RegistruActivitatiDidactice#obtineOrarComplet(java.lang.String)
 	 */
 	@Override
-	public ArrayList<OrarComplet> obtineOrarComplet(String CNPStudent) throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+	public ArrayList<OrarComplet> obtineOrarComplet(String cnpStudent, String grupa, int semestru) throws RemoteException {
+		//Pregatim anul de studiu, din grupa
+		if(grupa==null || grupa.isEmpty())
+		{
+			System.out.println("Studentul "+cnpStudent+" nu e inregistrat la nici o grupa.");
+			return null;
+		}
+		if(grupa.equals("licentiat"))
+		{
+			System.out.println("Studentul "+cnpStudent+" este licentiat.");
+			return null;
+		}
+		int anStudiu = grupa.charAt(1) - '0';
+		return orarCompletDAO.getOrareParticularizat(cnpStudent, anStudiu, grupa, semestru);
 	}
 
 
@@ -66,9 +79,15 @@ public class RegistruActivitatiDidacticeServer implements RegistruActivitatiDida
 	 * @see aii.rad.RegistruActivitatiDidactice#obtineProgramareExamene(java.lang.String)
 	 */
 	@Override
-	public ArrayList<Examen> obtineProgramareExamene(String CNPStudent) throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+	public ArrayList<Examen> obtineProgramareExamene(String cnpStudent, String grupa) throws RemoteException {
+		ArrayList<Examen> examene;
+		//Customizam matchingul dintre obiecte si baza de date pentru a obtine si denumirea disciplinei
+		examenDAO.setNameMatch(Constants.EXAMEN_STUDENT_FIELD_MATCH);
+		//Obtinem examenele
+		examene=examenDAO.getExameneParticularizat(cnpStudent, grupa);
+		//Resetam name matchingul la normal
+		examenDAO.setNameMatch(Constants.EXAMEN_FIELD_MATCH);
+		return examene;
 	}
 
 

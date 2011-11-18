@@ -117,8 +117,8 @@ public class Constants {
 															{ "Cod Disciplina", "Denumire", "Tip", "Numar Ore", "Puncte Credit", "Examinare"}	//nume coloane
 														};
 	final public static String[][]	VIEW_ORAR_STUDENT_COLUMN_FIELD_MATCH = {
-															{ "zi", "ora", "sala", "denumireDisciplina", "durata", "frecventa",  "tipActivitate", "grupa"},	//campuri obiect
-															{ "Zi", "Ora", "Sala", "Denumire Disciplina", "Durata (h)", "Frecventa",  "Tip", "Grupa"}	//nume coloane
+															{ "zi", "ora", "sala", "denumireDisciplina", "numeCadruDidactic","durata", "frecventa",  "tip", "grupa"},	//campuri obiect
+															{ "Zi", "Ora", "Sala", "Denumire Disciplina", "Nume Cadru", "Durata (h)", "Frecventa",  "Tip", "Grupa"}	//nume coloane
 														};	
 	final public static String[][]	VIEW_EXAMEN_STUDENT_COLUMN_FIELD_MATCH		= {
 															{ "denumireDisciplina", "data", "ora", "sala"},		//campuri obiect
