@@ -2,7 +2,7 @@ package aii.gui.panels;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -25,20 +25,17 @@ import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
 import aii.Activitate;
+import aii.Constants;
 import aii.NotaCatalog;
 import aii.Utilizator;
-import aii.database.ActivitateWrapper;
-import aii.database.Constants;
-import aii.database.NotaCatalogWrapper;
-import aii.database.UtilizatorWrapper;
+import aii.arhiva.Arhiva;
 import aii.gui.tools.ObjectTableModel;
+import aii.rad.RegistruActivitatiDidactice;
 
 
 @SuppressWarnings("serial")
 public class AdminCatalogPanel extends MainPanelAbstract implements ListSelectionListener, ActionListener {
 	
-	@SuppressWarnings("unused")
-	private Utilizator utilizator;
 	private JTable table;
 	private ArrayList<NotaCatalog> objects;
 	private ArrayList<Activitate> activitati;
@@ -46,11 +43,7 @@ public class AdminCatalogPanel extends MainPanelAbstract implements ListSelectio
 	private ObjectTableModel<NotaCatalog> mainTableModel;
 	private ObjectTableModel<Activitate> activitatiTableModel;
 	private ObjectTableModel<Utilizator> utilizatoriTableModel;
-	private NotaCatalogWrapper noteDAO=new NotaCatalogWrapper();
-	private ActivitateWrapper activitatiDAO=new ActivitateWrapper();
-	private UtilizatorWrapper utilizatoriDAO=new UtilizatorWrapper();
-	
-	private JLabel statusLbl;
+
 	private JButton btnSalveaza;
 	private JButton btnSterge;
 	private JButton btnAdauga;
@@ -67,44 +60,35 @@ public class AdminCatalogPanel extends MainPanelAbstract implements ListSelectio
 	/**
 	 * Create the panel.
 	 */
-	public AdminCatalogPanel(Utilizator utilizator, JLabel statusLbl) {
-		this.utilizator=utilizator;
-		this.statusLbl=statusLbl;
+	public AdminCatalogPanel(Arhiva arhivaService, RegistruActivitatiDidactice radService,
+			Utilizator utilizator, JLabel statusLabel) {
+		//Initialize the MainPanelAbstract object
+		super(arhivaService, radService, utilizator, statusLabel);
+		
 		this.statusLbl.setText("Administrare note catalog. Selecteaza valorile dorite pentru a crea o noua intrare in catalog sau selecteaza un rand pentru a il modifica.");
 		
 		//Get the objects and prepare the table models		
 		try {
 			//Table model for "Note"
-			//Temporary set the Field Match to get more info (nume disciplina & nume student)
-			noteDAO.setNameMatch(Constants.CATALOG_FIELD_MATCH_FULL);
-			objects=noteDAO.getNoteCatalogJoined("c.cnp_student, c.cod_disciplina, c.data, c.nota, concat(u.nume,concat(\" \",u.prenume)) nume, d.denumire",
-					"catalog c, utilizatori u, disciplina d",
-					"c.cnp_student=u.cnp AND c.cod_disciplina=d.cod");
-			//Restore Field Match
-			noteDAO.setNameMatch(Constants.CATALOG_FIELD_MATCH);
+			objects=arhivaService.obtineNote();
 			mainTableModel=new ObjectTableModel<NotaCatalog>(NotaCatalog.class,
 					objects,
 					Constants.ADMIN_CATALOG_COLUMN_FIELD_MATCH[1],
 					Constants.ADMIN_CATALOG_COLUMN_FIELD_MATCH[0]);
 			
 			//Table model for "Activitate"
-			activitatiDAO.setNameMatch(Constants.ACTIVITATE_FIELD_MATCH_SHORT);
-			activitati=activitatiDAO.getActivitatiJoined("a.id, a.cod_disciplina, d.denumire",
-					Constants.ACTIVITATE_TABLE+" a, "+Constants.DISCIPLINA_TABLE+" d",
-					"a.cnp_cadru_didactic='"+utilizator.CNP+"\' AND a.tip=\'"+Activitate.TipActivitate.Curs+"\' AND d.cod=a.cod_disciplina");
+			activitati=radService.obtinereActivitatiPredareCursCadru(utilizator.CNP);
 			activitatiTableModel=new ObjectTableModel<Activitate>(Activitate.class,
-					activitati,
+					activitati, 
 					new String[] {"Cod disciplina", "Nume Disciplina"},
 					new String[] {"codDisciplina", "denumireDisciplina"});
 			//Table model for "Utilizator"
-			utilizatori=utilizatoriDAO.getObjects(Constants.USER_TABLE,"tip=\'STUDENT\'");
+			utilizatori=radService.obtineUtilizatori("tip=\'STUDENT\'");
 			utilizatoriTableModel=new ObjectTableModel<Utilizator>(Utilizator.class,
 					utilizatori,
 					new String[] {"CNP","Nume","Prenume"},
 					new String[] {"CNP","nume","prenume"});
 			
-		} catch (SQLException e) {
-			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -230,6 +214,7 @@ public class AdminCatalogPanel extends MainPanelAbstract implements ListSelectio
 			spinnerLuna.setValue(1);
 			spinnerZi.setValue(1);
 			comboBoxNota.setSelectedItem(10);
+			btnSalveaza.setEnabled(true);
 			
 			statusLbl.setText("Seteaza activitatea, studentul a carui nota sa adauga, data si nota si apasa 'Salveaza' pentru a crea o noua intrare in catalog.");
 			return;
@@ -277,8 +262,9 @@ public class AdminCatalogPanel extends MainPanelAbstract implements ListSelectio
 		spinnerLuna.setValue(calendar.get(Calendar.MONTH)+1);
 		spinnerZi.setValue(calendar.get(Calendar.DAY_OF_MONTH));
 		comboBoxNota.setSelectedIndex(object.nota-1);
+		btnSalveaza.setEnabled(false);
 
-		statusLbl.setText("Seteaza activitatea, studentul a carui nota sa adauga, data si nota si apasa 'Salveaza' pentru a face permanente modificarile.");
+		statusLbl.setText("Nu se pot realiza modificari asupra notelor deja introduse.");
 	}
 
 	/* Evenimente declansate la click pe cele 3 butoane sau la schimbarea selectiei tipului
@@ -307,8 +293,13 @@ public class AdminCatalogPanel extends MainPanelAbstract implements ListSelectio
 				return;
 			
 			//Delete the nota
-			if(!noteDAO.deleteNotaCatalog(objects.get(table.getSelectedRow())))
-				return;
+			try {
+				if(!arhivaService.stergereNota(objects.get(table.getSelectedRow())))
+					return;
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			statusLbl.setText("Nota "+objects.get(table.getSelectedRow()).nota+" a fost stearsa.");
 			
@@ -340,16 +331,19 @@ public class AdminCatalogPanel extends MainPanelAbstract implements ListSelectio
 			calendar.set(Calendar.MONTH, (Integer) spinnerLuna.getValue()-1);
 			calendar.set(Calendar.DAY_OF_MONTH, (Integer) spinnerZi.getValue());
 			object.data=new java.sql.Date(calendar.getTime().getTime());
-			object.denumireDisciplina=activitati.get(tableActivitate.getSelectedRow()).denumireDisciplina;
-			object.numeStudent=utilizatori.get(tableStudent.getSelectedRow()).nume+" "+utilizatori.get(tableStudent.getSelectedRow()).prenume;
 			
 			//If it's a new entry
 			if(table.getSelectedRow()==-1)
 			{
 				//Insert the new entry
 				System.out.println("Nota noua: "+object);
-				if(!noteDAO.insertNotaCatalog(object))
-					return;
+				try {
+					if(!arhivaService.stabilesteNota(utilizator.CNP,object))
+						return;
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			
 				statusLbl.setText("S-a creat o intrare noua in catalog.");
 				
@@ -360,18 +354,8 @@ public class AdminCatalogPanel extends MainPanelAbstract implements ListSelectio
 			}
 			else //If it's an old entry
 			{
-				System.out.println("Nota existenta -> modificata in " + object);
-				if(!noteDAO.updateNotaCatalog(objects.get(table.getSelectedRow()), object))
-					return;
-				
-				statusLbl.setText("Nota lui "+object.cnpStudent+" a fost actualizata.");
-				
-				//Update JTable
-				int curSelected=table.getSelectedRow();
-				objects.set(table.getSelectedRow(), object);
-				mainTableModel.setObjects(objects);
-				mainTableModel.fireTableDataChanged();	
-				table.getSelectionModel().setSelectionInterval(0, curSelected);
+				JOptionPane.showMessageDialog(null, "Nu se pot modifica note deja introduse!");
+				table.getSelectionModel().clearSelection();
 			}
 				
 		}

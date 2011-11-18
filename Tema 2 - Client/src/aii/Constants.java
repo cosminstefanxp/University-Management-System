@@ -101,7 +101,7 @@ public class Constants {
 															{ "ID", "Cod Disciplina",  "CNP Cadru Didactic",  "Tip Activitate"}			//nume coloane
 														};
 	final public static String[][]	ADMIN_ORAR_COLUMN_FIELD_MATCH 	= {
-															{ "grupa", "idActivitate", "tipActivitate", "denumireDisciplina", "zi", "ora", "sala", "durata",   "frecventa"},	//campuri obiect
+															{ "grupa", "idActivitate", "tip", "denumireDisciplina", "zi", "ora", "sala", "durata",   "frecventa"},	//campuri obiect
 															{ "Grupa", "ID Activitate", "Tip", "Disciplina", "Zi", "Ora", "Sala", "Durata", "Frecventa"}	//nume coloane
 														};
 	final public static String[][]	ADMIN_EXAMEN_COLUMN_FIELD_MATCH 	= {
@@ -109,8 +109,8 @@ public class Constants {
 															{ "Grupa", "Cod Disciplina", "Denumire", "Data", "Ora", "Sala"}		//nume coloane
 														};
 	final public static String[][]	ADMIN_CATALOG_COLUMN_FIELD_MATCH 	= {
-															{ "codDisciplina", "denumireDisciplina" , "cnpStudent", "numeStudent", "data", "nota"},		//campuri obiect
-															{ "Cod Disciplina", "Denumire", "CNP Student", "Nume", "Data", "Nota"}		//nume coloane
+															{ "codDisciplina", "cnpStudent", "data", "nota"},		//campuri obiect
+															{ "Cod Disciplina", "CNP Student", "Data", "Nota"}		//nume coloane
 														};
 	final public static String[][]	VIEW_CONTRACT_DISCIPLINA_COLUMN_FIELD_MATCH		= {
 															{ "cod", "denumire", "tip", "nrOre", "pctCredit", "examinare"},	//campuri obiect

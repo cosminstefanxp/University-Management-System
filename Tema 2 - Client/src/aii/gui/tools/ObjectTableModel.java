@@ -44,7 +44,19 @@ public class ObjectTableModel<T> extends AbstractTableModel {
 		
 		//Build the object fields
 		for(int i=0;i<fieldNames.length;i++)
-			fields[i]=classType.getDeclaredField(fieldNames[i]);
+		{	
+
+			try{
+				fields[i]=classType.getDeclaredField(fieldNames[i]);
+			}
+			//If the field was not found, try to get it from the super class
+			catch(NoSuchFieldException ex)
+			{
+				if(classType.getSuperclass()==null)
+					throw ex;
+				fields[i]=classType.getSuperclass().getDeclaredField(fieldNames[i]);
+			}
+		}
 		
 	}
 

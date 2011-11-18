@@ -2,7 +2,7 @@ package aii.gui.panels;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -20,25 +20,21 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
+import aii.Constants;
 import aii.Utilizator;
-import aii.database.Constants;
-import aii.database.UtilizatorWrapper;
+import aii.arhiva.Arhiva;
 import aii.gui.tools.FixedSizeDocument;
 import aii.gui.tools.ObjectTableModel;
+import aii.rad.RegistruActivitatiDidactice;
 
 
 @SuppressWarnings("serial")
 public class AdminGrupePanel extends MainPanelAbstract implements ListSelectionListener, ActionListener {
 	
-	@SuppressWarnings("unused")
-	private Utilizator utilizator;
 	private JTable table;
 	private ArrayList<Utilizator> objects;
 	private ObjectTableModel<Utilizator> tableModel;
-	private UtilizatorWrapper utilizatorDAO=new UtilizatorWrapper();
-	
-	private JLabel statusLbl;
-	
+
 	private JTextField textFieldNume;
 	private JTextField textFieldGrupa;
 	private JLabel lblTitluGrupa;
@@ -48,20 +44,20 @@ public class AdminGrupePanel extends MainPanelAbstract implements ListSelectionL
 	/**
 	 * Create the panel.
 	 */
-	public AdminGrupePanel(Utilizator utilizator, JLabel statusLbl) {
-		this.utilizator=utilizator;
-		this.statusLbl=statusLbl;
+	public AdminGrupePanel(Arhiva arhivaService, RegistruActivitatiDidactice radService,
+			Utilizator utilizator, JLabel statusLabel) {
+		//Initialize the MainPanelAbstract object
+		super(arhivaService, radService, utilizator, statusLabel);
+		
 		this.statusLbl.setText("Administrare grupe utilizatori. Completeaza campurile pentru a edita grupa unui student si apasa 'Salveaza' pentru a face permanente setarile.");
 		
 		//Get the objects		
 		try {
-			objects=utilizatorDAO.getObjects(Constants.USER_TABLE,"tip=\'STUDENT\'");
+			objects=radService.obtineUtilizatori("tip=\'STUDENT\'");
 			tableModel=new ObjectTableModel<Utilizator>(Utilizator.class,
 					objects,
 					new String[] {"CNP","Nume", "Prenume", "Grupa"},
 					new String[] {"CNP","nume", "prenume", "titlu_grupa"});
-		} catch (SQLException e) {
-			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -175,15 +171,23 @@ public class AdminGrupePanel extends MainPanelAbstract implements ListSelectionL
 				return;
 			}
 			
-			Utilizator object=objects.get(table.getSelectedRow());
-				
-			object.titlu_grupa=textFieldGrupa.getText().toUpperCase();
-			if(!utilizatorDAO.UpdateUtilizator(object, object))
+			//Proof of concept for array of users - single user for this example
+			ArrayList<String> utilizatoriCNP=new ArrayList<String>();
+			utilizatoriCNP.add(objects.get(table.getSelectedRow()).CNP);
+			
+			try {
+				if(radService.stabilesteFormatieDeStudiu(utilizatoriCNP, textFieldGrupa.getText())!=1)
+					return;
+			} catch (RemoteException e) {
+				e.printStackTrace();
 				return;
+			}
 				
-			statusLbl.setText("Utilizatorul "+object.CNP+" a fost actualizat.");
+			statusLbl.setText("Utilizatorul "+objects.get(table.getSelectedRow()).CNP+" a fost actualizat.");
 				
 			//Update JTable
+			Utilizator object=objects.get(table.getSelectedRow());
+			object.setTitlu_grupa(textFieldGrupa.getText());
 			int curSelected=table.getSelectedRow();
 			objects.set(table.getSelectedRow(), object);
 			tableModel.setObjects(objects);

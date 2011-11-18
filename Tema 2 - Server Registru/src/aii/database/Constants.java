@@ -1,6 +1,7 @@
 package aii.database;
 
 
+
 public class Constants {
 	final public static String 		DATABASE_CONNECTION	= "jdbc:mysql://localhost/Grupa342C4_StefanDobrinCosmin";
 	final public static String		DATABASE_USER		= "root";
@@ -46,12 +47,12 @@ public class Constants {
 																{ "idActivitate",  "grupa",  "zi", "ora", "sala", "durata", "frecventa"}		//campuri obiect
 															};
 	final public static String[][]	ORAR_FIELD_MATCH_FULL	= {
-															{ "id_activitate", "grupa", "zi", "ora", "sala", "durata", "frecventa", "denumire", "tip"},					//campuri baza de date
-															{ "idActivitate",  "grupa",  "zi", "ora", "sala", "durata", "frecventa", "denumireDisciplina", "tipActivitate"}	//campuri obiect
+															{ "id_activitate", "grupa", "zi", "ora", "sala", "durata", "frecventa", "cod_disciplina", "denumire", "tip", "nume", "cnp"},									//campuri baza de date
+															{ "idActivitate",  "grupa",  "zi", "ora", "sala", "durata", "frecventa", "codDisciplina", "denumireDisciplina", "tip", "numeCadruDidactic", "cnpCadruDidactic"}	//campuri obiect
 														};
 	final public static String[][]	ORAR_STUDENT_FIELD_MATCH = {
 																{ "grupa", "zi", "ora", "sala", "durata", "frecventa", "denumire", "tip"},						//campuri baza de date
-																{ "grupa", "zi", "ora", "sala", "durata", "frecventa", "denumireDisciplina", "tipActivitate"}	//campuri obiect
+																{ "grupa", "zi", "ora", "sala", "durata", "frecventa", "denumireDisciplina", "tip"}	//campuri obiect
 															};
 	final public static int			ORAR_TABLE_PK_COUNT	= 2;	//atat 'id_activitate' cat si 'grupa' fac parte din cheie	
 	
@@ -101,7 +102,7 @@ public class Constants {
 															{ "ID", "Cod Disciplina", "Denumire", "CNP Cadru Didactic", "Nume Cadru", "Tip Activitate"}			//nume coloane
 														};
 	final public static String[][]	ADMIN_ORAR_COLUMN_FIELD_MATCH 	= {
-															{ "grupa", "idActivitate", "tipActivitate", "denumireDisciplina", "zi", "ora", "sala", "durata",   "frecventa"},	//campuri obiect
+															{ "grupa", "idActivitate", "tip", "denumireDisciplina", "zi", "ora", "sala", "durata",   "frecventa"},	//campuri obiect
 															{ "Grupa", "ID Activitate", "Tip", "Disciplina", "Zi", "Ora", "Sala", "Durata", "Frecventa"}	//nume coloane
 														};
 	final public static String[][]	ADMIN_EXAMEN_COLUMN_FIELD_MATCH 	= {
@@ -117,7 +118,7 @@ public class Constants {
 															{ "Cod Disciplina", "Denumire", "Tip", "Numar Ore", "Puncte Credit", "Examinare"}	//nume coloane
 														};
 	final public static String[][]	VIEW_ORAR_STUDENT_COLUMN_FIELD_MATCH = {
-															{ "zi", "ora", "sala", "denumireDisciplina", "durata", "frecventa",  "tipActivitate", "grupa"},	//campuri obiect
+															{ "zi", "ora", "sala", "denumireDisciplina", "durata", "frecventa",  "tip", "grupa"},	//campuri obiect
 															{ "Zi", "Ora", "Sala", "Denumire Disciplina", "Durata (h)", "Frecventa",  "Tip", "Grupa"}	//nume coloane
 														};	
 	final public static String[][]	VIEW_EXAMEN_STUDENT_COLUMN_FIELD_MATCH		= {

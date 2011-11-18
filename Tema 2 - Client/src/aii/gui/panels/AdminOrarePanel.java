@@ -2,6 +2,7 @@ package aii.gui.panels;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -26,33 +27,27 @@ import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
 import aii.Activitate;
+import aii.Constants;
 import aii.Orar;
+import aii.OrarComplet;
 import aii.Utilizator;
 import aii.Orar.Frecventa;
 import aii.Orar.Ziua;
-import aii.database.ActivitateWrapper;
-import aii.database.Constants;
-import aii.database.DatabaseConnection;
-import aii.database.OrarWrapper;
+import aii.arhiva.Arhiva;
 import aii.gui.tools.FixedSizeDocument;
 import aii.gui.tools.ObjectTableModel;
+import aii.rad.RegistruActivitatiDidactice;
 
 
 @SuppressWarnings("serial")
 public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionListener, ActionListener {
 	
-	@SuppressWarnings("unused")
-	private Utilizator utilizator;
 	private JTable table;
-	private ArrayList<Orar> objects;
+	private ArrayList<OrarComplet> objects;
 	private ArrayList<Activitate> activitati;
-	private ObjectTableModel<Orar> mainTableModel;
+	private ObjectTableModel<OrarComplet> mainTableModel;
 	private ObjectTableModel<Activitate> activitatiTableModel;
-	private OrarWrapper orareDAO=new OrarWrapper();
-	private ActivitateWrapper activitatiDAO=new ActivitateWrapper();
-	
-	
-	private JLabel statusLbl;
+
 	private JButton btnSalveaza;
 	private JButton btnSterge;
 	private JButton btnAdauga;
@@ -69,32 +64,27 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 	/**
 	 * Create the panel.
 	 */
-	public AdminOrarePanel(Utilizator utilizator, JLabel statusLbl) {
-		this.utilizator=utilizator;
-		this.statusLbl=statusLbl;
+	public AdminOrarePanel(Arhiva arhivaService, RegistruActivitatiDidactice radService,
+			Utilizator utilizator, JLabel statusLabel) {
+		//Initialize the MainPanelAbstract object
+		super(arhivaService, radService, utilizator, statusLabel);
+		
 		this.statusLbl.setText("Administrare activitati de predare. Selecteaza valorile dorite pentru a crea o noua disciplina sau selecteaza un rand pentru a il modifica.");
 		
 		//Get the objects and prepare the table models		
 		try {
 			//Table model for "Orare"
-			orareDAO.setNameMatch(Constants.ORAR_FIELD_MATCH_FULL);
-			objects=orareDAO.getOrareJoined("o.zi, o.ora, o.sala, d.denumire, o.grupa, o.frecventa, o.durata, o.id_activitate, a.tip",
-					Constants.DISCIPLINA_TABLE+" d, "+Constants.ORAR_TABLE+" o, "+Constants.ACTIVITATE_TABLE+" a",
-					"o.id_activitate=a.id AND a.cod_disciplina=d.cod");
-			orareDAO.setNameMatch(Constants.ORAR_FIELD_MATCH);
-			mainTableModel=new ObjectTableModel<Orar>(Orar.class,
+			objects=radService.obtineOrarComplet();
+			mainTableModel=new ObjectTableModel<OrarComplet>(OrarComplet.class,
 					objects,
 					Constants.ADMIN_ORAR_COLUMN_FIELD_MATCH[1],
 					Constants.ADMIN_ORAR_COLUMN_FIELD_MATCH[0]);
 			//Table model for "Activitate"
-			activitatiDAO.setNameMatch(Constants.ACTIVITATE_FIELD_MATCH_FULL);
-			activitati=activitatiDAO.getActivitatiJoined("a.id, a.cod_disciplina, a.cnp_cadru_didactic, a.tip, d.denumire, concat(u.nume,concat(\" \",u.prenume)) nume", 
-					Constants.ACTIVITATE_TABLE+" a, "+Constants.DISCIPLINA_TABLE+" d, "+Constants.USER_TABLE+" u",
-					"a.cod_disciplina=d.cod AND u.cnp=a.cnp_cadru_didactic");
+			activitati=radService.obtinereActivitatePredare();
 			activitatiTableModel=new ObjectTableModel<Activitate>(Activitate.class,
 					activitati,
-					new String[] {"ID","Tip","Denumire Disciplina", "Cadru Didactic"},
-					new String[] {"id","tip","denumireDisciplina", "numeCadruDidactic"});			
+					new String[] {"ID","Tip","Disciplina", "Cadru Didactic"},
+					new String[] {"id","tip","codDisciplina", "cnpCadruDidactic"});			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -209,27 +199,12 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 		panelEdit.add(btnAdauga);
 		
 		/* Pregatire date despre grupa. */
-		Vector<Object[]> results=null;
-		String query="SELECT DISTINCT titlu_grupa FROM "+Constants.USER_TABLE+" WHERE tip=\'"+Utilizator.Tip.STUDENT.toString()+"\'";
-		
+		Vector<String> grupe=null;
 		try {
-			DatabaseConnection.openConnection();
-			results=DatabaseConnection.customQueryArray(query);
-		} catch (SQLException e) {
+			grupe = radService.obtineGrupeStudenti();
+		} catch (RemoteException e) {
 			e.printStackTrace();
-			return;
 		}
-		
-		//Construire grupe
-		Vector<String> grupe=new Vector<String>(results.size());
-		for(int i=0;i<results.size();i++)
-		{
-			String value=(String) results.get(i)[0];
-			if(!value.isEmpty())	//Skip empty values
-				grupe.add(value);
-		}
-		System.out.println("Obtinute grupele: "+grupe);
-		
 		comboBoxGrupa.setModel(new DefaultComboBoxModel(grupe));
 		
 		lblNuSe = new JLabel("* Nu se pot desfasura mai multe clase in aceeasi sala");
@@ -341,8 +316,13 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 				return;
 			
 			//Delete the orar
-			if(!orareDAO.deleteOrar(objects.get(table.getSelectedRow())))
+			try {
+				if(!radService.stergereActivitateOrar(objects.get(table.getSelectedRow())))
+					return;
+			} catch (RemoteException e) {
+				e.printStackTrace();
 				return;
+			}
 			
 			statusLbl.setText("Orarul pentru "+objects.get(table.getSelectedRow()).grupa+"la activitate "+objects.get(table.getSelectedRow()).idActivitate+" a fost sters.");
 			
@@ -366,7 +346,7 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 			}
 			
 			//Create the new object
-			Orar object=new Orar();
+			OrarComplet object=new OrarComplet();
 			object.frecventa=(Frecventa) comboBoxFrecventa.getSelectedItem();
 			object.durata=(Integer) spinnerDurata.getValue();
 			object.grupa=(String) comboBoxGrupa.getSelectedItem();
@@ -374,11 +354,11 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 			object.idActivitate=activitati.get(tableActivitati.getSelectedRow()).id;
 			object.zi=(Ziua) comboBoxZiua.getSelectedItem();
 			object.ora=(Integer)spinnerOra.getValue();
-			object.tipActivitate=activitati.get(tableActivitati.getSelectedRow()).tip;
+			object.tip=activitati.get(tableActivitati.getSelectedRow()).tip;
 			object.denumireDisciplina=activitati.get(tableActivitati.getSelectedRow()).denumireDisciplina;
 			
 			//Tweak to help the check
-			Orar backup=null;
+			OrarComplet backup=null;
 			if(table.getSelectedRow()!=-1)
 			{
 				backup=objects.get(table.getSelectedRow());
@@ -399,8 +379,12 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 			{
 				//Insert the new orar
 				System.out.println("Intrare noua in orar: "+object);
-				if(!orareDAO.insertOrar(object))
-					return;
+				try {
+					if(!radService.adaugareActivitateOrar(object))
+						return;
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
 			
 				statusLbl.setText("S-a creat o noua intrare in orar.");
 				
@@ -413,10 +397,14 @@ public class AdminOrarePanel extends MainPanelAbstract implements ListSelectionL
 			{
 				
 				System.out.println("Orar existent -> modificat in " + object);
-				if(!orareDAO.updateOrar(backup, object))
-				{
-					objects.set(table.getSelectedRow(), backup);
-					return;
+				try {
+					if(!radService.editareActivitateOrar(object,backup))
+					{
+						objects.set(table.getSelectedRow(), backup);
+						return;
+					}
+				} catch (RemoteException e) {
+					e.printStackTrace();
 				}
 				
 				statusLbl.setText("Orarul pentru grupa "+object.grupa +" la activitatea "+object.idActivitate+" a fost actualizat.");

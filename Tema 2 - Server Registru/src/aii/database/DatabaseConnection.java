@@ -1,3 +1,9 @@
+/*
+ * Aplicatii Integrate pentru Intreprinderi
+ * 
+ * Stefan-Dobrin Cosmin
+ * 342C4
+ */
 package aii.database;
 
 import java.sql.Connection;
@@ -264,183 +270,28 @@ public class DatabaseConnection {
 		String expression = "UPDATE " + table + " SET "+setClause+" WHERE "+whereClause;
 		
 		System.out.println("S-a apelat expresia SQL \'"+expression+"\'");
-		statement.execute(expression);		
+		statement.execute(expression);	
 		
 	}
 	
-	/*public static void modifica_inregistrari_baza_de_date(String tabela, ArrayList<String> valori)
-			throws SQLExcep3nixtion {
-		deschide_conexiune_baza_de_date();
-		String expresie = "UPDATE " + tabela + " SET ";
-		for (String[] structura_tabela : Constants.STRUCTURA_TABELA)
-			if (tabela.equals(structura_tabela[0])) {
-				int coloana = 1;
-				for (String valoare : valori)
-					expresie += structura_tabela[coloana++] + "=\'" + valoare + "\', ";
-			}
-		expresie = expresie.substring(0, expresie.length() - 2);
-		expresie += " WHERE ";
-		for (String[] structura_tabela : Constants.STRUCTURA_TABELA)
-			if (tabela.equals(structura_tabela[0]))
-				expresie += structura_tabela[1] + "=\'" + valori.get(0) + "\'";
-		System.out.println(expresie);
-		interogare.execute(expresie);
-		inchide_conexiune_baza_de_date();
-	}
-	*/
+	/**
+	 * Updates entities in the table, using the setClause for setting values and whereClause to restrict rows.
+	 *
+	 * @param table the table
+	 * @param setClause the set clause
+	 * @param whereClause the where clause
+	 * @return the count of succesfully modified entries
+	 * @throws SQLException the sQL exception
+	 */
+	public static int updateEntitiesCount(String table, String setClause, String whereClause) throws SQLException
+	{
+		openConnection();
+		
+		String expression = "UPDATE " + table + " SET "+setClause+" WHERE "+whereClause;
+		
+		System.out.println("S-a apelat expresia SQL \'"+expression+"\'");
+		statement.execute(expression);	
 	
-	// public static Object[][] obtine_continut_baza_de_date (String tabela)
-	// throws SQLException
-	// {
-	// openConnection();
-	// String expresie = "SELECT * FROM "+tabela;
-	// ResultSet rezultat = statement.executeQuery(expresie);
-	// rezultat.last();
-	// int numar_randuri = rezultat.getRow();
-	// int numar_coloane = -1;
-	// for (String[] structura_tabela:Constants.STRUCTURA_TABELA)
-	// if (tabela.equals(structura_tabela[0]))
-	// numar_coloane = structura_tabela.length - 1;
-	// if (numar_coloane == -1)
-	// return null;
-	// Object[][] continut_baza_de_date = new
-	// Object[numar_randuri][numar_coloane];
-	// rezultat.beforeFirst();
-	// int rand = 0;
-	// while (rezultat.next())
-	// {
-	// for (int coloana = 0; coloana < numar_coloane; coloana++)
-	// continut_baza_de_date[rand][coloana] = rezultat.getString(coloana+1);
-	// rand++;
-	// }
-	// closeConnection();
-	// return continut_baza_de_date;
-	// }
-	//
-
-	//
-	// public static void modifica_inregistrari_baza_de_date (String tabela,
-	// ArrayList<String> valori) throws SQLException
-	// {
-	// openConnection();
-	// String expresie = "UPDATE "+tabela+" SET ";
-	// for (String[] structura_tabela:Constants.STRUCTURA_TABELA)
-	// if (tabela.equals(structura_tabela[0]))
-	// {
-	// int coloana = 1;
-	// for (String valoare:valori)
-	// expresie += structura_tabela[coloana++]+"=\'"+valoare+"\', ";
-	// }
-	// expresie = expresie.substring(0,expresie.length()-2);
-	// expresie += " WHERE ";
-	// for (String[] structura_tabela:Constants.STRUCTURA_TABELA)
-	// if (tabela.equals(structura_tabela[0]))
-	// expresie += structura_tabela[1]+"=\'"+valori.get(0)+"\'";
-	// System.out.println (expresie);
-	// statement.execute(expresie);
-	// closeConnection();
-	// }
-
-	// public static void sterge_inregistrari_baza_de_date (String tabela,
-	// ArrayList<String> valori) throws SQLException
-	// {
-	// deschide_conexiune_baza_de_date();
-	// String expresie = "DELETE FROM "+tabela+" WHERE ";
-	// for (String[] structura_tabela:Constants.STRUCTURA_TABELA)
-	// if (tabela.equals(structura_tabela[0]))
-	// expresie += structura_tabela[1]+"=\'"+valori.get(0)+"\'";
-	// System.out.println (expresie);
-	// statement.execute(expresie);
-	// inchide_conexiune_baza_de_date();
-	// }
-	//
-	// public static Object[][] apeleaza_functie (String[] coloane, String
-	// tabela, String conditie, String parametru) throws SQLException
-	// {
-	// deschide_conexiune_baza_de_date();
-	//
-	// String expresie = "SELECT ";
-	// for (int contor = 0; contor < coloane.length -1; contor++)
-	// expresie+=coloane[contor]+", ";
-	// expresie = expresie.substring (0, expresie.length() - 2);
-	//
-	// expresie += " FROM "+tabela;
-	// expresie += " WHERE "+conditie;
-	//
-	// System.out.println (expresie);
-	//
-	// PreparedStatement interogare_parametrizata =
-	// connection.prepareStatement(expresie,ResultSet.TYPE_SCROLL_SENSITIVE,
-	// ResultSet.CONCUR_UPDATABLE);
-	// interogare_parametrizata.setString(1,parametru);
-	// ResultSet rezultat = interogare_parametrizata.executeQuery();
-	// rezultat.last();
-	// int numar_randuri = rezultat.getRow();
-	// int numar_coloane = coloane.length;
-	//
-	// Object[][] continut_baza_de_date = new
-	// Object[numar_randuri][numar_coloane];
-	// rezultat.beforeFirst();
-	// int rand = 0;
-	// while (rezultat.next())
-	// {
-	// for (int coloana = 0; coloana < numar_coloane - 1; coloana++)
-	// continut_baza_de_date[rand][coloana] = rezultat.getString(coloana+1);
-	//
-	// CallableStatement interogare_functie =
-	// connection.prepareCall("{? = call "+coloane[coloane.length - 1]+" (?)}");
-	// interogare_functie.registerOutParameter(1, java.sql.Types.VARCHAR);
-	// interogare_functie.setString(2,rezultat.getString(numar_coloane - 1));
-	// interogare_functie.execute();
-	// String valoare = interogare_functie.getString(1);
-	// interogare_functie.close();
-	// continut_baza_de_date[rand][numar_coloane - 1] = valoare;
-	//
-	// rand++;
-	// }
-	// inchide_conexiune_baza_de_date();
-	// return continut_baza_de_date;
-	// }
-	//
-	// public static Object[][] statistici (String[] coloane, String tabela,
-	// String conditie) throws SQLException
-	// {
-	// deschide_conexiune_baza_de_date();
-	//
-	// String expresie = "SELECT ";
-	// for (int contor = 0; contor < coloane.length; contor++)
-	// expresie+=coloane[contor]+", ";
-	// expresie = expresie.substring (0, expresie.length() - 2);
-	//
-	// expresie += " FROM "+tabela;
-	// expresie += " WHERE "+conditie;
-	//
-	// expresie += " GROUP BY ";
-	// for (int contor = 0; contor < coloane.length - 1; contor++)
-	// expresie+=coloane[contor]+", ";
-	// expresie = expresie.substring (0, expresie.length() - 2);
-	//
-	// expresie += " ORDER BY ";
-	// expresie += coloane[coloane.length - 1]+" DESC";
-	//
-	// System.out.println (expresie);
-	//
-	// ResultSet rezultat = statement.executeQuery(expresie);
-	// rezultat.last();
-	// int numar_randuri = rezultat.getRow();
-	// int numar_coloane = coloane.length;
-	//
-	// Object[][] continut_baza_de_date = new
-	// Object[numar_randuri][numar_coloane];
-	// rezultat.beforeFirst();
-	// int rand = 0;
-	// while (rezultat.next())
-	// {
-	// for (int coloana = 0; coloana < numar_coloane; coloana++)
-	// continut_baza_de_date[rand][coloana] = rezultat.getString(coloana+1);
-	// rand++;
-	// }
-	// inchide_conexiune_baza_de_date();
-	// return continut_baza_de_date;
-	// }
+		return statement.getUpdateCount();
+	}
 }

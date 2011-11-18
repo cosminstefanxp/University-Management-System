@@ -40,6 +40,9 @@ public class Activitate implements Serializable{
 	
 	/** The tip. */
 	public TipActivitate tip;
+	
+	/** The denumire disciplina. Camp bonus utilizat in cazul in care afisam si numele activitatii */
+	public String denumireDisciplina;
 
 	//****************** METHODS ********************/
 	
@@ -123,6 +126,24 @@ public class Activitate implements Serializable{
 	 */
 	public void setTip(TipActivitate tip) {
 		this.tip = tip;
+	}
+
+	/**
+	 * Gets the denumire disciplina.
+	 *
+	 * @return the denumire disciplina
+	 */
+	public String getDenumireDisciplina() {
+		return denumireDisciplina;
+	}
+
+	/**
+	 * Sets the denumire disciplina.
+	 *
+	 * @param denumireDisciplina the new denumire disciplina
+	 */
+	public void setDenumireDisciplina(String denumireDisciplina) {
+		this.denumireDisciplina = denumireDisciplina;
 	}
 	
 

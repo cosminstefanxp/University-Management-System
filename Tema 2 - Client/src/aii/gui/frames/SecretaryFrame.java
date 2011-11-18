@@ -3,7 +3,6 @@ package aii.gui.frames;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -23,7 +22,6 @@ import aii.arhiva.Arhiva;
 import aii.gui.panels.AdminExamenePanel;
 import aii.gui.panels.AdminGrupePanel;
 import aii.gui.panels.AdminOrarePanel;
-import aii.gui.panels.PersonalDataPanel;
 import aii.rad.RegistruActivitatiDidactice;
 
 /**
@@ -34,13 +32,11 @@ public class SecretaryFrame extends JFrame implements ActionListener{
 
 	private JPanel contentPane;
 	private JPanel mainPanel;
-	private JButton btnSetariPersonale;
 	private JButton btnAdminGrupe;
 	private Utilizator utilizator;
 	public JLabel statusLbl;
 	private JButton btnAdminOrar;
 	private JButton btnProgramareExamene;
-	private JButton btnTrecereAn;
 	private Arhiva arhivaService;
 	private RegistruActivitatiDidactice radService;
 
@@ -75,13 +71,6 @@ public class SecretaryFrame extends JFrame implements ActionListener{
 		mntmProgramareExamene.addActionListener(this);
 		mnAdministrare.add(mntmProgramareExamene);
 		
-		JMenu mnSetari = new JMenu("Setari");
-		menuBar.add(mnSetari);
-		
-		JMenuItem mntmSetariPersonale = new JMenuItem("Setari Personale");
-		mntmSetariPersonale.addActionListener(this);
-		mnSetari.add(mntmSetariPersonale);
-		
 		/******* FULL CONTENT PANEL ********/
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -106,11 +95,6 @@ public class SecretaryFrame extends JFrame implements ActionListener{
 		mainPanel.setLayout(null);
 		contentPane.add(mainPanel, "cell 0 2,grow");
 		
-		btnSetariPersonale = new JButton("Setari personale");
-		btnSetariPersonale.setBounds(25, 50, 198, 25);
-		btnSetariPersonale.addActionListener(this);
-		mainPanel.add(btnSetariPersonale);
-		
 		btnAdminGrupe = new JButton("Administrare grupe");
 		btnAdminGrupe.setBounds(25, 88, 198, 25);
 		btnAdminGrupe.addActionListener(this);
@@ -122,18 +106,13 @@ public class SecretaryFrame extends JFrame implements ActionListener{
 		mainPanel.add(btnAdminOrar);
 		
 		btnProgramareExamene = new JButton("Programare examene");
-		btnProgramareExamene.setBounds(25, 162, 198, 25);
+		btnProgramareExamene.setBounds(25, 50, 198, 25);
 		btnProgramareExamene.addActionListener(this);
 		mainPanel.add(btnProgramareExamene);
 		
 		JLabel lblFolositiMeniulSau = new JLabel("Folositi meniul sau unul dintre butoanele de mai jos pentru a interactiona cu sistemul:");
 		lblFolositiMeniulSau.setBounds(25, 23, 613, 15);
 		mainPanel.add(lblFolositiMeniulSau);
-		
-		btnTrecereAn = new JButton("Trecere an");
-		btnTrecereAn.setBounds(25, 199, 198, 25);
-		btnTrecereAn.addActionListener(this);
-		mainPanel.add(btnTrecereAn);
 		
 	}
 
@@ -151,22 +130,13 @@ public class SecretaryFrame extends JFrame implements ActionListener{
         {
         	//Date personale
         	JMenuItem sourceItem=(JMenuItem)source;
-        	if(sourceItem.getText().toLowerCase().equals("setari personale"))
-        	{
-        		System.out.println("Menu: Setari personale");
-        		
-        		contentPane.remove(mainPanel);
-        		mainPanel=new PersonalDataPanel(utilizator, statusLbl);
-        		
-        		contentPane.add(mainPanel, "cell 0 2,grow");
-        		contentPane.revalidate();        		
-        	} 
-        	else if(sourceItem.getText().toLowerCase().equals("orar"))
+
+        	if(sourceItem.getText().toLowerCase().equals("orar"))
         	{
         		System.out.println("Meniu: Administrare Orar");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new AdminOrarePanel(utilizator, statusLbl);
+        		mainPanel=new AdminOrarePanel(arhivaService, radService, utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -176,7 +146,7 @@ public class SecretaryFrame extends JFrame implements ActionListener{
         		System.out.println("Meniu: Administrare Grupe");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new AdminGrupePanel(utilizator, statusLbl);
+        		mainPanel=new AdminGrupePanel(arhivaService, radService, utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -198,22 +168,12 @@ public class SecretaryFrame extends JFrame implements ActionListener{
         // Check buttons
         if(source instanceof JButton)
         {
-        	if(source==this.btnSetariPersonale)
-        	{
-        		System.out.println("Buton: Setari personale");
-        		
-        		contentPane.remove(mainPanel);
-        		mainPanel=new PersonalDataPanel(utilizator, statusLbl);
-        		
-        		contentPane.add(mainPanel, "cell 0 2,grow");
-        		contentPane.revalidate();        		
-        	}
-        	else if(source==this.btnAdminGrupe)
+        	if(source==this.btnAdminGrupe)
         	{
         		System.out.println("Buton: Administrare Grupe");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new AdminGrupePanel(utilizator, statusLbl);
+        		mainPanel=new AdminGrupePanel(arhivaService, radService, utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -223,7 +183,7 @@ public class SecretaryFrame extends JFrame implements ActionListener{
         		System.out.println("Buton: Administrare Orar");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new AdminOrarePanel(utilizator, statusLbl);
+        		mainPanel=new AdminOrarePanel(arhivaService, radService, utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -238,30 +198,7 @@ public class SecretaryFrame extends JFrame implements ActionListener{
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
         	}
-        	else if(source==this.btnTrecereAn)
-        	{
-        		System.out.println("Buton: Trecere an studiu");
-        		UtilizatorWrapper userDAO=new UtilizatorWrapper();
-        		ArrayList<Utilizator> utilizatori=userDAO.getUtilizatoriPromovati();
-        		for(Utilizator user : utilizatori)
-        		{
-        			System.out.println("A promovat studentul: "+user);
-        			if(user.titlu_grupa==null)
-        				System.out.println("Student fara grupa...");
-        			byte[] bytes=user.titlu_grupa.getBytes();
-        			if(bytes[1]=='4')
-        				user.titlu_grupa="licentiat";
-        			else
-        			{
-        				bytes[1]++;
-        				user.titlu_grupa=new String(bytes);
-        				user.contractCompletat=false;	//ca sa poate completa noul orar
-        			}
-        			System.out.println("Noua grupa: "+user.titlu_grupa);
-        			
-        			userDAO.UpdateUtilizator(user, user);	//conteaza doar campurile ce fac parte din cheia primara (cnp)
-        		}
-        	}
+ 
         }
 		
 	}

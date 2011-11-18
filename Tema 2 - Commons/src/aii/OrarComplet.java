@@ -12,7 +12,7 @@ import aii.Activitate.TipActivitate;
 
 /**
  * The Class OrarComplet that contains all the information that has been joined
- * from an Orar and an associated Activitate.
+ * from an Orar and an associated Activitate, Disciplina and Utilizator.
  */
 public class OrarComplet extends Orar implements Serializable {
 
@@ -21,27 +21,33 @@ public class OrarComplet extends Orar implements Serializable {
 
 	/** The cod disciplina. */
 	public int codDisciplina;
+	
+	/** The denumire disciplina. */
+	public String denumireDisciplina;
 
 	/** The cnp cadru didactic. */
 	public String cnpCadruDidactic;
+	
+	/** The nume cadru didactic. */
+	public String numeCadruDidactic;
 
 	/** The tip. */
 	public TipActivitate tip;
 
 	// ****************** METHODS ********************/
-
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see aii.Orar#toString()
 	 */
 	@Override
 	public String toString() {
 		return "OrarComplet [cnpCadruDidactic=" + cnpCadruDidactic + ", codDisciplina="
-				+ codDisciplina + ", tip=" + tip + ", durata=" + durata + ", frecventa="
-				+ frecventa + ", grupa=" + grupa + ", idActivitate=" + idActivitate + ", ora="
-				+ ora + ", sala=" + sala + ", zi=" + zi + "]";
+				+ codDisciplina + ", denumireDisciplina=" + denumireDisciplina
+				+ ", numeCadruDidactic=" + numeCadruDidactic + ", tip=" + tip + ", durata="
+				+ durata + ", frecventa=" + frecventa + ", grupa=" + grupa + ", idActivitate="
+				+ idActivitate + ", ora=" + ora + ", sala=" + sala + ", zi=" + zi + "]";
 	}
+
+
 
 	// ****************** GETTERS / SETTERS ********************/
 	/**
@@ -52,6 +58,7 @@ public class OrarComplet extends Orar implements Serializable {
 	public int getCodDisciplina() {
 		return codDisciplina;
 	}
+
 
 	/**
 	 * Sets the cod disciplina.
@@ -99,5 +106,49 @@ public class OrarComplet extends Orar implements Serializable {
 	 */
 	public void setTip(TipActivitate tip) {
 		this.tip = tip;
+	}
+
+
+
+	/**
+	 * Gets the denumire disciplina.
+	 *
+	 * @return the denumire disciplina
+	 */
+	public String getDenumireDisciplina() {
+		return denumireDisciplina;
+	}
+
+
+
+	/**
+	 * Sets the denumire disciplina.
+	 *
+	 * @param denumireDisciplina the new denumire disciplina
+	 */
+	public void setDenumireDisciplina(String denumireDisciplina) {
+		this.denumireDisciplina = denumireDisciplina;
+	}
+
+
+
+	/**
+	 * Gets the nume cadru didactic.
+	 *
+	 * @return the nume cadru didactic
+	 */
+	public String getNumeCadruDidactic() {
+		return numeCadruDidactic;
+	}
+
+
+
+	/**
+	 * Sets the nume cadru didactic.
+	 *
+	 * @param numeCadruDidactic the new nume cadru didactic
+	 */
+	public void setNumeCadruDidactic(String numeCadruDidactic) {
+		this.numeCadruDidactic = numeCadruDidactic;
 	}
 }

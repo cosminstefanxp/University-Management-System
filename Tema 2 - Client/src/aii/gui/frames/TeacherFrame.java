@@ -26,7 +26,6 @@ import aii.arhiva.Arhiva;
 import aii.gui.panels.AdminActivitatiPanel;
 import aii.gui.panels.AdminCatalogPanel;
 import aii.gui.panels.AdminDisciplinePanel;
-import aii.gui.panels.PersonalDataPanel;
 import aii.rad.RegistruActivitatiDidactice;
 
 /**
@@ -37,7 +36,6 @@ public class TeacherFrame extends JFrame implements ActionListener{
 
 	private JPanel contentPane;
 	private JPanel mainPanel;
-	private JButton btnSetariPersonale;
 	private JButton btnCatalog;
 	private Utilizator utilizator;
 	public JLabel statusLbl;
@@ -86,13 +84,6 @@ public class TeacherFrame extends JFrame implements ActionListener{
 		mntmOrare.setEnabled(false);
 		mnAdministrare.add(mntmOrare);
 		
-		JMenu mnSetari = new JMenu("Setari");
-		menuBar.add(mnSetari);
-		
-		JMenuItem mntmSetariPersonale = new JMenuItem("Setari Personale");
-		mntmSetariPersonale.addActionListener(this);
-		mnSetari.add(mntmSetariPersonale);
-		
 		/******* FULL CONTENT PANEL ********/
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -118,13 +109,8 @@ public class TeacherFrame extends JFrame implements ActionListener{
 		mainPanel.setLayout(null);
 		contentPane.add(mainPanel, "cell 0 2,grow");
 		
-		btnSetariPersonale = new JButton("Setari personale");
-		btnSetariPersonale.setBounds(25, 50, 198, 25);
-		btnSetariPersonale.addActionListener(this);
-		mainPanel.add(btnSetariPersonale);
-		
 		btnCatalog = new JButton("Catalog");
-		btnCatalog.setBounds(25, 88, 198, 25);
+		btnCatalog.setBounds(25, 50, 198, 25);
 		btnCatalog.addActionListener(this);
 		mainPanel.add(btnCatalog);
 		
@@ -133,24 +119,24 @@ public class TeacherFrame extends JFrame implements ActionListener{
 		mainPanel.add(lblFolositiMeniulSau);
 		
 		JSeparator separator_1 = new JSeparator();
-		separator_1.setBounds(25, 125, 198, 2);
+		separator_1.setBounds(25, 87, 198, 2);
 		mainPanel.add(separator_1);
 		
 		btnDiscipline = new JButton("Administrare Discipline");
 		btnDiscipline.addActionListener(this);
 		btnDiscipline.setEnabled(false);
-		btnDiscipline.setBounds(25, 166, 198, 25);
+		btnDiscipline.setBounds(25, 128, 198, 25);
 		mainPanel.add(btnDiscipline);
 		
 		btnOrar = new JButton("Activitati de predare");
 		btnOrar.addActionListener(this);
 		btnOrar.setEnabled(false);
-		btnOrar.setBounds(25, 203, 198, 25);
+		btnOrar.setBounds(25, 165, 198, 25);
 		mainPanel.add(btnOrar);
 		
 		JCheckBox chckbxSefDeCatedra = new JCheckBox("Sef de catedra");
 		chckbxSefDeCatedra.setEnabled(false);
-		chckbxSefDeCatedra.setBounds(25, 135, 129, 23);
+		chckbxSefDeCatedra.setBounds(25, 97, 129, 23);
 		mainPanel.add(chckbxSefDeCatedra);
 		
 		//Other initializations
@@ -182,22 +168,12 @@ public class TeacherFrame extends JFrame implements ActionListener{
         {
         	//Date personale
         	JMenuItem sourceItem=(JMenuItem)source;
-        	if(sourceItem.getText().toLowerCase().equals("setari personale"))
-        	{
-        		System.out.println("Menu: Setari personale");
-        		
-        		contentPane.remove(mainPanel);
-        		mainPanel=new PersonalDataPanel(utilizator, statusLbl);
-        		
-        		contentPane.add(mainPanel, "cell 0 2,grow");
-        		contentPane.revalidate();        		
-        	}
-        	else if(sourceItem.getText().toLowerCase().equals("catalog"))
+        	if(sourceItem.getText().toLowerCase().equals("catalog"))
         	{
         		System.out.println("Meniu: Administrare Catalog");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new AdminCatalogPanel(utilizator, statusLbl);
+        		mainPanel=new AdminCatalogPanel(arhivaService, radService, utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -228,22 +204,12 @@ public class TeacherFrame extends JFrame implements ActionListener{
         // Check buttons
         if(source instanceof JButton)
         {
-        	if(source==this.btnSetariPersonale)
-        	{
-        		System.out.println("Buton: Setari personale");
-        		
-        		contentPane.remove(mainPanel);
-        		mainPanel=new PersonalDataPanel(utilizator, statusLbl);
-        		
-        		contentPane.add(mainPanel, "cell 0 2,grow");
-        		contentPane.revalidate();        		
-        	}
-        	else if(source==this.btnCatalog)
+        	if(source==this.btnCatalog)
         	{
         		System.out.println("Buton: Catalog");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new AdminCatalogPanel(utilizator, statusLbl);
+        		mainPanel=new AdminCatalogPanel(arhivaService, radService, utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		

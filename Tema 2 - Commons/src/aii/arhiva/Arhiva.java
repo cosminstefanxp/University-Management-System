@@ -10,9 +10,9 @@ package aii.arhiva;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import aii.Disciplina;
+import aii.NotaCatalog;
 import aii.SituatieScolara;
 
 /**
@@ -98,15 +98,27 @@ public interface Arhiva extends Remote {
 	 * Specifica nota obţinută de un student la un examen.
 	 *
 	 * @param CNPCadruDidactic the cNP cadru didactic
-	 * @param codDisciplina the cod disciplina
-	 * @param CNPStudent the cNP student, used for checking permissions
 	 * @param nota the nota
-	 * @param data the data
 	 * @return true, if successful
 	 * @throws RemoteException the remote exception
 	 */
-	public boolean stabilesteNota(String CNPCadruDidactic, int codDisciplina, String CNPStudent,
-			int nota, Calendar data) throws RemoteException;
+	public boolean stabilesteNota(String CNPCadruDidactic, NotaCatalog nota) throws RemoteException;
+	
+	/**
+	 * Stergere nota obţinută de un student la un examen.
+	 *
+	 * @param nota the nota
+	 * @return true, if successful
+	 * @throws RemoteException the remote exception
+	 */
+	public boolean stergereNota(NotaCatalog nota) throws RemoteException;
+	
+	/**
+	 * Obtine notele din tot catalogul (la toate materiile).
+	 *
+	 * @return the array list
+	 */
+	public ArrayList<NotaCatalog> obtineNote() throws RemoteException;
 
 	/**
 	 * Obţine nota pentru una sau mai multe discipline.
@@ -116,7 +128,7 @@ public interface Arhiva extends Remote {
 	 * @return the array list
 	 * @throws RemoteException the remote exception
 	 */
-	public ArrayList<Integer> obtineNota(String CNPStudent, ArrayList<Integer> codDisciplina)
+	public ArrayList<Integer> obtineNoteStudent(String CNPStudent, ArrayList<Integer> codDisciplina)
 			throws RemoteException;
 
 	/**

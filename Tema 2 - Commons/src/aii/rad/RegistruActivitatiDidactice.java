@@ -9,6 +9,7 @@ package aii.rad;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import aii.Activitate;
 import aii.Examen;
@@ -67,6 +68,15 @@ public interface RegistruActivitatiDidactice extends Remote {
 	 * @throws RemoteException the remote exception
 	 */
 	public ArrayList<Activitate> obtinereActivitatePredare() throws RemoteException;
+	
+	/**
+	 * Obtinere activitatile de predare de tip curs pentru un cadru didactic dat.
+	 *
+	 * @param cnpCadruDidactic the cnp cadru didactic
+	 * @return the array list
+	 * @throws RemoteException the remote exception
+	 */
+	public ArrayList<Activitate> obtinereActivitatiPredareCursCadru(String cnpCadruDidactic) throws RemoteException;
 
 	/**
 	 * Stabileste formatie de studiu.
@@ -76,39 +86,42 @@ public interface RegistruActivitatiDidactice extends Remote {
 	 * @return the int
 	 * @throws RemoteException the remote exception
 	 */
-	public int stabilesteFormatieDeStudiu(ArrayList<String> CNPStudent, int grupa)
+	public int stabilesteFormatieDeStudiu(ArrayList<String> CNPStudent, String grupa)
 			throws RemoteException;
 
 	/**
 	 * Adaugare activitate didactica in orar.
 	 *
-	 * @param activitatiDidactice the activitati didactice
-	 * @return the int
+	 * @param orar the orar
+	 * @return true, if successful
 	 * @throws RemoteException the remote exception
 	 */
-	public int adaugareActivitateOrar(ArrayList<Orar> activitatiDidactice)
+	public boolean adaugareActivitateOrar(Orar orar)
 			throws RemoteException;
 
 	/**
 	 * Editare activitate didactica in orar.
 	 *
-	 * @param activitatiDidactice the activitati didactice
-	 * @return the int
+	 * @param orarNou the orar nou
+	 * @param orarVechi the orar vechi, utilizat pentru a gasi vechea activitate orar si a o edita
+	 * @return true, if successful
 	 * @throws RemoteException the remote exception
 	 */
-	public int editareActivitateOrar(ArrayList<Orar> activitatiDidactice)
+	public boolean editareActivitateOrar(Orar orarNou, Orar orarVechi)
 			throws RemoteException;
 
 	/**
 	 * Stergere activitate didactica din orar.
 	 *
-	 * @param activitatiDidactice the activitati didactice
-	 * @return the int
+	 * @param orar the orar
+	 * @return true, if successful
 	 * @throws RemoteException the remote exception
 	 */
-	public int stergereActivitateOrar(ArrayList<Orar> activitatiDidactice)
+	public boolean stergereActivitateOrar(Orar orar)
 			throws RemoteException;
 
+	
+	
 	/**
 	 * Adaugare examen in calendarul de examene.
 	 *
@@ -144,6 +157,14 @@ public interface RegistruActivitatiDidactice extends Remote {
 	 * @throws RemoteException the remote exception
 	 */
 	public ArrayList<OrarComplet> obtineOrarComplet(String CNPStudent) throws RemoteException;
+	
+	/**
+	 * Obtine orarul complet al tuturor activitatile. De folosit in interfata de secretar.
+	 *
+	 * @return the array list
+	 * @throws RemoteException the remote exception
+	 */
+	public ArrayList<OrarComplet> obtineOrarComplet() throws RemoteException;
 
 	/**
 	 * Obţine calendarul examenelor pentru sesiunea în curs.
@@ -183,4 +204,22 @@ public interface RegistruActivitatiDidactice extends Remote {
 	 * @throws RemoteException the remote exception
 	 */
 	public ArrayList<Utilizator> obtineUtilizatori(String whereClause) throws RemoteException;
+	
+	/**
+	 * Verifica daca un cadru didactic preda cursul la o disciplina. 
+	 *
+	 * @param codDisciplina the cod disciplina
+	 * @param cnpCadruDidactic the cnp cadru didactic
+	 * @return true, if successful
+	 * @throws RemoteException the remote exception
+	 */
+	public boolean cadruPentruDisciplina(int codDisciplina, String cnpCadruDidactic) throws RemoteException;
+	
+	/**
+	 * Obtine toate grupele de studenti care exista.
+	 *
+	 * @return the vector
+	 */
+	public Vector<String> obtineGrupeStudenti() throws RemoteException;
+	
 }

@@ -11,18 +11,26 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.Calendar;
+
+import javax.swing.JOptionPane;
 
 import aii.Disciplina;
+import aii.NotaCatalog;
 import aii.SituatieScolara;
 import aii.database.DisciplinaWrapper;
 import aii.database.NotaCatalogWrapper;
 import aii.database.OptiuneContractWrapper;
+import aii.rad.RegistruActivitatiDidactice;
 
 /**
  * The Class ArhivaServer.
  */
 public class ArhivaServer implements Arhiva{
+
+
+
+
+
 
 	/** The disciplina dao. */
 	static DisciplinaWrapper disciplinaDAO=new DisciplinaWrapper();
@@ -32,6 +40,28 @@ public class ArhivaServer implements Arhiva{
 	
 	/** The optiune contract dao. */
 	static OptiuneContractWrapper optiuneContractDAO=new OptiuneContractWrapper();
+	
+	/** The rad service. */
+	private RegistruActivitatiDidactice radService;
+	
+	/**
+	 * Instantiates a new arhiva server.
+	 */
+	public ArhivaServer() {
+		super();
+		try {
+			// Prepare the registry to query
+			Registry registry = LocateRegistry.getRegistry("localhost");
+
+			// Get the stubs for the remote service
+			radService = (RegistruActivitatiDidactice) registry
+					.lookup(RegistruActivitatiDidactice.PUBLISH_NAME);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Eroare la conectarea la componentele remote");
+		}
+	}
 	
 	/* (non-Javadoc)
 	 * @see aii.arhiva.Arhiva#adaugareDisciplina(java.lang.String, java.util.ArrayList)
@@ -97,7 +127,7 @@ public class ArhivaServer implements Arhiva{
 	 * @see aii.arhiva.Arhiva#obtineNota(java.lang.String, java.util.ArrayList)
 	 */
 	@Override
-	public ArrayList<Integer> obtineNota(String CNPStudent, ArrayList<Integer> codDisciplina)
+	public ArrayList<Integer> obtineNoteStudent(String CNPStudent, ArrayList<Integer> codDisciplina)
 			throws RemoteException {
 		// TODO Auto-generated method stub
 		return null;
@@ -115,16 +145,6 @@ public class ArhivaServer implements Arhiva{
 	}
 
 
-
-	/* (non-Javadoc)
-	 * @see aii.arhiva.Arhiva#stabilesteNota(java.lang.String, int, java.lang.String, int, java.util.Calendar)
-	 */
-	@Override
-	public boolean stabilesteNota(String CNPCadruDidactic, int codDisciplina, String CNPStudent,
-			int nota, Calendar data) throws RemoteException {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	/* (non-Javadoc)
 	 * @see aii.arhiva.Arhiva#adaugareDisciplina(aii.Disciplina)
@@ -186,7 +206,46 @@ public class ArhivaServer implements Arhiva{
 			return ;
 		}
 		
+		//Pregatim serviciul RegistruActivitatiDidactice
+		
+		
 		System.out.println("Initializare completa a serverului pentru "+PUBLISH_NAME);
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see aii.arhiva.Arhiva#obtineNote()
+	 */
+	@Override
+	public ArrayList<NotaCatalog> obtineNote() throws RemoteException {
+		return notaCatalogDAO.getNoteCatalog("true");	//toate notele din catalog
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see aii.arhiva.Arhiva#stabilesteNota(java.lang.String, aii.NotaCatalog)
+	 */
+	@Override
+	public boolean stabilesteNota(String cnpCadruDidactic, NotaCatalog nota) throws RemoteException {
+		//Verificam daca acest cadru preda la materia respectiva cursul
+		if(radService.cadruPentruDisciplina(nota.codDisciplina, cnpCadruDidactic)==false)
+			return false;
+		
+		//TODO: Verificam daca exista deja o nota pentru acel elev la aceasta materie
+		
+		return notaCatalogDAO.insertNotaCatalog(nota);		
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see aii.arhiva.Arhiva#stergereNota(aii.NotaCatalog)
+	 */
+	@Override
+	public boolean stergereNota(NotaCatalog nota) throws RemoteException {
+		return notaCatalogDAO.deleteNotaCatalog(nota);
 	}
 
 
