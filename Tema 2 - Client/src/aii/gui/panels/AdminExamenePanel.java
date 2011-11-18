@@ -2,7 +2,7 @@ package aii.gui.panels;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -27,32 +27,25 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
+import aii.Constants;
 import aii.Disciplina;
 import aii.Examen;
 import aii.Utilizator;
-import aii.database.Constants;
-import aii.database.DatabaseConnection;
-import aii.database.DisciplinaWrapper;
-import aii.database.ExamenWrapper;
+import aii.arhiva.Arhiva;
 import aii.gui.tools.FixedSizeDocument;
 import aii.gui.tools.ObjectTableModel;
+import aii.rad.RegistruActivitatiDidactice;
 
 
 @SuppressWarnings("serial")
 public class AdminExamenePanel extends MainPanelAbstract implements ListSelectionListener, ActionListener {
 	
-	@SuppressWarnings("unused")
-	private Utilizator utilizator;
 	private JTable table;
 	private ArrayList<Examen> objects;
 	private ArrayList<Disciplina> discipline;
 	private ObjectTableModel<Examen> mainTableModel;
 	private ObjectTableModel<Disciplina> disciplineTableModel;
-	private ExamenWrapper exameneDAO=new ExamenWrapper();
-	private DisciplinaWrapper disciplineDAO=new DisciplinaWrapper();
-	
-	
-	private JLabel statusLbl;
+
 	private JButton btnSalveaza;
 	private JButton btnSterge;
 	private JButton btnAdauga;
@@ -70,31 +63,27 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 	/**
 	 * Create the panel.
 	 */
-	public AdminExamenePanel(Utilizator utilizator, JLabel statusLbl) {
-		this.utilizator=utilizator;
-		this.statusLbl=statusLbl;
+	public AdminExamenePanel(Arhiva arhivaService, RegistruActivitatiDidactice radService,
+			Utilizator utilizator, JLabel statusLabel) {
+		//Initialize the MainPanelAbstract object
+		super(arhivaService, radService, utilizator, statusLabel);
+		
 		this.statusLbl.setText("Administrare activitati de predare. Selecteaza valorile dorite pentru a crea o noua disciplina sau selecteaza un rand pentru a il modifica.");
 		
 		//Get the objects and prepare the table models		
 		try {
 			//Table model for "Examen"
-			exameneDAO.setNameMatch(Constants.EXAMEN_FIELD_MATCH_FULL);
-			objects=exameneDAO.getExameneJoined("e.data, e.ora, d.denumire, e.sala, e.grupa, e.cod_disciplina",
-					"disciplina d, examen e",
-					"d.cod=e.cod_disciplina");
-			exameneDAO.setNameMatch(Constants.EXAMEN_FIELD_MATCH);
+			objects=radService.obtineExamene();
 			mainTableModel=new ObjectTableModel<Examen>(Examen.class,
 					objects,
 					Constants.ADMIN_EXAMEN_COLUMN_FIELD_MATCH[1],
 					Constants.ADMIN_EXAMEN_COLUMN_FIELD_MATCH[0]);
 			//Table model for "Discipline"
-			discipline=disciplineDAO.getObjects(Constants.DISCIPLINA_TABLE,"cod=cod");
+			discipline=arhivaService.obtineDiscipline();
 			disciplineTableModel=new ObjectTableModel<Disciplina>(Disciplina.class,
 					discipline,
 					new String[] {"Cod","Denumire"},
 					new String[] {"cod","denumire"});			
-		} catch (SQLException e) {
-			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -210,27 +199,13 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 		panelEdit.add(btnAdauga);
 		
 		/* Pregatire date despre grupa. */
-		Vector<Object[]> results=null;
-		String query="SELECT DISTINCT titlu_grupa FROM "+Constants.USER_TABLE+" WHERE tip=\'"+Utilizator.Tip.STUDENT.toString()+"\'";
-		
+		Vector<String> grupe=null;
 		try {
-			DatabaseConnection.openConnection();
-			results=DatabaseConnection.customQueryArray(query);
-		} catch (SQLException e) {
+			grupe = radService.obtineGrupeStudenti();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return;
 		}
-		
-		//Construire grupe
-		Vector<String> grupe=new Vector<String>(results.size());
-		for(int i=0;i<results.size();i++)
-		{
-			String value=(String) results.get(i)[0];
-			if(!value.isEmpty())	//Skip empty values
-				grupe.add(value);
-		}
-		System.out.println("Obtinute grupele: "+grupe);
-		
 		comboBoxGrupa.setModel(new DefaultComboBoxModel(grupe));
 		
 		JLabel lblDurataAlocata = new JLabel("* Durata alocata unui examen este 3 ore");
@@ -357,8 +332,13 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 				return;
 			
 			//Delete the orar
-			if(!exameneDAO.deleteExamen(objects.get(table.getSelectedRow())))
+			try {
+				if(!radService.stergereExamen(objects.get(table.getSelectedRow())))
+					return;
+			} catch (RemoteException e) {
+				e.printStackTrace();
 				return;
+			}
 			
 			statusLbl.setText("Examenul pentru "+objects.get(table.getSelectedRow()).grupa+" la disciplina "+objects.get(table.getSelectedRow()).codDisciplina+" a fost sters.");
 			
@@ -392,7 +372,6 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 			calendar.set(Calendar.DAY_OF_MONTH, (Integer) spinnerZi.getValue());
 			object.data=new java.sql.Date(calendar.getTime().getTime());
 			object.ora=(Integer)spinnerOra.getValue();
-			object.denumireDisciplina=discipline.get(tableDiscipline.getSelectedRow()).denumire;
 			
 			
 			//Tweak to help the check
@@ -418,8 +397,13 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 			{
 				//Insert the new examen
 				System.out.println("Intrare noua in tabela de examene: "+object);
-				if(!exameneDAO.insertExamen(object))
+				try {
+					if(!radService.adaugareExamen(object))
+						return;
+				} catch (RemoteException e) {
+					e.printStackTrace();
 					return;
+				}
 			
 				statusLbl.setText("S-a creat o noua programare de examen.");
 				
@@ -432,9 +416,14 @@ public class AdminExamenePanel extends MainPanelAbstract implements ListSelectio
 			{
 				
 				System.out.println("Examen existent -> modificat in " + object);
-				if(!exameneDAO.updateExamen(backup, object))
-				{
-					objects.set(table.getSelectedRow(), backup);	//restore previous exam
+				try {
+					if(!radService.editareExamen(object, backup))
+					{
+						objects.set(table.getSelectedRow(), backup);	//restore previous exam
+						return;
+					}
+				} catch (RemoteException e) {
+					e.printStackTrace();
 					return;
 				}
 				

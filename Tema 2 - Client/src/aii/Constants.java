@@ -105,8 +105,8 @@ public class Constants {
 															{ "Grupa", "ID Activitate", "Tip", "Disciplina", "Zi", "Ora", "Sala", "Durata", "Frecventa"}	//nume coloane
 														};
 	final public static String[][]	ADMIN_EXAMEN_COLUMN_FIELD_MATCH 	= {
-															{ "grupa", "codDisciplina", "denumireDisciplina", "data", "ora", "sala"},	//campuri obiect
-															{ "Grupa", "Cod Disciplina", "Denumire", "Data", "Ora", "Sala"}		//nume coloane
+															{ "grupa", "codDisciplina", "data", "ora", "sala"},	//campuri obiect
+															{ "Grupa", "Cod Disciplina", "Data", "Ora", "Sala"}		//nume coloane
 														};
 	final public static String[][]	ADMIN_CATALOG_COLUMN_FIELD_MATCH 	= {
 															{ "codDisciplina", "cnpStudent", "data", "nota"},		//campuri obiect

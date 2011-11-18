@@ -156,12 +156,11 @@ public class SecretaryFrame extends JFrame implements ActionListener{
         		System.out.println("Meniu: Programare Examene");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new AdminExamenePanel(utilizator, statusLbl);
+        		mainPanel=new AdminExamenePanel(arhivaService, radService, utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
         	}
-
         
         }
         
@@ -193,7 +192,7 @@ public class SecretaryFrame extends JFrame implements ActionListener{
         		System.out.println("Buton: Programare Examen");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new AdminExamenePanel(utilizator, statusLbl);
+        		mainPanel=new AdminExamenePanel(arhivaService, radService, utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		

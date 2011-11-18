@@ -50,26 +50,6 @@ public class RegistruActivitatiDidacticeServer implements RegistruActivitatiDida
 	
 
 	
-	/* (non-Javadoc)
-	 * @see aii.rad.RegistruActivitatiDidactice#adaugareExamen(java.lang.String, java.util.ArrayList)
-	 */
-	@Override
-	public int adaugareExamen(ArrayList<Examen> examene) throws RemoteException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
-	/* (non-Javadoc)
-	 * @see aii.rad.RegistruActivitatiDidactice#editareExamen(java.lang.String, java.util.ArrayList)
-	 */
-	@Override
-	public int editareExamen(ArrayList<Examen> examene) throws RemoteException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
 
 	/* (non-Javadoc)
 	 * @see aii.rad.RegistruActivitatiDidactice#obtineOrarComplet(java.lang.String)
@@ -136,14 +116,7 @@ public class RegistruActivitatiDidacticeServer implements RegistruActivitatiDida
 
 
 
-	/* (non-Javadoc)
-	 * @see aii.rad.RegistruActivitatiDidactice#stergereExamen(java.lang.String, java.util.ArrayList)
-	 */
-	@Override
-	public int stergereExamen(ArrayList<Examen> examene) throws RemoteException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+
 	
 	/* (non-Javadoc)
 	 * @see aii.rad.RegistruActivitatiDidactice#autentificaUtilizator(java.lang.String, java.lang.String)
@@ -368,6 +341,36 @@ public class RegistruActivitatiDidacticeServer implements RegistruActivitatiDida
 
 
 
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#adaugareExamen(aii.Examen)
+	 */
+	@Override
+	public boolean adaugareExamen(Examen examen) throws RemoteException {
+		return examenDAO.insertExamen(examen);
+	}
 
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#editareExamen(aii.Examen, aii.Examen)
+	 */
+	@Override
+	public boolean editareExamen(Examen examenNou, Examen examenVechi) throws RemoteException {
+		return examenDAO.updateExamen(examenVechi, examenNou);
+	}
+
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#stergereExamen(aii.Examen)
+	 */
+	@Override
+	public boolean stergereExamen(Examen examen) throws RemoteException {
+		return examenDAO.deleteExamen(examen);
+	}
+
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#obtineExamene()
+	 */
+	@Override
+	public ArrayList<Examen> obtineExamene() throws RemoteException {
+		return examenDAO.getExamene("true");
+	}
 
 }

@@ -120,35 +120,42 @@ public interface RegistruActivitatiDidactice extends Remote {
 	public boolean stergereActivitateOrar(Orar orar)
 			throws RemoteException;
 
-	
-	
 	/**
 	 * Adaugare examen in calendarul de examene.
 	 *
-	 * @param examene the examene
+	 * @param examen the examen
 	 * @return the int
 	 * @throws RemoteException the remote exception
 	 */
-	public int adaugareExamen(ArrayList<Examen> examene) throws RemoteException;
+	public boolean adaugareExamen(Examen examen) throws RemoteException;
 
 	/**
 	 * Editare examen in calendarul de examene.
 	 *
-	 * @param examene the examene
+	 * @param examenNou the examen nou
+	 * @param examenVechi the examen vechi, pentru a putea identifica in mod unic examenul pe care il actualizam
 	 * @return the int
 	 * @throws RemoteException the remote exception
 	 */
-	public int editareExamen(ArrayList<Examen> examene) throws RemoteException;
+	public boolean editareExamen(Examen examenNou, Examen examenVechi) throws RemoteException;
 
 	/**
 	 * Stergere examen din calendarul de examene.
 	 *
-	 * @param examene the examene
+	 * @param examen the examen
 	 * @return the int
 	 * @throws RemoteException the remote exception
 	 */
-	public int stergereExamen(ArrayList<Examen> examene) throws RemoteException;
-
+	public boolean stergereExamen(Examen examen) throws RemoteException;
+	
+	/**
+	 * Obtine toate examenele din baza de date. Pentru a se folosi in interfata de secretar.
+	 *
+	 * @return the array list
+	 * @throws RemoteException the remote exception
+	 */
+	public ArrayList<Examen> obtineExamene() throws RemoteException;
+	
 	/**
 	 * Obţine orarul complet al activităţilor didactice pentru semestrul în curs.
 	 *
