@@ -82,7 +82,7 @@ public class Constants {
 																{ "cnp_student", "cod_disciplina", "data", "nota", "nume", "denumire"},		//campuri baza de date
 																{ "cnpStudent",  "codDisciplina",  "data", "nota", "numeStudent", "denumireDisciplina"}		//campuri obiect
 															};	
-	final public static int			CATALOG_TABLE_PK_COUNT	= 3;	//atat 'cod_disciplina' cat si 'grupa' si 'data' fac parte din cheie	
+	final public static int			CATALOG_TABLE_PK_COUNT	= 2;	//atat 'cod_disciplina' cat si 'grupa' fac parte din cheie	
 
 	/*******OPTIUNI CONTRACT********/
 	final public static String		CONTRACT_TABLE			= "optiuni_contract";

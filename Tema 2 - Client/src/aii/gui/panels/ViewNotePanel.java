@@ -1,17 +1,21 @@
 package aii.gui.panels;
+import java.awt.Color;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
-import aii.Constants;
-import aii.OrarComplet;
+import aii.Disciplina;
 import aii.Utilizator;
 import aii.arhiva.Arhiva;
 import aii.gui.tools.ObjectTableModel;
@@ -19,13 +23,12 @@ import aii.rad.RegistruActivitatiDidactice;
 
 
 @SuppressWarnings("serial")
-public class ViewNotePanel extends MainPanelAbstract {
-	
-	private JTable table;
-	private ArrayList<OrarComplet> objects;
-	private ObjectTableModel<OrarComplet> mainTableModel;
-	
-	private JLabel lblOrarulTauEste;
+public class ViewNotePanel extends MainPanelAbstract implements ListSelectionListener {
+	private ArrayList<Disciplina> discipline;
+	private ObjectTableModel<Disciplina> disciplineTableModel;
+	private JPanel panelEditInfo;
+	private JTable tableDiscipline;
+	private JTextField textField;
 
 	/**
 	 * Create the panel.
@@ -35,69 +38,98 @@ public class ViewNotePanel extends MainPanelAbstract {
 		//Initialize the MainPanelAbstract object
 		super(arhivaService, radService, utilizator, statusLabel);
 		
-		
-		//Prepare study year
-		if(utilizator.titlu_grupa==null || utilizator.titlu_grupa.isEmpty())
-		{
-			JOptionPane.showMessageDialog(null,"Nu sunteti inregistrat la nici o grupa!");
-			return;
-		}
-		if(utilizator.titlu_grupa.equals("licentiat"))
-		{
-			JOptionPane.showMessageDialog(null,"Sunteti licentiat!");
-			return;
-		}
-		int studyYear = utilizator.titlu_grupa.charAt(1) - '0';
-		System.out.println("Studentul este in anul "+studyYear);
-		
-		//Prepare semestru
-		Calendar calendar=new GregorianCalendar();
-		int semestru;
-		Calendar inceputS1=new GregorianCalendar(); inceputS1.set(calendar.get(Calendar.YEAR), Calendar.OCTOBER, 1);
-		Calendar finalS1=new GregorianCalendar(); finalS1.set(calendar.get(Calendar.YEAR)+1, Calendar.MARCH, 1);
-		if(calendar.after(inceputS1) && calendar.before(finalS1) )
-		{
-			this.statusLbl.setText("Se vizualizeaza orarul pentru primul semestru.");
-			semestru=1;
-		}
-		else
-		{
-			this.statusLbl.setText("Se vizualizeaza orarul pentru al doilea semestru.");
-			semestru=2;			
-		}
-		
+		this.statusLbl.setText("Vizualizare note. Selecteaza o disciplina pentru a ii vizualiza nota.");
 		
 		//Get the objects and prepare the table models		
 		try {
-			//Table model for "Orare"
-			objects=radService.obtineOrarComplet(utilizator.CNP, utilizator.titlu_grupa, semestru);
-			mainTableModel=new ObjectTableModel<OrarComplet>(OrarComplet.class,
-					objects,
-					Constants.VIEW_ORAR_STUDENT_COLUMN_FIELD_MATCH[1],
-					Constants.VIEW_ORAR_STUDENT_COLUMN_FIELD_MATCH[0]);
+			//Table model for "Discipline"
+			discipline=arhivaService.obtineDiscipline();
+			disciplineTableModel=new ObjectTableModel<Disciplina>(Disciplina.class,
+					discipline,
+					new String[] {"Cod","Denumire"},
+					new String[] {"cod","denumire"});			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		//GUI
-		setLayout(new MigLayout("", "[799.00px:1022.00px]", "[][132.00px:541.00px][]"));
+		setLayout(new MigLayout("", "[799.00px:1022.00px]", "[140.00px:325.00px]"));
 		
-		lblOrarulTauEste = new JLabel("Orarul tau este:");
-		add(lblOrarulTauEste, "cell 0 0");
+		JPanel panelEdit = new JPanel();
+		add(panelEdit, "cell 0 0,grow");
+		panelEdit.setLayout(null);
 		
-		JScrollPane scrollPaneTable = new JScrollPane();
-		add(scrollPaneTable, "cell 0 1,grow");
+		panelEditInfo = new JPanel();
+		panelEditInfo.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Setari Examene", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
+		panelEditInfo.setBounds(12, 16, 756, 316);
+		panelEdit.add(panelEditInfo);
+		panelEditInfo.setLayout(null);
 		
-		JLabel lblDisclaimer = new JLabel("* Se afiseaza doar orarul pentru grupa ta si materiile alese de tine.");
-		add(lblDisclaimer, "cell 0 2");
+		JLabel lblNewLabel = new JLabel("Disciplina:");
+		lblNewLabel.setBounds(11, 29, 273, 15);
+		panelEditInfo.add(lblNewLabel);
 		
-		table = new JTable(mainTableModel);
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table.setFillsViewportHeight(true);
-		table.setEnabled(false);
-		scrollPaneTable.setViewportView(table);
+		JScrollPane scrollPaneDiscipline = new JScrollPane();
+		scrollPaneDiscipline.setBounds(11, 52, 368, 245);
+		panelEditInfo.add(scrollPaneDiscipline);
 		
+		tableDiscipline = new JTable(disciplineTableModel);
+		tableDiscipline.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableDiscipline.setFillsViewportHeight(true);
+		tableDiscipline.getSelectionModel().addListSelectionListener(this);
+		scrollPaneDiscipline.setViewportView(tableDiscipline);
+		
+		textField = new JTextField("Lipsa nota");
+		textField.setEnabled(false);
+		textField.setBounds(452, 51, 191, 33);
+		panelEditInfo.add(textField);
+		textField.setColumns(10);
+		
+	    
+	    JLabel lblNota = new JLabel("Nota:");
+	    lblNota.setBounds(452, 29, 273, 15);
+	    panelEditInfo.add(lblNota);
+		
+	
 	}
 
+	/* Eveniment declansat la schimbarea selectiei
+	 * (non-Javadoc)
+	 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+	 */
+	@Override
+	public void valueChanged(ListSelectionEvent event) {
+		if (event.getValueIsAdjusting())
+            return;
+        
+		int row = tableDiscipline.getSelectedRow();
+		System.out.println("Selectie modificata pe randul "+row);
+		
+		//Nothing selected / deselection
+		if(row==-1)
+		{
+			System.out.println("Deselectie detectata.");
+			textField.setText("Lipsa valoare!");
+			return;
+		}
+		
+		//Proof of concept for ArrayList
+		ArrayList<Integer> codDisciplina=new ArrayList<Integer>();
+		codDisciplina.add(discipline.get(tableDiscipline.getSelectedRow()).cod);
+		
+		ArrayList<Float> note;
+		try {
+			note=arhivaService.obtineNoteStudent(utilizator.CNP, codDisciplina);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			return;
+		}
+		if(note.get(0)!=-1.0f)
+			textField.setText(note.get(0).toString());
+		else
+			textField.setText("Lipsa nota");
+		
+	}
+	
 	
 }

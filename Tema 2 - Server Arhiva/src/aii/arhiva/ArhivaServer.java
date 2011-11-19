@@ -12,6 +12,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
@@ -19,7 +20,6 @@ import javax.swing.JOptionPane;
 import aii.Disciplina;
 import aii.NotaCatalog;
 import aii.SituatieScolara;
-import aii.Utilizator;
 import aii.database.Constants;
 import aii.database.DatabaseConnection;
 import aii.database.DisciplinaWrapper;
@@ -140,11 +140,11 @@ public class ArhivaServer implements Arhiva{
 		String where="cnp_student=\'"+CNPStudent+"\'" +
 				" AND cod_disciplina IN (";
 		for(Integer cod : codDisciplina)
-			where+=cod+", ";
+			where+="\'"+cod+"\', ";
 		where=where.substring(0,where.length()-2);	//stergem virgula
 		where+=")";
 		
-		String query="SELECT nota FROM "+from+" WHERE "+where;
+		String query="SELECT nota, cod_disciplina FROM "+from+" WHERE "+where;
 		
 		//Executam query-ul
 		try {
@@ -155,17 +155,28 @@ public class ArhivaServer implements Arhiva{
 			return null;
 		}
 		
-		//Construim lista rezultat
-		ArrayList<Float> note=new ArrayList<Float>();
+		//Construim un hash-table rezultat
+		HashMap<Integer, Float> note=new HashMap<Integer, Float>();
 		for(int i=0;i<results.size();i++)
 		{
-			String value=(String) results.get(i)[0];
-			if(!value.isEmpty())	//Skip empty values
-				note.add(Float.parseFloat(value));
+			float value=(Long) results.get(i)[0];
+			Integer cod=(Integer) results.get(i)[1];
+			
+			note.put(cod,value);
 		}
-		System.out.println("Obtinute notele: "+note);
 		
-		return note;
+		//Construim un array-list cerut
+		ArrayList<Float> noteList=new ArrayList<Float>();
+		for(int i=0;i<codDisciplina.size();i++)
+		{
+			if(!note.containsKey(codDisciplina.get(i)))
+				noteList.add(-1.0f);
+			else
+				noteList.add(note.get(codDisciplina.get(i)));
+		}
+		System.out.println("Obtinute notele: "+noteList);
+		
+		return noteList;
 	}
 
 
@@ -174,9 +185,93 @@ public class ArhivaServer implements Arhiva{
 	 * @see aii.arhiva.Arhiva#obtineSituatieScolara(java.lang.String)
 	 */
 	@Override
-	public SituatieScolara obtineSituatieScolara(String CNPStudent) throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+	public SituatieScolara obtineSituatieScolara(String CNPStudent, int anStudiu) throws RemoteException {
+		SituatieScolara situatie=new SituatieScolara();
+		
+		//Prepare Queries
+		//Media aritmetica
+		String unprocessedQueryAritmetica="SELECT AVG(IFNULL(nota,0)) " +
+				"FROM optiuni_contract o " +
+				"INNER JOIN disciplina d " +
+				"	ON d.cod=o.cod_disciplina " +
+				"LEFT JOIN catalog c " +
+				"	ON o.cod_disciplina=c.cod_disciplina AND c.cnp_student=\'%s\'" +
+				"WHERE o.cnp_student=\'%s\'";
+		
+		//Suma ponderata
+		String unprocessedQueryGenerala="SELECT SUM(IFNULL(nota,0)*d.puncte_credit) " +
+				"FROM optiuni_contract o " +
+				"INNER JOIN disciplina d " +
+				"	ON d.cod=o.cod_disciplina " +
+				"LEFT JOIN catalog c " +
+				"	ON o.cod_disciplina=c.cod_disciplina AND c.cnp_student=\'%s\'" +
+				"WHERE o.cnp_student=\'%s\'";		
+		
+		//Numar total de credite
+		String unprocessedQueryCreditTotal="SELECT sum(d1.puncte_credit)" +
+				" FROM optiuni_contract o, disciplina d1" +
+				" WHERE o.cod_disciplina=d1.cod" +
+				"	AND o.cnp_student='%s'";
+		
+		//Numar obtinut
+		String unprocessedQueryCreditObtinut="SELECT sum(d1.puncte_credit)" +
+				" FROM optiuni_contract o, disciplina d1" +
+				" WHERE o.cod_disciplina=d1.cod" +
+				"	AND o.cnp_student='%s'" +
+				"	AND (SELECT IFNULL(max(nota),0) FROM catalog c" +
+				"		WHERE cnp_student='%s'" +
+				"			AND cod_disciplina=o.cod_disciplina) >= 5";
+		
+		//Numar restante
+		String unprocessedQueryRestante="SELECT count(*)" +
+				" FROM optiuni_contract o, disciplina d1" +
+				" WHERE o.cod_disciplina=d1.cod" +
+				"		AND o.cnp_student='%s'" +
+				"		AND (SELECT IFNULL(max(nota),0) FROM catalog c" +
+				"			WHERE cnp_student='%s'" +
+				"			AND cod_disciplina=o.cod_disciplina) < 5";
+		
+		
+		if(anStudiu!=0)	//nu e pe toti anii
+		{
+			unprocessedQueryAritmetica+=" AND o.an_studiu=\'"+anStudiu+"\'";
+			unprocessedQueryCreditTotal+=" AND o.an_studiu=\'"+anStudiu+"\'";
+			unprocessedQueryCreditObtinut+=" AND o.an_studiu=\'"+anStudiu+"\'";
+			unprocessedQueryGenerala+=" AND o.an_studiu=\'"+anStudiu+"\'";
+			unprocessedQueryGenerala+=" AND o.an_studiu=\'"+anStudiu+"\'";
+		}
+
+		try{
+			//Situatia anuala - aritmetica
+			String query=String.format(unprocessedQueryAritmetica,CNPStudent,CNPStudent);
+			situatie.setMedieAritmetica(DatabaseConnection.getSingleValueResult(query));
+			if(anStudiu!=0)
+			{		
+				//Situatia semestrul 1
+				situatie.setMedieSemestru1(DatabaseConnection.getSingleValueResult(query+" AND d.semestru=\'1\'"));
+				//Situatia semestrul 2
+				situatie.setMedieSemestru1(DatabaseConnection.getSingleValueResult(query+" AND d.semestru=\'2\'"));
+			}
+			//Situatia anuala - ponderata
+			query=String.format(unprocessedQueryGenerala,CNPStudent,CNPStudent);
+			String query2=String.format(unprocessedQueryCreditTotal,CNPStudent);
+			float suma1=DatabaseConnection.getSingleValueResult(query);
+			float suma2=DatabaseConnection.getSingleValueResult(query2);
+			situatie.setMedieGenerala(suma1/suma2);
+			//Puncte credit obtinute
+			query=String.format(unprocessedQueryCreditTotal,CNPStudent);
+			situatie.setPuncteCredit((int) DatabaseConnection.getSingleValueResult(query));
+			//Restante
+			query=String.format(unprocessedQueryRestante,CNPStudent,CNPStudent);
+			situatie.setRestante((int) DatabaseConnection.getSingleValueResult(query));
+		}
+		catch (SQLException ex)
+		{
+			ex.printStackTrace();
+		}
+		
+		
+		return situatie;
 	}
 
 
@@ -265,12 +360,22 @@ public class ArhivaServer implements Arhiva{
 	@Override
 	public boolean stabilesteNota(String cnpCadruDidactic, NotaCatalog nota) throws RemoteException {
 		//Verificam daca acest cadru preda la materia respectiva cursul
-		if(radService.cadruPentruDisciplina(nota.codDisciplina, cnpCadruDidactic)==false)
+		if(radService.cadruPentruDisciplina(nota.getCodDisciplina(), cnpCadruDidactic)==false)
 			return false;
 		
-		//TODO: Verificam daca exista deja o nota pentru acel elev la aceasta materie
+		//Verificam daca exista deja o nota pentru acel elev la aceasta materie
+		NotaCatalog notaExistentaMaxima=notaCatalogDAO.getNotaCatalog(nota.codDisciplina, nota.cnpStudent);
 		
-		return notaCatalogDAO.insertNotaCatalog(nota);		
+		//Daca nu exista nota, o inseram
+		if(notaExistentaMaxima==null)
+			return notaCatalogDAO.insertNotaCatalog(nota);
+		//Daca exista dar era mai mica sau era restanta, o actualizam
+		else if(notaExistentaMaxima.nota<5 || notaExistentaMaxima.nota<=nota.nota)
+			return notaCatalogDAO.updateNotaCatalog(notaExistentaMaxima, nota);
+
+		//Altfel nu facem nimic
+		return false;
+			
 	}
 
 

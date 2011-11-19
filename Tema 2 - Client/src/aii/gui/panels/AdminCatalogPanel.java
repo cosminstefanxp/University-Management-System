@@ -297,8 +297,8 @@ public class AdminCatalogPanel extends MainPanelAbstract implements ListSelectio
 				if(!arhivaService.stergereNota(objects.get(table.getSelectedRow())))
 					return;
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return;
 			}
 			
 			statusLbl.setText("Nota "+objects.get(table.getSelectedRow()).nota+" a fost stearsa.");
@@ -339,15 +339,23 @@ public class AdminCatalogPanel extends MainPanelAbstract implements ListSelectio
 				System.out.println("Nota noua: "+object);
 				try {
 					if(!arhivaService.stabilesteNota(utilizator.CNP,object))
+					{
+						JOptionPane.showMessageDialog(null, "Nota nu a fost creata intrucat exista deja o intrare mai buna decat aceasta.");
 						return;
+					}
 				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
+					return;
 				}
 			
 				statusLbl.setText("S-a creat o intrare noua in catalog.");
 				
-				objects.add(object);
+				//Luam din nou notele, pentru a vedea modificarile din baza de date
+				try {
+					objects=arhivaService.obtineNote();
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
 				mainTableModel.setObjects(objects);
 				mainTableModel.fireTableDataChanged();
 				table.getSelectionModel().setSelectionInterval(0, objects.size()-1);

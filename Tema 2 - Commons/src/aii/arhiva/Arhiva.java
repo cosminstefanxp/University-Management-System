@@ -132,13 +132,14 @@ public interface Arhiva extends Remote {
 			throws RemoteException;
 
 	/**
-	 * Obţine situaţia şcolară pentru anul universitar curent.
+	 * Obţine situaţia şcolară pentru anul universitar dat. Daca anStudiu este 0, se genereaza o medie pe toti anii.
 	 *
 	 * @param CNPStudent the CNP student, used for checking permissions
+	 * @param anStudiu the an studiu
 	 * @return the situatie scolara
 	 * @throws RemoteException the remote exception
 	 */
-	public SituatieScolara obtineSituatieScolara(String CNPStudent) throws RemoteException;
+	public SituatieScolara obtineSituatieScolara(String CNPStudent, int anStudiu) throws RemoteException;
 	
 
 

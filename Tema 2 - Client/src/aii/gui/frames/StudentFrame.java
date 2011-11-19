@@ -20,6 +20,7 @@ import net.miginfocom.swing.MigLayout;
 import aii.Utilizator;
 import aii.arhiva.Arhiva;
 import aii.gui.panels.ViewExamenePanel;
+import aii.gui.panels.ViewNotePanel;
 import aii.gui.panels.ViewOrarPanel;
 import aii.gui.panels.ViewSituatiePanel;
 import aii.rad.RegistruActivitatiDidactice;
@@ -39,6 +40,7 @@ public class StudentFrame extends JFrame implements ActionListener{
 	private JButton btnProgramareExamene;
 	private Arhiva arhivaService;
 	private RegistruActivitatiDidactice radService;
+	private JButton btnVizualizareNote;
 
 
 	/**
@@ -114,6 +116,11 @@ public class StudentFrame extends JFrame implements ActionListener{
 		lblFolositiMeniulSau.setBounds(25, 23, 613, 15);
 		mainPanel.add(lblFolositiMeniulSau);
 		
+		btnVizualizareNote = new JButton("Vizualizare Note");
+		btnVizualizareNote.setBounds(25, 162, 198, 25);
+		btnVizualizareNote.addActionListener(this);
+		mainPanel.add(btnVizualizareNote);
+		
 
 		
 	}
@@ -147,7 +154,7 @@ public class StudentFrame extends JFrame implements ActionListener{
         		System.out.println("Meniu: Vizualizare situatie scolara");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new ViewSituatiePanel(utilizator, statusLbl);
+        		mainPanel=new ViewSituatiePanel(arhivaService, radService, utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -183,7 +190,7 @@ public class StudentFrame extends JFrame implements ActionListener{
         		System.out.println("Buton: Vizualizare Situatie Scolara");
         		
         		contentPane.remove(mainPanel);
-        		mainPanel=new ViewSituatiePanel(utilizator, statusLbl);
+        		mainPanel=new ViewSituatiePanel(arhivaService, radService, utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		
@@ -194,6 +201,16 @@ public class StudentFrame extends JFrame implements ActionListener{
         		
         		contentPane.remove(mainPanel);
         		mainPanel=new ViewExamenePanel(arhivaService, radService, utilizator, statusLbl);
+        		
+        		contentPane.add(mainPanel, "cell 0 2,grow");
+        		contentPane.revalidate();        		
+        	}
+        	else if(source==this.btnVizualizareNote)
+        	{
+        		System.out.println("Buton: Vizualizare Note");
+        		
+        		contentPane.remove(mainPanel);
+        		mainPanel=new ViewNotePanel(arhivaService, radService, utilizator, statusLbl);
         		
         		contentPane.add(mainPanel, "cell 0 2,grow");
         		contentPane.revalidate();        		

@@ -75,7 +75,7 @@ public class NotaCatalogWrapper extends ObjectWrapper<NotaCatalog> {
 	
 	
 	/**
-	 * Gets the nota that has a given cod.
+	 * Gets the maximum nota for a student and a class.
 	 *
 	 * @param codDisciplina the cod disciplina
 	 * @param cnpStudent the cnp student
@@ -83,12 +83,18 @@ public class NotaCatalogWrapper extends ObjectWrapper<NotaCatalog> {
 	 */
 	public NotaCatalog getNotaCatalog(int codDisciplina, String cnpStudent)
 	{
-		List<NotaCatalog> note=this.getNoteCatalog("codDisciplina=\'"+codDisciplina+"\' AND cnpStudent=\'"+cnpStudent+"\'");
+		List<NotaCatalog> note=this.getNoteCatalog("cod_disciplina=\'"+codDisciplina+"\' AND cnp_student=\'"+cnpStudent+"\'");
 		
-		if(note==null || note.size()!=1)
+		if(note==null || note.size()==0)
 			return null;
 		
-		return note.get(0);
+		//Cautam nota maxima
+		NotaCatalog maxim=note.get(0);
+		for(NotaCatalog nota : note)
+			if(nota.nota>maxim.nota)
+				maxim=nota;
+		
+		return maxim;
 	}
 	
 	/**

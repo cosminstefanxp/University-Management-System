@@ -6,10 +6,15 @@
  */
 package aii;
 
+import java.io.Serializable;
+
 /**
  * The Class SituatieScolara.
  */
-public class SituatieScolara {
+public class SituatieScolara implements Serializable{
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 4952273979956930996L;
 
 	/** The medie generala. */
 	public float medieGenerala;
@@ -18,10 +23,16 @@ public class SituatieScolara {
 	public float medieAritmetica;
 	
 	/** The puncte credit. */
-	public float puncteCredit;
+	public int puncteCredit;
 	
 	/** The restante. */
-	public float restante;
+	public int restante;
+	
+	/** The medie semestru1. Necompletat daca este un query despre toti anii.*/
+	public float medieSemestru1;
+	
+	/** The medie semestru2. Necompletat daca este un query despre toti anii.*/
+	public float medieSemestru2;
 	
 	//****************** METHODS ********************/
 
@@ -31,10 +42,11 @@ public class SituatieScolara {
 	@Override
 	public String toString() {
 		return "SituatieScolara [medieAritmetica=" + medieAritmetica + ", medieGenerala="
-				+ medieGenerala + ", puncteCredit=" + puncteCredit + ", restante=" + restante + "]";
+				+ medieGenerala + ", medieSemestru1=" + medieSemestru1 + ", medieSemestru2="
+				+ medieSemestru2 + ", puncteCredit=" + puncteCredit + ", restante=" + restante
+				+ "]";
 	}
 
-	
 	//****************** GETTERS / SETTERS ********************/
 	/**
 	 * Gets the medie generala.
@@ -77,7 +89,7 @@ public class SituatieScolara {
 	 *
 	 * @return the puncte credit
 	 */
-	public float getPuncteCredit() {
+	public int getPuncteCredit() {
 		return puncteCredit;
 	}
 
@@ -86,7 +98,7 @@ public class SituatieScolara {
 	 *
 	 * @param puncteCredit the new puncte credit
 	 */
-	public void setPuncteCredit(float puncteCredit) {
+	public void setPuncteCredit(int puncteCredit) {
 		this.puncteCredit = puncteCredit;
 	}
 
@@ -95,7 +107,7 @@ public class SituatieScolara {
 	 *
 	 * @return the restante
 	 */
-	public float getRestante() {
+	public int getRestante() {
 		return restante;
 	}
 
@@ -104,7 +116,27 @@ public class SituatieScolara {
 	 *
 	 * @param restante the new restante
 	 */
-	public void setRestante(float restante) {
+	public void setRestante(int restante) {
 		this.restante = restante;
+	}
+
+
+	public float getMedieSemestru1() {
+		return medieSemestru1;
+	}
+
+
+	public void setMedieSemestru1(float medieSemestru1) {
+		this.medieSemestru1 = medieSemestru1;
+	}
+
+
+	public float getMedieSemestru2() {
+		return medieSemestru2;
+	}
+
+
+	public void setMedieSemestru2(float medieSemestru2) {
+		this.medieSemestru2 = medieSemestru2;
 	}
 }
