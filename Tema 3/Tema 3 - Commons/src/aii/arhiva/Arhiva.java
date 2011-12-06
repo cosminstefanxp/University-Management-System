@@ -7,13 +7,13 @@
 
 package aii.arhiva;
 
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import aii.Disciplina;
 import aii.NotaCatalog;
 import aii.SituatieScolara;
+import aii.protocol.MessageStructure;
 
 /**
  * Arhiva gestionează informaţiile referitoare la disciplinele de învăţământ cât
@@ -26,10 +26,22 @@ import aii.SituatieScolara;
  * 
  * @author Stefan-Dobrin Cosmin
  */
-public interface Arhiva extends Remote {
+public interface Arhiva {
 	
 	/** The Constant PUBLISH_NAME. */
-	public static final String PUBLISH_NAME="ServiciuArhiva";
+	public static final String SERVER_ADDRESS="localhost";
+	
+	/** The Constant SERVER_PORT. */
+	public static final Integer SERVER_PORT=10234;
+	
+	/**
+	 * Processes a message and returns the string (message) to be sent to the client.
+	 *
+	 * @param message the message
+	 * @param structure the structure
+	 * @return the string
+	 */
+	public String processMessage(String message, MessageStructure structure);
 
 	/**
 	 * Adaugare disciplina in planul de învăţământ.
@@ -38,61 +50,59 @@ public interface Arhiva extends Remote {
 	 * @return the int
 	 * @throws RemoteException the remote exception
 	 */
-	public int adaugareDisciplina(ArrayList<Disciplina> discipline) throws RemoteException;
+	public int adaugareDisciplina(ArrayList<Disciplina> discipline)  ;
 
 	/**
 	 * Editare disciplina in planul de învăţământ.
 	 *
 	 * @param discipline the discipline
 	 * @return the int
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public int editareDisciplina(ArrayList<Disciplina> discipline) throws RemoteException;
+	public int editareDisciplina(ArrayList<Disciplina> discipline)  ;
 
 	/**
 	 * Stergere disciplina din planul de învăţământ.
 	 *
-	 * @param discipline the discipline
+	 * @param coduriDiscipline the coduri discipline
 	 * @return the int
-	 * @throws RemoteException the remote exception
 	 */
-	public int stergereDisciplina(ArrayList<Disciplina> discipline) throws RemoteException;
+	public int stergereDisciplina(ArrayList<String> coduriDiscipline)  ;
 	
 	/**
 	 * Adaugare disciplina in planul de învăţământ.
 	 *
 	 * @param disciplina the disciplina
 	 * @return the int
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public boolean adaugareDisciplina(Disciplina disciplina) throws RemoteException;
+	public boolean adaugareDisciplina(Disciplina disciplina)  ;
 
 	/**
 	 * Editare disciplina in planul de învăţământ.
 	 *
-	 * @param discipline the discipline
+	 * @param disciplina the disciplina
 	 * @return the int
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public boolean editareDisciplina(Disciplina disciplina) throws RemoteException;
+	public boolean editareDisciplina(Disciplina disciplina)  ;
 	
 	
 	/**
 	 * Obtine disciplinele din planul de invatamant.
 	 *
 	 * @return the array list
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public ArrayList<Disciplina> obtineDiscipline() throws RemoteException;
+	public ArrayList<Disciplina> obtineDiscipline()  ;
 
 	/**
 	 * Stergere disciplina din planul de învăţământ.
 	 *
-	 * @param discipline the discipline
+	 * @param codDisciplina the cod disciplina
 	 * @return the int
-	 * @throws RemoteException the remote exception
 	 */
-	public boolean stergereDisciplina(Disciplina disciplina) throws RemoteException;
+	public boolean stergereDisciplina(String codDisciplina)  ;
 
 	/**
 	 * Specifica nota obţinută de un student la un examen.
@@ -100,25 +110,26 @@ public interface Arhiva extends Remote {
 	 * @param CNPCadruDidactic the cNP cadru didactic
 	 * @param nota the nota
 	 * @return true, if successful
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public boolean stabilesteNota(String CNPCadruDidactic, NotaCatalog nota) throws RemoteException;
+	public boolean stabilesteNota(String CNPCadruDidactic, NotaCatalog nota)  ;
 	
 	/**
 	 * Stergere nota obţinută de un student la un examen.
 	 *
 	 * @param nota the nota
 	 * @return true, if successful
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public boolean stergereNota(NotaCatalog nota) throws RemoteException;
+	public boolean stergereNota(NotaCatalog nota)  ;
 	
 	/**
 	 * Obtine notele din tot catalogul (la toate materiile).
 	 *
 	 * @return the array list
+	 * @  the remote exception
 	 */
-	public ArrayList<NotaCatalog> obtineNote() throws RemoteException;
+	public ArrayList<NotaCatalog> obtineNote()  ;
 
 	/**
 	 * Obţine nota pentru una sau mai multe discipline.
@@ -126,10 +137,9 @@ public interface Arhiva extends Remote {
 	 * @param CNPStudent the CNP student, used for checking permissions
 	 * @param codDisciplina the cod disciplina
 	 * @return the array list
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public ArrayList<Float> obtineNoteStudent(String CNPStudent, ArrayList<Integer> codDisciplina)
-			throws RemoteException;
+	public ArrayList<Float> obtineNoteStudent(String CNPStudent, ArrayList<Integer> codDisciplina);
 
 	/**
 	 * Obţine situaţia şcolară pentru anul universitar dat. Daca anStudiu este 0, se genereaza o medie pe toti anii.
@@ -137,9 +147,9 @@ public interface Arhiva extends Remote {
 	 * @param cnpStudent the cnp student
 	 * @param anStudiu the an studiu
 	 * @return the situatie scolara
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public SituatieScolara obtineSituatieScolara(String cnpStudent, int anStudiu) throws RemoteException;
+	public SituatieScolara obtineSituatieScolara(String cnpStudent, int anStudiu)  ;
 	
 	/**
 	 * Obtine disciplinele urmate de un student, conform contractului de studii al acestuia.
@@ -147,9 +157,9 @@ public interface Arhiva extends Remote {
 	 * @param cnpStudent the cnp student
 	 * @param anStudiu the an studiu
 	 * @return the array list
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public ArrayList<Integer> obtineDisciplineUrmate(String cnpStudent, int anStudiu) throws RemoteException; 
+	public ArrayList<Integer> obtineDisciplineUrmate(String cnpStudent, int anStudiu)  ; 
 
 	/**
 	 * Obtine discipline urmate de un student, conform contractului de studii al acestuia. Se obtin doar disciplinele
@@ -159,7 +169,7 @@ public interface Arhiva extends Remote {
 	 * @param anStudiu the an studiu
 	 * @param semestru the semestru
 	 * @return the array list
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public ArrayList<Integer> obtineDisciplineUrmate(String cnpStudent, int anStudiu, int semestru) throws RemoteException;
+	public ArrayList<Integer> obtineDisciplineUrmate(String cnpStudent, int anStudiu, int semestru)  ;
 }

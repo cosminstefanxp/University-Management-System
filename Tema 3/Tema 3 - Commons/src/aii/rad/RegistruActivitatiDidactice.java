@@ -6,8 +6,6 @@
  */
 package aii.rad;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -29,54 +27,57 @@ import aii.Utilizator;
  * 
  * @author Stefan-Dobrin Cosmin
  */
-public interface RegistruActivitatiDidactice extends Remote {
+public interface RegistruActivitatiDidactice{
 
 	/** The Constant PUBLISH_NAME. */
-	public static final String PUBLISH_NAME = "RADServiciu";
+	public static final String SERVER_ADDRESS="localhost";
+	
+	/** The Constant SERVER_PORT. */
+	public static final Integer SERVER_PORT=10235;
 	
 	/**
 	 * Stabileste repartizare cadru didactic la o disciplina pentru un tip de activitate didactica.
 	 *
 	 * @param activitate the activitate
 	 * @return true, if successful
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public boolean stabilesteActivitatePredare(Activitate activitate) throws RemoteException;
+	public boolean stabilesteActivitatePredare(Activitate activitate)  ;
 	
 	/**
 	 * Sterge o repartizare cadru didactic la o disciplina pentru un tip de activitate didactica.
 	 *
 	 * @param activitate the activitate
 	 * @return true, if successful
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public boolean stergereActivitatePredare(Activitate activitate) throws RemoteException;
+	public boolean stergereActivitatePredare(Activitate activitate)  ;
 	
 	/**
 	 * Editeaza o repartizare cadru didactic la o disciplina pentru un tip de activitate didactica.
 	 *
 	 * @param activitate the activitate
 	 * @return true, if successful
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public boolean editareActivitatePredare(Activitate activitate) throws RemoteException;
+	public boolean editareActivitatePredare(Activitate activitate)  ;
 	
 	/**
 	 * Obtine repartizare cadru didactic la o disciplina pentru un tip de activitate didactica.
 	 *
 	 * @return true, if successful
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public ArrayList<Activitate> obtinereActivitatePredare() throws RemoteException;
+	public ArrayList<Activitate> obtinereActivitatePredare()  ;
 	
 	/**
 	 * Obtinere activitatile de predare de tip curs pentru un cadru didactic dat.
 	 *
 	 * @param cnpCadruDidactic the cnp cadru didactic
 	 * @return the array list
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public ArrayList<Activitate> obtinereActivitatiPredareCursCadru(String cnpCadruDidactic) throws RemoteException;
+	public ArrayList<Activitate> obtinereActivitatiPredareCursCadru(String cnpCadruDidactic)  ;
 
 	/**
 	 * Stabileste formatie de studiu.
@@ -84,20 +85,20 @@ public interface RegistruActivitatiDidactice extends Remote {
 	 * @param CNPStudent the CNP student
 	 * @param grupa the grupa
 	 * @return the int
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
 	public int stabilesteFormatieDeStudiu(ArrayList<String> CNPStudent, String grupa)
-			throws RemoteException;
+			 ;
 
 	/**
 	 * Adaugare activitate didactica in orar.
 	 *
 	 * @param orar the orar
 	 * @return true, if successful
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
 	public boolean adaugareActivitateOrar(Orar orar)
-			throws RemoteException;
+			 ;
 
 	/**
 	 * Editare activitate didactica in orar.
@@ -105,29 +106,29 @@ public interface RegistruActivitatiDidactice extends Remote {
 	 * @param orarNou the orar nou
 	 * @param orarVechi the orar vechi, utilizat pentru a gasi vechea activitate orar si a o edita
 	 * @return true, if successful
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
 	public boolean editareActivitateOrar(Orar orarNou, Orar orarVechi)
-			throws RemoteException;
+			 ;
 
 	/**
 	 * Stergere activitate didactica din orar.
 	 *
 	 * @param orar the orar
 	 * @return true, if successful
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
 	public boolean stergereActivitateOrar(Orar orar)
-			throws RemoteException;
+			 ;
 
 	/**
 	 * Adaugare examen in calendarul de examene.
 	 *
 	 * @param examen the examen
 	 * @return the int
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public boolean adaugareExamen(Examen examen) throws RemoteException;
+	public boolean adaugareExamen(Examen examen)  ;
 
 	/**
 	 * Editare examen in calendarul de examene.
@@ -135,26 +136,26 @@ public interface RegistruActivitatiDidactice extends Remote {
 	 * @param examenNou the examen nou
 	 * @param examenVechi the examen vechi, pentru a putea identifica in mod unic examenul pe care il actualizam
 	 * @return the int
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public boolean editareExamen(Examen examenNou, Examen examenVechi) throws RemoteException;
+	public boolean editareExamen(Examen examenNou, Examen examenVechi)  ;
 
 	/**
 	 * Stergere examen din calendarul de examene.
 	 *
 	 * @param examen the examen
 	 * @return the int
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public boolean stergereExamen(Examen examen) throws RemoteException;
+	public boolean stergereExamen(Examen examen)  ;
 	
 	/**
 	 * Obtine toate examenele din baza de date. Pentru a se folosi in interfata de secretar.
 	 *
 	 * @return the array list
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public ArrayList<Examen> obtineExamene() throws RemoteException;
+	public ArrayList<Examen> obtineExamene()  ;
 	
 	/**
 	 * Obţine orarul complet al activităţilor didactice pentru semestrul în curs.
@@ -163,17 +164,17 @@ public interface RegistruActivitatiDidactice extends Remote {
 	 * @param grupa the grupa
 	 * @param semestru the semestru
 	 * @return the array list of OrarComplet entities
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public ArrayList<OrarComplet> obtineOrarComplet(String CNPStudent, String grupa, int semestru) throws RemoteException;
+	public ArrayList<OrarComplet> obtineOrarComplet(String CNPStudent, String grupa, int semestru)  ;
 	
 	/**
 	 * Obtine orarul complet al tuturor activitatile. De folosit in interfata de secretar.
 	 *
 	 * @return the array list
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public ArrayList<OrarComplet> obtineOrarComplet() throws RemoteException;
+	public ArrayList<OrarComplet> obtineOrarComplet()  ;
 
 	/**
 	 * Obţine calendarul examenelor pentru sesiunea în curs. Se completeaza si campul denumireDisciplina din obiectele Examen.
@@ -181,9 +182,9 @@ public interface RegistruActivitatiDidactice extends Remote {
 	 * @param CNPStudent the CNP student
 	 * @param grupa the grupa
 	 * @return the array list
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public ArrayList<Examen> obtineProgramareExamene(String CNPStudent, String grupa) throws RemoteException;
+	public ArrayList<Examen> obtineProgramareExamene(String CNPStudent, String grupa)  ;
 
 	
 	/**
@@ -192,9 +193,9 @@ public interface RegistruActivitatiDidactice extends Remote {
 	 * @param CNP the cNP
 	 * @param parola the parola
 	 * @return the utilizator, daca autentificarea a fost cu succes, sau null daca nu a fost cu succes.
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public Utilizator autentificaUtilizator(String CNP, String parola) throws RemoteException;
+	public Utilizator autentificaUtilizator(String CNP, String parola)  ;
 	
 	/**
 	 * Autentifica un utilizator, verificand daca acesta are permisiunile cerute.
@@ -202,18 +203,18 @@ public interface RegistruActivitatiDidactice extends Remote {
 	 * @param cnp the cnp
 	 * @param permisiuni the permisiuni
 	 * @return true, if successful
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public boolean autentificaUtilizator(String cnp, Utilizator.Tip permisiuni) throws RemoteException;
+	public boolean autentificaUtilizator(String cnp, Utilizator.Tip permisiuni)  ;
 	
 	/**
 	 * Obtine utilizatorii din baza de date, dandu'se o clauza de selectie.
 	 *
 	 * @param whereClause the where clause
 	 * @return the array list
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public ArrayList<Utilizator> obtineUtilizatori(String whereClause) throws RemoteException;
+	public ArrayList<Utilizator> obtineUtilizatori(String whereClause)  ;
 	
 	/**
 	 * Verifica daca un cadru didactic preda cursul la o disciplina. 
@@ -221,15 +222,15 @@ public interface RegistruActivitatiDidactice extends Remote {
 	 * @param codDisciplina the cod disciplina
 	 * @param cnpCadruDidactic the cnp cadru didactic
 	 * @return true, if successful
-	 * @throws RemoteException the remote exception
+	 * @  the remote exception
 	 */
-	public boolean cadruPentruDisciplina(int codDisciplina, String cnpCadruDidactic) throws RemoteException;
+	public boolean cadruPentruDisciplina(int codDisciplina, String cnpCadruDidactic)  ;
 	
 	/**
 	 * Obtine toate grupele de studenti care exista.
 	 *
 	 * @return the vector
 	 */
-	public Vector<String> obtineGrupeStudenti() throws RemoteException;
+	public Vector<String> obtineGrupeStudenti()  ;
 	
 }

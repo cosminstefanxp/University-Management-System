@@ -203,7 +203,7 @@ public class ObjectWrapper<T> {
 	}
 	
 	/**
-	 * Delete an object from the given table
+	 * Delete an object from the given table. Object selection is based on private key.
 	 *
 	 * @param table the table
 	 * @param object the object
@@ -229,6 +229,25 @@ public class ObjectWrapper<T> {
 		//Clean the last ,
 		whereClause=whereClause.substring(0,whereClause.length()-4);
 
+		//Run the SQL deletion query
+		System.out.println("Stergem un obiect din baza de date: "+whereClause);
+		DatabaseConnection.openConnection();
+		DatabaseConnection.deleteEntities(table, whereClause);	
+	}
+	
+	/**
+	 * Delete an object from the given table. The selection of the objects to delete is done using the provided where clause.
+	 *
+	 * @param table the table
+	 * @param whereClause the where clause
+	 * @throws SecurityException the security exception
+	 * @throws NoSuchFieldException the no such field exception
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws IllegalAccessException the illegal access exception
+	 * @throws SQLException the sQL exception
+	 */
+	public void deleteObject(String table, String whereClause) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, SQLException
+	{
 		//Run the SQL deletion query
 		System.out.println("Stergem un obiect din baza de date: "+whereClause);
 		DatabaseConnection.openConnection();

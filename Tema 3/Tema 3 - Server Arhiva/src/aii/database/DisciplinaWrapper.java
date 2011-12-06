@@ -123,6 +123,31 @@ public class DisciplinaWrapper extends ObjectWrapper<Disciplina> {
 	}
 	
 	/**
+	 * Deletes a disciplina from the database.
+	 *
+	 * @param whereClause the where clause
+	 * @return true, if successful
+	 */
+	public boolean deleteDisciplina(String whereClause)
+	{
+		try {
+			this.deleteObject(Constants.DISCIPLINA_TABLE, whereClause);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"accesului la baza de date!");
+			return false;
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
+			e.printStackTrace();
+			return false;
+		} 
+		
+		return true;
+	}
+	
+	/**
 	 * Updates a disciplina in the database.
 	 *
 	 * @param disciplinaVeche the disciplina veche
