@@ -28,7 +28,7 @@ public class Client {
 	
 	private static void testingUnit(int mode,BufferedReader fromSocket, PrintWriter toSocket) throws IOException
 	{
-		//TEST Jurnal
+		//TEST Arhiva
 		if(mode==ARHIVA)
 		{
 			String response;
@@ -49,6 +49,24 @@ public class Client {
 			response=fromSocket.readLine();
 			System.out.println("Raspuns "+mode+":"+response);
 		}
+
+		//TEST RAD
+		if(mode==RAD)
+		{
+			String response;
+			String message;
+			
+			//TEST Activitati
+			message="repartizare_cadre_didactice#2#" +
+					"1876398642864~988~Curs#" +
+					"2890508035278~9828~Seminar";
+					
+					
+			toSocket.println(message);
+			System.out.println("Test 1 "+mode+":"+message);
+			response=fromSocket.readLine();
+			System.out.println("Raspuns "+mode+":"+response);
+		}		
 	}
 	
 	/**
@@ -76,7 +94,7 @@ public class Client {
 				System.out.print("> ");
 				//TODO: de reparat
 				//line = keyboardInput.readLine();
-				line="1";
+				line="2";
 				switch (Integer.parseInt(line)) {
 				case JURNAL:
 					mode = JURNAL;

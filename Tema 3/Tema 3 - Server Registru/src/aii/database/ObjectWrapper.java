@@ -77,17 +77,7 @@ public class ObjectWrapper<T> {
 			for(int i=0; i<nameMatch[0].length;i++)
 			{
 				//Prepare the field of the object which we are now filling
-				Field field;
-				try{
-					field=classType.getDeclaredField(nameMatch[1][i]);
-				}
-				//If the field was not found, try to get it from the super class
-				catch(NoSuchFieldException ex)
-				{
-					if(classType.getSuperclass()==null)
-						throw ex;
-					field=classType.getSuperclass().getDeclaredField(nameMatch[1][i]);
-				}
+				Field field=classType.getDeclaredField(nameMatch[1][i]);
 				
 				//Prepare the value of the database column
 				String columnName = nameMatch[0][i];
@@ -213,7 +203,7 @@ public class ObjectWrapper<T> {
 	}
 	
 	/**
-	 * Delete an object from the given table
+	 * Delete an object from the given table. Object selection is based on private key.
 	 *
 	 * @param table the table
 	 * @param object the object
@@ -243,6 +233,27 @@ public class ObjectWrapper<T> {
 		System.out.println("Stergem un obiect din baza de date: "+whereClause);
 		DatabaseConnection.openConnection();
 		DatabaseConnection.deleteEntities(table, whereClause);	
+	}
+	
+	/**
+	 * Delete an object from the given table. The selection of the objects to delete is done using the provided where clause.
+	 *
+	 * @param table the table
+	 * @param whereClause the where clause
+	 * @throws SecurityException the security exception
+	 * @throws NoSuchFieldException the no such field exception
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws IllegalAccessException the illegal access exception
+	 * @throws SQLException the sQL exception
+	 */
+	public void deleteObject(String table, String whereClause) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, SQLException
+	{
+		//Run the SQL deletion query
+		System.out.println("Stergem un obiect din baza de date: "+whereClause);
+		DatabaseConnection.openConnection();
+		int count=DatabaseConnection.deleteEntitiesCount(table, whereClause);
+		if(count==0)
+			throw new SQLException("CUSTOM: No entities were deleted!");
 	}
 	
 	/**
@@ -339,7 +350,9 @@ public class ObjectWrapper<T> {
 		//Run the SQL deletion query
 		System.out.println("Actualizam un obiect din baza de date: "+whereClause);
 		DatabaseConnection.openConnection();
-		DatabaseConnection.updateEntities(table, setClause, whereClause);	
+		int count=DatabaseConnection.updateEntitiesCount(table, setClause, whereClause);
+		if(count==0)
+			throw new SQLException("CUSTOM: No entities were updated!");
 	}
 	
 	

@@ -253,6 +253,27 @@ public class DatabaseConnection {
 		
 		System.out.println("S-a apelat expresia SQL \'"+expression+"\'");
 		statement.execute(expression);
+	}
+	
+	/**
+	 * Delete entities that match a given where close.
+	 *
+	 * @param table the table
+	 * @param whereClause the where clause
+	 * @return the number of successfully deleted entities
+	 * @throws SQLException the sQL exception
+	 */
+	public static int deleteEntitiesCount(String table, String whereClause)
+			throws SQLException {
+		
+		openConnection();
+		
+		String expression = "DELETE FROM " + table + " WHERE "+whereClause;
+		
+		System.out.println("S-a apelat expresia SQL \'"+expression+"\'");
+		statement.execute(expression);
+		
+		return statement.getUpdateCount();
 		
 	}
 	
@@ -271,7 +292,7 @@ public class DatabaseConnection {
 		String expression = "UPDATE " + table + " SET "+setClause+" WHERE "+whereClause;
 		
 		System.out.println("S-a apelat expresia SQL \'"+expression+"\'");
-		statement.execute(expression);	
+		statement.execute(expression);		
 		
 	}
 	

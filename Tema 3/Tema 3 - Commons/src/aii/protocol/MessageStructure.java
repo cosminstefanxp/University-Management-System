@@ -27,7 +27,10 @@ public class MessageStructure {
 		RAD,
 		
 		/** The ARHIVA. */
-		ARHIVA
+		ARHIVA,
+		
+		/** The CLIENT. */
+		CLIENT
 	}
 	/** The header. */
 	public String header;

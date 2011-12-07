@@ -14,6 +14,7 @@ import aii.Examen;
 import aii.Orar;
 import aii.OrarComplet;
 import aii.Utilizator;
+import aii.protocol.MessageStructure;
 
 /**
  * RegistruActivităţiDidactice gestionează informaţiile despre calendarul
@@ -34,6 +35,15 @@ public interface RegistruActivitatiDidactice{
 	
 	/** The Constant SERVER_PORT. */
 	public static final Integer SERVER_PORT=10235;
+	
+	/**
+	 * Processes a message and returns the string (message) to be sent to the client.
+	 *
+	 * @param message the message
+	 * @param structure the structure
+	 * @return the string
+	 */
+	public String processMessage(String message, MessageStructure structure);
 	
 	/**
 	 * Stabileste repartizare cadru didactic la o disciplina pentru un tip de activitate didactica.

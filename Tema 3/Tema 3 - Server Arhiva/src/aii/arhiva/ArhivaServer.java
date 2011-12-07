@@ -39,7 +39,7 @@ public class ArhivaServer implements Arhiva {
 	 *            the string
 	 */
 	private static void debug(String string) {
-		if (ConnectionThread.DEBUG)
+		if (ArhivaConnectionThread.DEBUG)
 			System.out.println("[DEBUG][Thread " + Thread.currentThread().getId() + "] " + string);
 	}
 
@@ -79,7 +79,7 @@ public class ArhivaServer implements Arhiva {
 		//Realizam fiecare operatie
 		Integer n=Integer.parseInt(msgFields[1]);
 		String response;
-		response=n+"";
+		response="raspuns_"+msgFields[0]+"#"+n;	//header de raspuns
 		for(int i=1;i<=n;i++)
 		{
 			String operatie=msgFields[2*i];
@@ -266,15 +266,31 @@ public class ArhivaServer implements Arhiva {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+
+	/* (non-Javadoc)
 	 * @see aii.arhiva.Arhiva#stabilesteNota(java.lang.String, aii.NotaCatalog)
 	 */
 	@Override
-	public boolean stabilesteNota(String CNPCadruDidactic, NotaCatalog nota) {
-		// TODO Auto-generated method stub
+	public boolean stabilesteNota(String cnpCadruDidactic, NotaCatalog nota) {
+//		//Verificam daca acest cadru preda la materia respectiva cursul
+//		if(radService==null)
+//			pregatesteRADService();
+//		if(radService.cadruPentruDisciplina(nota.getCodDisciplina(), cnpCadruDidactic)==false)
+//			return false;
+//		
+//		//Verificam daca exista deja o nota pentru acel elev la aceasta materie
+//		NotaCatalog notaExistentaMaxima=notaCatalogDAO.getNotaCatalog(nota.codDisciplina, nota.cnpStudent);
+//		
+//		//Daca nu exista nota, o inseram
+//		if(notaExistentaMaxima==null)
+//			return notaCatalogDAO.insertNotaCatalog(nota);
+//		//Daca exista dar era mai mica sau era restanta, o actualizam
+//		else if(notaExistentaMaxima.nota<5 || notaExistentaMaxima.nota<=nota.nota)
+//			return notaCatalogDAO.updateNotaCatalog(notaExistentaMaxima, nota);
+
+		//Altfel nu facem nimic
 		return false;
+			
 	}
 
 	/*

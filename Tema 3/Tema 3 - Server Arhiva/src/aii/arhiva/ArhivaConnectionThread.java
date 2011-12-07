@@ -20,7 +20,7 @@ import aii.protocol.MessageStructure.Type;
 /**
  * The Class ConnectionThread.
  */
-public class ConnectionThread extends Thread {
+public class ArhivaConnectionThread extends Thread {
 
 	/** The socket. */
 	private Socket socket = null;
@@ -51,7 +51,7 @@ public class ConnectionThread extends Thread {
 	 * @param socket
 	 *            the socket
 	 */
-	public ConnectionThread(Socket socket) {
+	public ArhivaConnectionThread(Socket socket) {
 		super("ConnectionThread");
 		this.socket = socket;
 		this.arhiva = new ArhivaServer();
@@ -153,13 +153,13 @@ public class ConnectionThread extends Thread {
 			System.err.println("Could not listen on port: " + port);
 			System.exit(-1);
 		}
-		ConnectionThread.debug("Created listening socket. Listening...");
+		ArhivaConnectionThread.debug("Created listening socket. Listening...");
 		
 		// Listen to new connection requests
 		while (listening) {
 			try {
 				// If a request was made, start a new thread to handle it
-				new ConnectionThread(serverSocket.accept()).start();
+				new ArhivaConnectionThread(serverSocket.accept()).start();
 			} catch (Exception e) {
 				System.err.println("Error while creating the socket.");
 				System.exit(-1);
@@ -167,7 +167,7 @@ public class ConnectionThread extends Thread {
 		}
 
 		// Close the socket
-		ConnectionThread.debug("Closing the socket");
+		ArhivaConnectionThread.debug("Closing the socket");
 		try {
 			serverSocket.close();
 		} catch (Exception e) {

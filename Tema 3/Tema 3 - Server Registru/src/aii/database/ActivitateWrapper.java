@@ -38,12 +38,10 @@ public class ActivitateWrapper extends ObjectWrapper<Activitate> {
 			activitati=this.getObjects(Constants.ACTIVITATE_TABLE, whereClause);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
-					"accesului la baza de date!");
+			//JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +"accesului la baza de date!");
 			return null;
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
-					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
+			//JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
 			e.printStackTrace();
 			return null;
 		}
@@ -66,8 +64,7 @@ public class ActivitateWrapper extends ObjectWrapper<Activitate> {
 			activitati = this.getObjects(fields, tables, whereClause, null);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
-					"accesului la baza de date!");
+			// JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +"accesului la baza de date!");
 			return null;
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
@@ -107,12 +104,11 @@ public class ActivitateWrapper extends ObjectWrapper<Activitate> {
 			this.insertObject(Constants.ACTIVITATE_TABLE, activitate);
 		} catch (MySQLIntegrityConstraintViolationException e){
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Aveti campuri invalide: "+e.getMessage());	
+			//JOptionPane.showMessageDialog(null,"Aveti campuri invalide: "+e.getMessage());	
 			return false;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
-					"accesului la baza de date!");
+			//JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +"accesului la baza de date!");
 			return false;
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
@@ -137,8 +133,7 @@ public class ActivitateWrapper extends ObjectWrapper<Activitate> {
 			this.deleteObject(Constants.ACTIVITATE_TABLE, activitate);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
-					"accesului la baza de date!");
+			//JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +	"accesului la baza de date!");
 			return false;
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
