@@ -253,6 +253,7 @@ public class DatabaseConnection {
 		
 		System.out.println("S-a apelat expresia SQL \'"+expression+"\'");
 		statement.execute(expression);
+		
 	}
 	
 	/**

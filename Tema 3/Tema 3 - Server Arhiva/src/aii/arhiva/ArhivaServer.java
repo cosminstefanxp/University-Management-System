@@ -14,6 +14,8 @@ import aii.SituatieScolara;
 import aii.database.DisciplinaWrapper;
 import aii.database.NotaCatalogWrapper;
 import aii.database.OptiuneContractWrapper;
+import aii.protocol.MessageConstants;
+import aii.protocol.MessageParser;
 import aii.protocol.MessageStructure;
 
 /**
@@ -48,7 +50,61 @@ public class ArhivaServer implements Arhiva {
 	 * aii.protocol.MessageStructure)
 	 */
 	public String processMessage(String message, MessageStructure structure) {
+		
+		//Facem procesarea header-ului mesajului si trimitem mesajul la componenta corespunzatoare
+		if(structure.header.equalsIgnoreCase("stabilire_plan_de_invatamant"))
+			return managementDisciplina(message);
+		
+		
+		
 		return null;
+	}
+	
+	/**
+	 * Realizeaza taskurile de management asupre unei/mai multor discipline.
+	 *
+	 * @param message the message
+	 * @return the string
+	 */
+	private String managementDisciplina(String message)
+	{
+		//Spargere mesaj in componente
+		String[] msgFields=MessageParser.splitMessage(message);
+		if(msgFields.length<4)
+		{
+			debug("Format incorect mesaj: "+message);
+			return "error#format_mesaj";
+		}
+		
+		//Realizam fiecare operatie
+		Integer n=Integer.parseInt(msgFields[1]);
+		String response;
+		response=n+"";
+		for(int i=1;i<=n;i++)
+		{
+			String operatie=msgFields[2*i];
+			boolean res=true;
+			debug("Analizam operatia "+(2*i)+":"+operatie);
+			
+			//Realizare operatii
+			if(operatie.equals("stergere"))
+				res=disciplinaDAO.deleteDisciplina("cod=\'"+msgFields[2*i+1]+"\'");
+			else 
+			{
+				Disciplina disciplina=MessageParser.parseObject(Disciplina.class, msgFields[2*i+1], MessageConstants.STRUCTURE_DISCIPLINA);
+				if(operatie.equals("adaugare"))
+					res=disciplinaDAO.insertDisciplina(disciplina);
+				else if(operatie.equals("editare"))
+					res=disciplinaDAO.updateDisciplina("cod=\'"+disciplina.cod+"\'",disciplina);
+				else 
+					res=false;
+			}
+			//Raspuns
+			response+=MessageParser.DELIMITER.toString()+Boolean.toString(res);
+		}
+		
+		
+		return response;
 	}
 
 	/*

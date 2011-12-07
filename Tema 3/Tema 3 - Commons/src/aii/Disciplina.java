@@ -21,21 +21,23 @@ public class Disciplina implements Serializable{
 	 * The Enum TipDisciplina.
 	 */
 	public enum TipDisciplina {
-			/** The Obligatoriu. */
-			Obligatoriu, 
-			 /** The Optional. */
-			 Optional, 
-			 /** The Facultativ. */
-			 Facultativ};
+		/** The Obligatoriu. */
+		Obligatoriu,
+		/** The Optional. */
+		Optional,
+		/** The Facultativ. */
+		Facultativ
+	};
 	
 	/**
 	 * The Enum Examinare.
 	 */
 	public enum Examinare {
-			/** The Examen. */
-			Examen, 
-			 /** The Colocviu. */
-			 Colocviu};
+		/** The Examen. */
+		Examen,
+		/** The Colocviu. */
+		Colocviu
+	};
 	
 	/** The cod disciplina. */
 	public int cod;

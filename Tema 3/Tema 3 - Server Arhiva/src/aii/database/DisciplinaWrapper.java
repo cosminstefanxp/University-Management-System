@@ -38,8 +38,7 @@ public class DisciplinaWrapper extends ObjectWrapper<Disciplina> {
 			discipline=this.getObjects(Constants.DISCIPLINA_TABLE, whereClause);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
-					"accesului la baza de date!");
+			//JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " + "accesului la baza de date!");
 			return null;
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
@@ -79,7 +78,7 @@ public class DisciplinaWrapper extends ObjectWrapper<Disciplina> {
 			this.insertObject(Constants.DISCIPLINA_TABLE, disciplina);
 		} catch (MySQLIntegrityConstraintViolationException e){
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Aveti campuri invalide: "+e.getMessage());	
+			//JOptionPane.showMessageDialog(null,"Aveti campuri invalide: "+e.getMessage());	
 			return false;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -109,8 +108,7 @@ public class DisciplinaWrapper extends ObjectWrapper<Disciplina> {
 			this.deleteObject(Constants.DISCIPLINA_TABLE, disciplina);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
-					"accesului la baza de date!");
+			//JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " + "accesului la baza de date!");
 			return false;
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
@@ -134,8 +132,7 @@ public class DisciplinaWrapper extends ObjectWrapper<Disciplina> {
 			this.deleteObject(Constants.DISCIPLINA_TABLE, whereClause);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
-					"accesului la baza de date!");
+			//JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " + "accesului la baza de date!");
 			return false;
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
@@ -160,12 +157,11 @@ public class DisciplinaWrapper extends ObjectWrapper<Disciplina> {
 			this.updateObject(Constants.DISCIPLINA_TABLE, disciplinaVeche, disciplinaNoua);
 		} catch (MySQLIntegrityConstraintViolationException e){
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Aveti campuri invalide: "+e.getMessage());	
+			//JOptionPane.showMessageDialog(null,"Aveti campuri invalide: "+e.getMessage());	
 			return false;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
-					"accesului la baza de date!");
+			//JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " + 	"accesului la baza de date!");
 			return false;
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
@@ -190,12 +186,11 @@ public class DisciplinaWrapper extends ObjectWrapper<Disciplina> {
 			this.updateObject(Constants.DISCIPLINA_TABLE, whereClause, disciplinaNoua);
 		} catch (MySQLIntegrityConstraintViolationException e){
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Aveti campuri invalide: "+e.getMessage());	
+			//JOptionPane.showMessageDialog(null,"Aveti campuri invalide: "+e.getMessage());	
 			return false;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
-					"accesului la baza de date!");
+			//JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +"accesului la baza de date!");
 			return false;
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +

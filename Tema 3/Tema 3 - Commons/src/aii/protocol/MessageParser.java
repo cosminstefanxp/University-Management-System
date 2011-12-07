@@ -54,6 +54,7 @@ public class MessageParser{
 		return null;
 	}
 	
+
 	/**
 	 * Gets the object representation.
 	 *
@@ -193,6 +194,9 @@ public class MessageParser{
 		return objects;
 	}
 	
+	/**
+	 * Test for parsing.
+	 */
 	public static void parseTest()
 	{
 		Disciplina disciplina=new Disciplina();
@@ -214,6 +218,17 @@ public class MessageParser{
 		System.out.println(parsedL.toString());
 		System.out.println(MessageParser.getObjectsRepresentation(Disciplina.class, parsedL, MessageConstants.STRUCTURE_DISCIPLINA));
 		System.out.println("##Test COMPLETE!!!");
+	}
+	
+	/**
+	 * Splits the message into objects, using the delimiter.
+	 *
+	 * @param message the message
+	 * @return the string[]
+	 */
+	public static String[] splitMessage(String message)
+	{
+		return message.split(DELIMITER.toString());
 	}
 	
 }
