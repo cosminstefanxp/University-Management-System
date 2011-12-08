@@ -59,6 +59,10 @@ Detalii implementare:
 		- etc
 	* obtineSituatieScolara, din ArhivaServer am implementat-o cat mai general, in sensul ca obtine situatia scolara pe un an de studiu dat (daca anStudiu>0) sau pe toti anii (daca anStudiu=0). In client, momentan este folosita doar versiunea pentru anul de studiu curent, pentru care sunt calculare inclusiv mediile aritmetice pe fiecare semestru.
 	
+	
+Modificari mesaje:
+	-solicitare_situatie scolara (Student -> Arhiva): Am adaugat si anul de studiu pentru care se cere: solicitare_situatie_scolara#cnp_student#an_studiu
+	-raspuns_situatie_scolara: Ama adaugat mai multe campuri cu mai multe informatii: "medieGenerala", "medieAritmetica", "puncteCredit", "restante", "medieSemestrul1", "medieSemestrul2"
 
 
 Detalii bonus:

@@ -152,7 +152,7 @@ public interface Arhiva {
 	public SituatieScolara obtineSituatieScolara(String cnpStudent, int anStudiu)  ;
 	
 	/**
-	 * Obtine disciplinele urmate de un student, conform contractului de studii al acestuia.
+	 * Obtine disciplinele urmate de un student intr-un an, conform contractului de studii al acestuia.
 	 *
 	 * @param cnpStudent the cnp student
 	 * @param anStudiu the an studiu
@@ -160,6 +160,16 @@ public interface Arhiva {
 	 * @  the remote exception
 	 */
 	public ArrayList<Integer> obtineDisciplineUrmate(String cnpStudent, int anStudiu)  ; 
+	
+	/**
+	 * Obtine disciplinele urmate de un student oricand, conform contractului de studii al acestuia.
+	 *
+	 * @param cnpStudent the cnp student
+	 * @param anStudiu the an studiu
+	 * @return the array list
+	 * @  the remote exception
+	 */
+	public ArrayList<Integer> obtineDisciplineUrmate(String cnpStudent)  ; 
 
 	/**
 	 * Obtine discipline urmate de un student, conform contractului de studii al acestuia. Se obtin doar disciplinele
