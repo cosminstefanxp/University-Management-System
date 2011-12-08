@@ -74,7 +74,17 @@ public class MessageParser{
 			// we write it in the string
 			for (int i = 0; i < fieldMatch.length; i++) {
 				// Prepare the field of the object which we are now getting info from
-				Field field = classType.getDeclaredField(fieldMatch[i]);
+				Field field;
+				try{
+					field=classType.getDeclaredField(fieldMatch[i]);
+				}
+				//If the field was not found, try to get it from the super class
+				catch(NoSuchFieldException ex)
+				{
+					if(classType.getSuperclass()==null)
+						throw ex;
+					field=classType.getSuperclass().getDeclaredField(fieldMatch[i]);
+				}
 
 				// Get the field value
 				Object value = field.get(object);
@@ -138,8 +148,18 @@ public class MessageParser{
 			
 			//For every field in the fieldMatch array of object field names, we get the value from the representation
 			for (int i = 0; i < fieldMatch.length; i++) {
-				// Prepare the field of the object which we are now filling
-				Field field = classType.getDeclaredField(fieldMatch[i]);
+				// Prepare the field of the object which we are now getting info from
+				Field field;
+				try{
+					field=classType.getDeclaredField(fieldMatch[i]);
+				}
+				//If the field was not found, try to get it from the super class
+				catch(NoSuchFieldException ex)
+				{
+					if(classType.getSuperclass()==null)
+						throw ex;
+					field=classType.getSuperclass().getDeclaredField(fieldMatch[i]);
+				}
 
 				if (field.getType() == java.sql.Date.class)
 					field.set(instance, Date.parse(fields[i]));

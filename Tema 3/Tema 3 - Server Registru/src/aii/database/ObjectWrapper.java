@@ -77,7 +77,17 @@ public class ObjectWrapper<T> {
 			for(int i=0; i<nameMatch[0].length;i++)
 			{
 				//Prepare the field of the object which we are now filling
-				Field field=classType.getDeclaredField(nameMatch[1][i]);
+				Field field;
+				try{
+					field=classType.getDeclaredField(nameMatch[1][i]);
+				}
+				//If the field was not found, try to get it from the super class
+				catch(NoSuchFieldException ex)
+				{
+					if(classType.getSuperclass()==null)
+						throw ex;
+					field=classType.getSuperclass().getDeclaredField(nameMatch[1][i]);
+				}
 				
 				//Prepare the value of the database column
 				String columnName = nameMatch[0][i];

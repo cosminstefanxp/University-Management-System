@@ -30,6 +30,8 @@ public class MessageConstants {
 				Type.ARHIVA),
 		new MessageStructure("stabilire_nota", 
 				Type.ARHIVA),
+		new MessageStructure("solicitare_discipline_urmate", 
+				Type.ARHIVA),
 				
 		new MessageStructure("repartizare_cadre_didactice", 
 				Type.RAD),
@@ -64,7 +66,7 @@ public class MessageConstants {
 	public static final String[] STRUCTURE_CATALOG={ "cnpStudent",  "codDisciplina",  "data", "nota"};
 	
 	public static final String[] STRUCTURE_ACTIVITATE={"cnpCadruDidactic", "codDisciplina", "tip"};
-	public static final String[] STRUCTURE_ORAR={"idActivitate",  "grupa",  "zi", "ora", "sala", "durata", "frecventa"};
+	public static final String[] STRUCTURE_ORAR={"idActivitate", "grupa",  "zi", "ora", "sala", "durata", "codDisciplina", "numeCadruDidactic", "tip", "frecventa"  };
 	public static final String[] STRUCTURE_EXAMEN={"codDisciplina",  "grupa", "data", "ora", "sala"};
 	public static final String[] STRUCTURE_USER={"CNP", "parola", "tip", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare", "contractCompletat"};
 	public static final String[] STRUCTURE_SITUATIE_SCOLARA={"medieGenerala", "medieAritmetica", "puncteCredit", "restante", "medieSemestru1", "medieSemestru2"}; 

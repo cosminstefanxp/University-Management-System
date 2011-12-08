@@ -63,7 +63,8 @@ public class ArhivaServer implements Arhiva {
 			return providerNoteStudent(message);		
 		if(structure.header.equalsIgnoreCase("solicitare_situatie_scolara"))
 			return providerSituatieScolaraStudent(message);	
-		
+		if(structure.header.equalsIgnoreCase("solicitare_discipline_urmate"))
+			return providerDisciplinUrmate(message);			
 		
 		return null;
 	}
@@ -181,6 +182,40 @@ public class ArhivaServer implements Arhiva {
 		
 		//Raspuns
 		response+=MessageParser.DELIMITER.toString()+MessageParser.getObjectRepresentation(SituatieScolara.class, situatie, MessageConstants.STRUCTURE_SITUATIE_SCOLARA);	
+		
+		return response;
+	}
+	
+	/**
+	 * Obtine disciplinele urmate de un student.
+	 *
+	 * @param message the message
+	 * @return the string
+	 */
+	private String providerDisciplinUrmate(String message)
+	{
+		//Spargere mesaj in componente
+		String[] msgFields=MessageParser.splitMessage(message);
+		if(msgFields.length!=4)
+		{
+			debug("Format incorect mesaj: "+message);
+			return "error#format_mesaj";
+		}
+		
+		//Realizam fiecare operatie
+		Integer an=Integer.parseInt(msgFields[2]);
+		Integer semestru=Integer.parseInt(msgFields[3]);
+		String cnp=msgFields[1];
+		String response;
+		response="raspuns_"+msgFields[0];	//header de raspuns
+
+		//Realizare operatii
+		ArrayList<Integer> discipline;
+		discipline=obtineDisciplineUrmate(cnp, an, semestru);
+		
+		//Raspuns
+		for(Integer disciplina: discipline)
+			response+=MessageParser.DELIMITER.toString()+disciplina;	
 		
 		return response;
 	}

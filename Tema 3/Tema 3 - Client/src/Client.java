@@ -63,7 +63,15 @@ public class Client {
 															//raspunsul are: "medieGenerala", "medieAritmetica", "puncteCredit", "restante", "medieSemestrul1", "medieSemestrul2"
 					
 			toSocket.println(message);
-			System.out.println("Test 2 "+mode+":"+message);
+			System.out.println("Test 3 "+mode+":"+message);
+			response=fromSocket.readLine();
+			System.out.println("Raspuns "+mode+":"+response);
+			
+			//TEST Discipline Urmate
+			message="solicitare_discipline_urmate#444#4#1";	//disciplinele pentru anul 2, semestrul 1
+		
+			toSocket.println(message);
+			System.out.println("Test 4 "+mode+":"+message);
 			response=fromSocket.readLine();
 			System.out.println("Raspuns "+mode+":"+response);
 		}
@@ -84,6 +92,15 @@ public class Client {
 			System.out.println("Test 1 "+mode+":"+message);
 			response=fromSocket.readLine();
 			System.out.println("Raspuns "+mode+":"+response);
+
+			//TEST Orar Student
+			message="solicitare_orar#444#341C4#1";	//orarul pentru anul 4, semestrul 1
+		
+			toSocket.println(message);
+			System.out.println("Test 2 "+mode+":"+message);
+			response=fromSocket.readLine();
+			System.out.println("Raspuns "+mode+":"+response);
+
 		}		
 	}
 	
@@ -112,7 +129,7 @@ public class Client {
 				System.out.print("> ");
 				//TODO: de reparat
 				//line = keyboardInput.readLine();
-				line="1";
+				line="2";
 				switch (Integer.parseInt(line)) {
 				case JURNAL:
 					mode = JURNAL;

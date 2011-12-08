@@ -59,7 +59,7 @@ public class OrarCompletWrapper extends ObjectWrapper<OrarComplet> {
 	{
 		String fields="o.zi, o.ora, o.sala, o.grupa, o.frecventa, o.durata, o.id_activitate, a.tip, a.cod_disciplina, u.cnp, concat(u.nume,concat(' ',u.prenume)) nume";
 		String from=Constants.ORAR_TABLE+" o, "+Constants.ACTIVITATE_TABLE+" a, "+Constants.USER_TABLE+" u";
-		String extra="GROUP BY o.grupa ORDER BY o.zi";
+		String extra="ORDER BY o.zi, o.ora";
 		String where="o.grupa=\'"+grupa+"\'" +
 				" AND o.id_activitate=a.id" +
 				" AND u.cnp=a.cnp_cadru_didactic" +
