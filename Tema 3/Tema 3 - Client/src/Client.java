@@ -84,8 +84,8 @@ public class Client {
 			
 			//TEST Activitati
 			message="repartizare_cadre_didactice#2#" +
-					"1876398642864~988~Curs#" +
-					"2890508035278~9828~Seminar";
+					"1876398642864~988~Curs#" +		//Repartizare valida
+					"2890508035278~9828~Seminar";	//Repartizare nevalida, pentru ca nu exista acea disciplina
 					
 					
 			toSocket.println(message);
@@ -101,6 +101,15 @@ public class Client {
 			response=fromSocket.readLine();
 			System.out.println("Raspuns "+mode+":"+response);
 
+			
+			//TEST Examene Student
+			message="solicitare_calendar_examene#444#341C4";	//orarul pentru anul 4, semestrul 1 (semestrul curent)
+		
+			toSocket.println(message);
+			System.out.println("Test 3 "+mode+":"+message);
+			response=fromSocket.readLine();
+			System.out.println("Raspuns "+mode+":"+response);
+			
 		}		
 	}
 	

@@ -13,6 +13,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Vector;
 
 import aii.Activitate;
@@ -78,8 +80,8 @@ public class RADServer implements RegistruActivitatiDidactice {
 			return managementActivitate(message);
 		if(structure.header.equalsIgnoreCase("solicitare_orar"))
 			return providerOrarStudent(message);
-		
-		
+		if(structure.header.equalsIgnoreCase("solicitare_calendar_examene"))
+			return providerExameneStudent(message);
 		
 		return null;
 	}
@@ -202,6 +204,39 @@ public class RADServer implements RegistruActivitatiDidactice {
 		return response;
 	}
 
+	/**
+	 * Obtine planificare examene pentru un student.
+	 *
+	 * @param message the message
+	 * @return the string
+	 */
+	private String providerExameneStudent(String message)
+	{
+		//Spargere mesaj in componente
+		String[] msgFields=MessageParser.splitMessage(message);
+		if(msgFields.length!=3)
+		{
+			debug("Format incorect mesaj: "+message);
+			return "error#format_mesaj";
+		}
+		
+		//Realizam fiecare operatie
+		String grupa=msgFields[2];
+		String cnp=msgFields[1];
+		
+		String response;
+		response="raspuns_"+msgFields[0];	//header de raspuns
+
+		//Realizare operatii
+		ArrayList<Examen> examene=obtineProgramareExamene(cnp, grupa);
+		
+		//Raspuns
+		response+=MessageParser.DELIMITER.toString()+examene.size();
+		response+=MessageParser.getObjectsRepresentation(Examen.class, examene, MessageConstants.STRUCTURE_EXAMEN);	
+		
+		return response;
+	}
+
 	
 	@Override
 	public boolean adaugareActivitateOrar(Orar orar) {
@@ -273,6 +308,7 @@ public class RADServer implements RegistruActivitatiDidactice {
 	 */
 	@Override
 	public ArrayList<OrarComplet> obtineOrarComplet(String cnpStudent, String grupa, int semestru) {
+		//TODO: De obtinut dinamic grupa si verificat cnp-ul
 		//Pregatim anul de studiu, din grupa
 		if(grupa==null || grupa.isEmpty())
 		{
@@ -303,9 +339,45 @@ public class RADServer implements RegistruActivitatiDidactice {
 	 * @see aii.rad.RegistruActivitatiDidactice#obtineProgramareExamene(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public ArrayList<Examen> obtineProgramareExamene(String CNPStudent, String grupa) {
-		// TODO Auto-generated method stub
-		return null;
+	public ArrayList<Examen> obtineProgramareExamene(String cnpStudent, String grupa) {
+		//Pregatim anul de studiu, din grupa
+		if(grupa==null || grupa.isEmpty())
+		{
+			System.out.println("Studentul "+cnpStudent+" nu e inregistrat la nici o grupa.");
+			return null;
+		}
+		if(grupa.equals("licentiat"))
+		{
+			System.out.println("Studentul "+cnpStudent+" este licentiat.");
+			return null;
+		}
+		int anStudiu = grupa.charAt(1) - '0';
+		
+		
+		//Obtinere semestru curent
+		int semestru;
+		Calendar calendar=new GregorianCalendar();
+		if(calendar.get(Calendar.MONTH)>=Calendar.JULY ||
+				calendar.get(Calendar.MONTH)<=Calendar.FEBRUARY)
+			semestru=1;
+		else
+			semestru=2;
+
+		//Pregatim disciplinele urmate prin conectare si comunicare cu Arhiva
+		ArrayList<Integer> discipline=new ArrayList<Integer>();
+		this.conectareArhiva();
+		String raspuns=this.messageToArhiva("solicitare_discipline_urmate#"+cnpStudent+"#"+anStudiu+"#"+semestru);
+		String[] fields=MessageParser.splitMessage(raspuns);
+		for(int i=1;i<fields.length;i++)
+			discipline.add(Integer.parseInt(fields[i]));
+		debug("Obtinut disciplinele urmate: "+discipline);
+
+		
+		//TODO: Obtinere nume cadru didactic 
+		
+		//Obtinem examenele
+		return examenDAO.getExameneParticularizat(discipline, grupa);
+
 	}
 
 	@Override

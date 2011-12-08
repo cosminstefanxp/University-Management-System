@@ -67,7 +67,7 @@ public class MessageConstants {
 	
 	public static final String[] STRUCTURE_ACTIVITATE={"cnpCadruDidactic", "codDisciplina", "tip"};
 	public static final String[] STRUCTURE_ORAR={"idActivitate", "grupa",  "zi", "ora", "sala", "durata", "codDisciplina", "numeCadruDidactic", "tip", "frecventa"  };
-	public static final String[] STRUCTURE_EXAMEN={"codDisciplina",  "grupa", "data", "ora", "sala"};
+	public static final String[] STRUCTURE_EXAMEN={"data", "ora", "sala", "codDisciplina",  "grupa"};
 	public static final String[] STRUCTURE_USER={"CNP", "parola", "tip", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare", "contractCompletat"};
 	public static final String[] STRUCTURE_SITUATIE_SCOLARA={"medieGenerala", "medieAritmetica", "puncteCredit", "restante", "medieSemestru1", "medieSemestru2"}; 
 }

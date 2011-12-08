@@ -93,7 +93,7 @@ public class MessageParser{
 				if (value != null)
 					representation += value.toString()+FIELD_DELIMITER;
 				else
-					representation += FIELD_DELIMITER;
+					representation += "NULL"+FIELD_DELIMITER;
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -107,7 +107,7 @@ public class MessageParser{
 	}
 	
 	/**
-	 * Gets the representation for multiple objects.
+	 * Gets the representation for multiple objects. Starts with delimiter.
 	 *
 	 * @param <T> the generic type
 	 * @param classType the class type
@@ -120,7 +120,7 @@ public class MessageParser{
 		String representation="";
 		
 		for(T object:objects)
-			representation+=getObjectRepresentation(classType, object, fieldMatch)+DELIMITER;
+			representation+=DELIMITER+getObjectRepresentation(classType, object, fieldMatch);
 		
 		return representation;
 	}
