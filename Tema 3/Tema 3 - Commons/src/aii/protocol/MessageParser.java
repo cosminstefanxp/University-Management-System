@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import aii.Disciplina;
@@ -161,7 +162,7 @@ public class MessageParser{
 					field=classType.getSuperclass().getDeclaredField(fieldMatch[i]);
 				}
 
-				if (field.getType() == java.sql.Date.class)
+				if (field.getType() == Date.class)
 				{
 					System.out.println("Parsam data: "+fields[i]);
 					SimpleDateFormat formatter=new SimpleDateFormat("dd-MM-yyyy");

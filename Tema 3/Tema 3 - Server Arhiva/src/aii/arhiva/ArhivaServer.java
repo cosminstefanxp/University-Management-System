@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
+import com.sun.org.apache.regexp.internal.recompile;
+
 import aii.Disciplina;
 import aii.NotaCatalog;
 import aii.SituatieScolara;
@@ -28,6 +30,7 @@ import aii.database.OptiuneContractWrapper;
 import aii.protocol.MessageConstants;
 import aii.protocol.MessageParser;
 import aii.protocol.MessageStructure;
+import aii.rad.RegistruActivitatiDidactice;
 
 /**
  * The Class ArhivaServer.
@@ -87,10 +90,10 @@ public class ArhivaServer implements Arhiva {
 		
 		Socket socket = null;
 		
-		int port = Arhiva.SERVER_PORT;
-		String adresa = Arhiva.SERVER_ADDRESS;
+		int port = RegistruActivitatiDidactice.SERVER_PORT;
+		String adresa = RegistruActivitatiDidactice.SERVER_ADDRESS;
 		
-		debug("Ne conectam la Arhiva.");
+		debug("Ne conectam la RAD.");
 		try {
 			socket = new Socket(adresa, port);
 			toRAD = new PrintWriter(socket.getOutputStream(), true);
@@ -701,7 +704,8 @@ public class ArhivaServer implements Arhiva {
 		String[] fields=MessageParser.splitMessage(raspuns);
 		ArrayList<Boolean> cadruPentruDisciplina=new ArrayList<Boolean>();
 		for(int i=2;i<note.size()+2;i++)
-			cadruPentruDisciplina.add(Boolean.parseBoolean(fields[i]));			
+			cadruPentruDisciplina.add(Boolean.parseBoolean(fields[i]));
+		debug("Cadru pentru disciplina: "+cadruPentruDisciplina);
 		
 		//Analizam fiecare nota in parte
 		ArrayList<Float> updateSucces=new ArrayList<Float>();
@@ -727,7 +731,7 @@ public class ArhivaServer implements Arhiva {
 				updateSucces.add(notaCatalogDAO.updateNotaCatalog(notaExistentaMaxima, nota) ? 2.0f : 0.0f);
 			else
 				//altfel nu facem nimic
-				updateSucces.add(0f);
+				updateSucces.add(-2.0f);
 		}
 	
 		return updateSucces;

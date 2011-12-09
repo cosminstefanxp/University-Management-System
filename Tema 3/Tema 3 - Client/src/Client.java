@@ -76,10 +76,10 @@ public class Client {
 			System.out.println("Raspuns "+mode+":"+response);
 			
 			//TEST Stabilire nota
-			message="stabilire_nota#222#2#" +
-					"1~444~9~17-01-2012#" +
-					"9~444~6~18-02-2012";
-		
+			message="stabilire_nota#222#3#" +
+					"7~444~9~17-01-2012#" +		//deja are o nota -> intoarce -2
+					"3~444~6~18-02-2012#" +		//la prima executie a testului o sa scrie nota 6 (si va intoarce 1), dupa care va face o suprascriere (vezi readme) si va intoarce 2
+					"10~444~988~12-01-2012";	//nu e materia cadrului respectiv
 			toSocket.println(message);
 			System.out.println("Test 4 "+mode+":"+message);
 			response=fromSocket.readLine();

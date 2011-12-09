@@ -7,6 +7,7 @@
 package aii.database;
 
 import java.lang.reflect.Field;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -94,6 +95,11 @@ public class ObjectWrapper<T> {
 				
 				if(field.getType() == java.sql.Date.class)
 					field.set(instance, entries.getDate(columnName));
+				if(field.getType() == java.util.Date.class)
+				{
+					java.sql.Date sqlDate=entries.getDate(columnName);
+					field.set(instance, new java.util.Date(sqlDate.getTime()));
+				}
 				else
 					if(field.getType() == int.class)
 						field.setInt(instance, entries.getInt(columnName));
@@ -307,6 +313,12 @@ public class ObjectWrapper<T> {
 					setClause+=nameMatch[0][i]+"=\'1\', ";
 				else
 					setClause+=nameMatch[0][i]+"=\'0\', ";
+			}
+			if(field.getType() == java.util.Date.class)
+			{
+				java.util.Date date=(java.util.Date) field.get(newObject);
+				java.sql.Date sqlDate= new Date(date.getTime());
+				setClause+=nameMatch[0][i]+"=\'"+sqlDate+"\', ";
 			}
 			else
 				setClause+=nameMatch[0][i]+"=\'"+field.get(newObject)+"\', ";				
