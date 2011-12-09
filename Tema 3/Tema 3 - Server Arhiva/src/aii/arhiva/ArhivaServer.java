@@ -124,7 +124,7 @@ public class ArhivaServer implements Arhiva {
 		if(structure.header.equalsIgnoreCase("solicitare_situatie_scolara"))
 			return providerSituatieScolaraStudent(message);	
 		if(structure.header.equalsIgnoreCase("solicitare_discipline_urmate"))
-			return providerDisciplinUrmate(message);			
+			return providerDisciplineUrmate(message);			
 		if(structure.header.equalsIgnoreCase("stabilire_nota"))
 			return managementNoteStudent(message);		
 		
@@ -294,7 +294,7 @@ public class ArhivaServer implements Arhiva {
 	 * @param message the message
 	 * @return the string
 	 */
-	private String providerDisciplinUrmate(String message)
+	private String providerDisciplineUrmate(String message)
 	{
 		//Spargere mesaj in componente
 		String[] msgFields=MessageParser.splitMessage(message);

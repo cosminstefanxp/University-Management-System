@@ -61,6 +61,8 @@ Detalii implementare:
 	
 	
 Modificari mesaje:
+	-pentru raspunsurile care cereau statusul comenzii, am folosit, in principiu (mai putin cazurile speciale prezentate), true - pentru succes si false - pentru insucces.
+	-stabilire_plan_invatamant: am adaugat si campul de grup la final, folosit pentru gruparea optionalelor.
 	-solicitare_situatie scolara (Student -> Arhiva): Am adaugat si anul de studiu pentru care se cere: solicitare_situatie_scolara#cnp_student#an_studiu
 	-raspuns_situatie_scolara: Am adaugat mai multe campuri cu mai multe informatii: "medieGenerala", "medieAritmetica", "puncteCredit", "restante", "medieSemestrul1", "medieSemestrul2"
 	-solicitare_orar: Am adaugat si semestrul pentru ca este posibil ca un student aflat, sa zicem, la finalul semestrului 1, sa vrea sa afle care este orarul pentru semestrul 2, pentru a, de exemplu, planifica ceva cu cateva luni in avans. Nou format: solicitare_orar#CNP#semestru. La raspuns, disciplina este reprezentata doar prin codul acesteia.
@@ -70,7 +72,8 @@ Modificari mesaje:
 	-raspuns_stabilire_nota: Formatul este cel din enunt: raspuns_stabilire_nota#nr_note#valoare_succes_1#..#valoare_succes_n, dar valoare succes poate lua urmatoarele valori: 1.0 - daca e nota noua si a reusit operatia; 2.0 - daca exista o nota veche, dar nota curenta e mai mare si operatia a reusit; -1.0 - daca nu e materia cadrului respectiv; -2.0 - daca nota curenta nu mai mare decat cea care exista deja; 0.0 - daca nu a reusit din alt motiv. De asemenea, pentru a observa schimbarea unei note (pentru rulari succesive ale testerului din Client), am considerat ca se face inlocuirea cu noua nota si daca nota curenta este egala cu cea veche.
 	-raspuns_stabilire_formatie_studiu: Intoarce numarul de modificari realizate cu succes: raspuns_stabilire_formatie_studiu#nr_intrari_realizate_cu_succes
 	-stabilire_orar: Cum, in cazul meu, tabela orar din cerinta este impartita in doua tabele (pentru a avea FN3), la stabilirea unui orar trebuie precizat id-ul activitatii de predare. Astfel, formatul devine: zi~ora~sala~durata~idActivitate~grupa~frecventa . Am adaugat si grupa, pentru ca, de exemplu, un seminar are intrari diferite pentru grupe diferite.
-
+	-stabilite_calendar_examen: ordinea pentru campuri este: "data", "ora", "sala", "codDisciplina",  "grupa". Pentru stergere, este suficient doar codul disciplinei si grupa.
+	-error: in cazul anumitor situatii, se pot trimite inapoi mesaje de eroare, sub formatul: error#mesaj_de_eroare
 
 Detalii bonus:
 	* am implementat bonusul pentru dezvoltarea unei interfete grafice, toate facilitatile componentelor server cerute fiind testate.

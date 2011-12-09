@@ -66,7 +66,7 @@ public class MessageConstants {
 				Type.JURNAL)
 		};
 	
-	public static final String[] STRUCTURE_DISCIPLINA={"cod", "denumire", "tip", "nrOre",  "pctCredit",     "examinare", "anStudiu",  "semestru", "grup"};
+	public static final String[] STRUCTURE_DISCIPLINA={"cod", "denumire", "tip", "nrOre",  "pctCredit", "examinare", "anStudiu",  "semestru", "grup"};
 	public static final String[] STRUCTURE_CATALOG={ "codDisciplina", "cnpStudent", "nota", "data"};
 	
 	public static final String[] STRUCTURE_ACTIVITATE={"cnpCadruDidactic", "codDisciplina", "tip"};
