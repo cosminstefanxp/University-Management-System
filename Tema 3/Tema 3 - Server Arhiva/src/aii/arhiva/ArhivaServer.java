@@ -17,8 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
-import com.sun.org.apache.regexp.internal.recompile;
-
 import aii.Disciplina;
 import aii.NotaCatalog;
 import aii.SituatieScolara;
@@ -46,7 +44,10 @@ public class ArhivaServer implements Arhiva {
 	/** The optiune contract dao. */
 	static OptiuneContractWrapper optiuneContractDAO = new OptiuneContractWrapper();
 
+	/** The output printer to rad. */
 	private static PrintWriter toRAD = null;
+	
+	/** The input reader from rad. */
 	private static BufferedReader fromRAD = null;
 	
 	/**
@@ -61,7 +62,7 @@ public class ArhivaServer implements Arhiva {
 	}
 
 	/**
-	 * Sent Message to RAD.
+	 * Send Message to RAD.
 	 *
 	 * @param message the message
 	 * @return the string
@@ -527,8 +528,7 @@ public class ArhivaServer implements Arhiva {
 	 */
 	@Override
 	public ArrayList<NotaCatalog> obtineNote() {
-		// TODO Auto-generated method stub
-		return null;
+		return notaCatalogDAO.getNoteCatalog("true");	//toate notele din catalog
 	}
 
 	/*
@@ -744,8 +744,7 @@ public class ArhivaServer implements Arhiva {
 	 */
 	@Override
 	public boolean stergereNota(NotaCatalog nota) {
-		// TODO Auto-generated method stub
-		return false;
+		return notaCatalogDAO.deleteNotaCatalog(nota);
 	}
 
 }

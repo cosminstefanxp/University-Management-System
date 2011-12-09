@@ -18,10 +18,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Vector;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
 import aii.Activitate;
-import aii.Disciplina;
 import aii.Examen;
 import aii.Orar;
 import aii.OrarComplet;
@@ -59,8 +56,12 @@ public class RADServer implements RegistruActivitatiDidactice {
 	/** The examen dao. */
 	private static ExamenWrapper examenDAO=new ExamenWrapper();
 
+	/** The output printer to arhiva. */
 	private static PrintWriter toArhiva = null;
+	
+	/** The input reader from arhiva. */
 	private static BufferedReader fromArhiva = null;
+	
 	/**
 	 * Debug message printer.
 	 * 
@@ -95,13 +96,12 @@ public class RADServer implements RegistruActivitatiDidactice {
 			return managementOrar(message);
 		if(structure.header.equalsIgnoreCase("stabilire_calendar_examene"))
 			return managementExamene(message);
-		//TODO - sa verifice cat a editat la examene
-				
+
 		return null;
 	}
 	
 	/**
-	 * Sent Message to arhiva.
+	 * Send Message to arhiva.
 	 *
 	 * @param message the message
 	 * @return the string
@@ -372,7 +372,7 @@ public class RADServer implements RegistruActivitatiDidactice {
 		int cod;
 		String cnp=msgFields[1];
 		int n=Integer.parseInt(msgFields[2]);
-		String response="response_"+msgFields[0]+MessageParser.DELIMITER+msgFields[1];
+		String response="raspuns_"+msgFields[0]+MessageParser.DELIMITER+msgFields[1];
 		
 		//Realizam fiecare operatie
 		for(int i=3;i<n+3;i++)
@@ -455,16 +455,32 @@ public class RADServer implements RegistruActivitatiDidactice {
 		return examenDAO.deleteExamen(examen);
 	}
 
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#autentificaUtilizator(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public Utilizator autentificaUtilizator(String CNP, String parola) {
-		// TODO Auto-generated method stub
-		return null;
+		Utilizator utilizator;
+
+		//obtine utilizatorul. daca a fost intampinata o eroare, intoarce null
+		utilizator=utilizatorDAO.getUtilizator(CNP);
+		if(utilizator==null || !utilizator.parola.equals(parola))
+			return null;
+		
+		return utilizator;
 	}
 
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#autentificaUtilizator(java.lang.String, aii.Utilizator.Tip)
+	 */
 	@Override
 	public boolean autentificaUtilizator(String cnp, Tip permisiuni) {
-		// TODO Auto-generated method stub
-		return false;
+		Utilizator utilizator;
+		//obtine utilizatorul. daca a fost intampinata o eroare, intoarce null
+		utilizator=utilizatorDAO.getUtilizator(cnp);
+		if(utilizator==null || utilizator.tip!=permisiuni)
+			return false;
+		return true;
 	}
 
 	/* (non-Javadoc)
@@ -490,10 +506,12 @@ public class RADServer implements RegistruActivitatiDidactice {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#editareActivitateOrar(aii.Orar, aii.Orar)
+	 */
 	@Override
 	public boolean editareActivitateOrar(Orar orarNou, Orar orarVechi) {
-		// TODO Auto-generated method stub
-		return false;
+		return orarDAO.updateOrar(orarVechi, orarNou);
 	}
 
 	/* (non-Javadoc)
@@ -504,16 +522,42 @@ public class RADServer implements RegistruActivitatiDidactice {
 		return activitateDAO.updateActivitate("id=\'"+activitate.id+"\'",activitate);
 	}
 
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#obtineExamene()
+	 */
 	@Override
 	public ArrayList<Examen> obtineExamene() {
-		// TODO Auto-generated method stub
-		return null;
+		return examenDAO.getExamene("true");
 	}
 
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#obtineGrupeStudenti()
+	 */
 	@Override
 	public Vector<String> obtineGrupeStudenti() {
-		// TODO Auto-generated method stub
-		return null;
+		/* Pregatire date despre grupa. */
+		Vector<Object[]> results=null;
+		String query="SELECT DISTINCT titlu_grupa FROM "+Constants.USER_TABLE+" WHERE tip=\'"+Utilizator.Tip.STUDENT.toString()+"\'";
+		
+		try {
+			DatabaseConnection.openConnection();
+			results=DatabaseConnection.customQueryArray(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		//Construire grupe
+		Vector<String> grupe=new Vector<String>(results.size());
+		for(int i=0;i<results.size();i++)
+		{
+			String value=(String) results.get(i)[0];
+			if(!value.isEmpty())	//Skip empty values
+				grupe.add(value);
+		}
+		System.out.println("Obtinute grupele: "+grupe);
+		
+		return grupe;
 	}
 
 	/* (non-Javadoc)
@@ -521,8 +565,11 @@ public class RADServer implements RegistruActivitatiDidactice {
 	 */
 	@Override
 	public ArrayList<OrarComplet> obtineOrarComplet() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<OrarComplet> orare=orarCompletDAO.getOrareJoined("o.zi, o.ora, o.sala, o.grupa, o.frecventa, o.durata, o.id_activitate, a.tip, a.cod_disciplina, u.cnp, concat(u.nume,concat(' ',u.prenume)) nume",
+				Constants.ORAR_TABLE+" o, "+Constants.ACTIVITATE_TABLE+" a, "+Constants.USER_TABLE+" u",
+				"o.id_activitate=a.id AND u.cnp=a.cnp_cadru_didactic");
+		
+		return orare;
 	}
 
 	/* (non-Javadoc)
@@ -616,22 +663,31 @@ public class RADServer implements RegistruActivitatiDidactice {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#obtineUtilizatori(java.lang.String)
+	 */
 	@Override
 	public ArrayList<Utilizator> obtineUtilizatori(String whereClause) {
-		// TODO Auto-generated method stub
-		return null;
+		return utilizatorDAO.getUtilizatori(whereClause);
 	}
 
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#obtinereActivitatePredare()
+	 */
 	@Override
 	public ArrayList<Activitate> obtinereActivitatePredare() {
-		// TODO Auto-generated method stub
-		return null;
+		return activitateDAO.getActivitati("id=id");	//toate activitatile
 	}
 
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#obtinereActivitatiPredareCursCadru(java.lang.String)
+	 */
 	@Override
 	public ArrayList<Activitate> obtinereActivitatiPredareCursCadru(String cnpCadruDidactic) {
-		// TODO Auto-generated method stub
-		return null;
+		//Obtinem activitatile de predare la care cadrul didactic este titular
+		ArrayList<Activitate> activitati=activitateDAO.getActivitati("cnp_cadru_didactic='"+cnpCadruDidactic+"\' AND tip=\'"+Activitate.TipActivitate.Curs+"\'");
+	
+		return activitati;
 	}
 
 	/* (non-Javadoc)
@@ -667,10 +723,12 @@ public class RADServer implements RegistruActivitatiDidactice {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#stergereActivitateOrar(aii.Orar)
+	 */
 	@Override
 	public boolean stergereActivitateOrar(Orar orar) {
-		// TODO Auto-generated method stub
-		return false;
+		return orarDAO.deleteOrar(orar);
 	}
 
 	/* (non-Javadoc)

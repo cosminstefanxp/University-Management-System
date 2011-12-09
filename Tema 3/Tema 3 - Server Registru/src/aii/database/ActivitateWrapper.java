@@ -136,8 +136,8 @@ public class ActivitateWrapper extends ObjectWrapper<Activitate> {
 			//JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +	"accesului la baza de date!");
 			return false;
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
-					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
+//			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+//					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
 			e.printStackTrace();
 			return false;
 		} 
@@ -158,16 +158,16 @@ public class ActivitateWrapper extends ObjectWrapper<Activitate> {
 			this.updateObject(Constants.ACTIVITATE_TABLE, activitateVeche, activitateNoua);
 		} catch (MySQLIntegrityConstraintViolationException e){
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Aveti campuri invalide: "+e.getMessage());	
+//			JOptionPane.showMessageDialog(null,"Aveti campuri invalide: "+e.getMessage());	
 			return false;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
-					"accesului la baza de date!");
+//			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+//					"accesului la baza de date!");
 			return false;
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
-					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
+//			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+//					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
 			e.printStackTrace();
 			return false;
 		}
@@ -188,16 +188,16 @@ public class ActivitateWrapper extends ObjectWrapper<Activitate> {
 			this.updateObject(Constants.ACTIVITATE_TABLE, whereClause, activitateNoua);
 		} catch (MySQLIntegrityConstraintViolationException e){
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Aveti campuri invalide: "+e.getMessage());	
+//			JOptionPane.showMessageDialog(null,"Aveti campuri invalide: "+e.getMessage());	
 			return false;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
-					"accesului la baza de date!");
+//			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+//					"accesului la baza de date!");
 			return false;
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
-					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
+//			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+//					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
 			e.printStackTrace();
 			return false;
 		}

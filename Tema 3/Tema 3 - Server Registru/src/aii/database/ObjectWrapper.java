@@ -337,7 +337,9 @@ public class ObjectWrapper<T> {
 		//Run the SQL deletion query
 		System.out.println("Actualizam un obiect din baza de date: "+whereClause);
 		DatabaseConnection.openConnection();
-		DatabaseConnection.updateEntities(table, setClause, whereClause);	
+		int count=DatabaseConnection.updateEntitiesCount(table, setClause, whereClause);
+		if(count==0)
+			throw new SQLException("CUSTOM: No entities were updated!");
 	}
 	
 	/**

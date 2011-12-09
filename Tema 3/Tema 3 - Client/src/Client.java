@@ -129,7 +129,7 @@ public class Client {
 					
 					
 			toSocket.println(message);
-			System.out.println("Test 1 "+mode+":"+message);
+			System.out.println("Test 3 "+mode+":"+message);
 			response=fromSocket.readLine();
 			System.out.println("Raspuns "+mode+":"+response);
 			
@@ -138,7 +138,7 @@ public class Client {
 			message="solicitare_orar#444#1";	//orarul pentru anul 4, semestrul 1
 		
 			toSocket.println(message);
-			System.out.println("Test 3 "+mode+":"+message);
+			System.out.println("Test 4 "+mode+":"+message);
 			response=fromSocket.readLine();
 			System.out.println("Raspuns "+mode+":"+response);
 
@@ -147,7 +147,7 @@ public class Client {
 			message="solicitare_calendar_examene#444";	//orarul pentru anul 4, semestrul 1 (semestrul curent)
 		
 			toSocket.println(message);
-			System.out.println("Test 4 "+mode+":"+message);
+			System.out.println("Test 5 "+mode+":"+message);
 			response=fromSocket.readLine();
 			System.out.println("Raspuns "+mode+":"+response);
 			
@@ -155,7 +155,7 @@ public class Client {
 			message="solicitare_calendar_examene#222";	//orarul pentru anul 4, semestrul 1 (semestrul curent)
 		
 			toSocket.println(message);
-			System.out.println("Test 5 "+mode+":"+message);
+			System.out.println("Test 6 "+mode+":"+message);
 			response=fromSocket.readLine();
 			System.out.println("Raspuns "+mode+":"+response);
 			
@@ -165,7 +165,7 @@ public class Client {
 					"3";		// false
 		
 			toSocket.println(message);
-			System.out.println("Test 6 "+mode+":"+message);
+			System.out.println("Test 7 "+mode+":"+message);
 			response=fromSocket.readLine();
 			System.out.println("Raspuns "+mode+":"+response);
 			
@@ -176,7 +176,7 @@ public class Client {
 					"222";		//nu e student, deci nu va reusi
 		
 			toSocket.println(message);
-			System.out.println("Test 7 "+mode+":"+message);
+			System.out.println("Test 8 "+mode+":"+message);
 			response=fromSocket.readLine();
 			System.out.println("Raspuns "+mode+":"+response);
 			
