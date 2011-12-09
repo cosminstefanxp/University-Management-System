@@ -7,7 +7,7 @@
 package aii;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * The Class NotaCatalog that describes a grade in the students sheet.

@@ -65,6 +65,7 @@ Modificari mesaje:
 	-raspuns_situatie_scolara: Am adaugat mai multe campuri cu mai multe informatii: "medieGenerala", "medieAritmetica", "puncteCredit", "restante", "medieSemestrul1", "medieSemestrul2"
 	-solicitare_orar: Am adaugat si semestrul pentru ca este posibil ca un student aflat, sa zicem, la finalul semestrului 1, sa vrea sa afle care este orarul pentru semestrul 2, pentru a, de exemplu, planifica ceva cu cateva luni in avans. Nou format: solicitare_orar#CNP#semestru
 	-raspuns_solicitare_calendar_examene: Adaugat si campul pentru grupa, la final. Disciplina este reprezentata doar prin codul acesteia.
+	-cadru_pentru_disciplina: Mesaj ce verifica daca un cadru preda cursul pentru anumite discipline. Folosit intre Arhiva si RegistruActivitatiDidactice. Format: cadru_pentru_disciplina#cnp_cadru#numar_discipline#cod_disciplina_1#..#cod_desciplina_n
 
 
 Detalii bonus:

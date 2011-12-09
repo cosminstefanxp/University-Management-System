@@ -6,6 +6,12 @@
  */
 package aii.arhiva;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +43,9 @@ public class ArhivaServer implements Arhiva {
 	/** The optiune contract dao. */
 	static OptiuneContractWrapper optiuneContractDAO = new OptiuneContractWrapper();
 
+	private static PrintWriter toRAD = null;
+	private static BufferedReader fromRAD = null;
+	
 	/**
 	 * Debug message printer.
 	 * 
@@ -48,6 +57,53 @@ public class ArhivaServer implements Arhiva {
 			System.out.println("[DEBUG][Thread " + Thread.currentThread().getId() + "] " + string);
 	}
 
+	/**
+	 * Sent Message to RAD.
+	 *
+	 * @param message the message
+	 * @return the string
+	 */
+	private String messageToRAD(String message)
+	{
+		
+		try {
+				toRAD.println(message);
+				String fromServer = fromRAD.readLine();
+				return fromServer;
+		} catch (IOException e) {
+			System.err.println("Couldn't get I/O for the connection to: localhost.");
+			System.exit(-1);
+		}
+		return null;
+	}
+	
+	/**
+	 * Conectare la componenta RAD.
+	 */
+	private void conectareRAD()
+	{
+		if(toRAD!=null && fromRAD!=null)
+			return;
+		
+		Socket socket = null;
+		
+		int port = Arhiva.SERVER_PORT;
+		String adresa = Arhiva.SERVER_ADDRESS;
+		
+		debug("Ne conectam la Arhiva.");
+		try {
+			socket = new Socket(adresa, port);
+			toRAD = new PrintWriter(socket.getOutputStream(), true);
+			fromRAD = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		} catch (UnknownHostException e) {
+			System.err.println("Don't know about host: localhost.");
+			System.exit(-1);
+		} catch (IOException e) {
+			System.err.println("Couldn't get I/O for the connection to: localhost.");
+			System.exit(-1);
+		}
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -65,6 +121,8 @@ public class ArhivaServer implements Arhiva {
 			return providerSituatieScolaraStudent(message);	
 		if(structure.header.equalsIgnoreCase("solicitare_discipline_urmate"))
 			return providerDisciplinUrmate(message);			
+		if(structure.header.equalsIgnoreCase("stabilire_nota"))
+			return managementNoteStudent(message);		
 		
 		return null;
 	}
@@ -117,6 +175,46 @@ public class ArhivaServer implements Arhiva {
 		
 	}
 
+	/**
+	 * Management notele unui student.
+	 *
+	 * @param message the message
+	 * @return the string
+	 */
+	private String managementNoteStudent(String message)
+	{
+		//Spargere mesaj in componente
+		String[] msgFields=MessageParser.splitMessage(message);
+		if(msgFields.length<4)
+		{
+			debug("Format incorect mesaj: "+message);
+			return "error#format_mesaj";
+		}
+		
+		//Realizam fiecare operatie
+		Integer n=Integer.parseInt(msgFields[2]);
+		String cnp=msgFields[1];
+		String response;
+		response="raspuns_"+msgFields[0]+"#"+n;	//header de raspuns
+		ArrayList<NotaCatalog> note=new ArrayList<NotaCatalog>();
+		for(int i=3;i<n+3;i++)
+		{
+			debug("Analizam nota numarul '"+i+"': "+msgFields[i]);
+			
+			//Realizare operatii
+			note.add(MessageParser.parseObject(NotaCatalog.class, msgFields[i], MessageConstants.STRUCTURE_CATALOG));
+
+		}
+		//Realizare operatii
+		ArrayList<Float> raspuns=stabilesteNota(cnp, note);
+		
+		//Raspuns
+		for(Float res : raspuns)
+			response+=MessageParser.DELIMITER.toString()+String.format("%.2f", res);	
+		
+		return response;
+	}
+	
 	/**
 	 * Obtine notele unui student.
 	 *
@@ -588,26 +686,51 @@ public class ArhivaServer implements Arhiva {
 	 * @see aii.arhiva.Arhiva#stabilesteNota(java.lang.String, aii.NotaCatalog)
 	 */
 	@Override
-	public boolean stabilesteNota(String cnpCadruDidactic, NotaCatalog nota) {
-//		//Verificam daca acest cadru preda la materia respectiva cursul
-//		if(radService==null)
-//			pregatesteRADService();
-//		if(radService.cadruPentruDisciplina(nota.getCodDisciplina(), cnpCadruDidactic)==false)
-//			return false;
-//		
-//		//Verificam daca exista deja o nota pentru acel elev la aceasta materie
-//		NotaCatalog notaExistentaMaxima=notaCatalogDAO.getNotaCatalog(nota.codDisciplina, nota.cnpStudent);
-//		
-//		//Daca nu exista nota, o inseram
-//		if(notaExistentaMaxima==null)
-//			return notaCatalogDAO.insertNotaCatalog(nota);
-//		//Daca exista dar era mai mica sau era restanta, o actualizam
-//		else if(notaExistentaMaxima.nota<5 || notaExistentaMaxima.nota<=nota.nota)
-//			return notaCatalogDAO.updateNotaCatalog(notaExistentaMaxima, nota);
-
-		//Altfel nu facem nimic
-		return false;
+	public ArrayList<Float> stabilesteNota(String cnpCadruDidactic, ArrayList<NotaCatalog> note) {
+		
+		//Verificam daca acest cadru preda la materia respectiva cursul
+		this.conectareRAD();
+		
+		//pregatim mesaj
+		String message="cadru_pentru_disciplina#"+cnpCadruDidactic+"#"+note.size();
+		for(NotaCatalog nota : note)
+			message+="#"+nota.getCodDisciplina();
+		
+		//parsam raspunsul
+		String raspuns=this.messageToRAD(message);
+		String[] fields=MessageParser.splitMessage(raspuns);
+		ArrayList<Boolean> cadruPentruDisciplina=new ArrayList<Boolean>();
+		for(int i=2;i<note.size()+2;i++)
+			cadruPentruDisciplina.add(Boolean.parseBoolean(fields[i]));			
+		
+		//Analizam fiecare nota in parte
+		ArrayList<Float> updateSucces=new ArrayList<Float>();
+		for(int i=0;i<note.size();i++)
+		{
+			NotaCatalog nota=note.get(i);
 			
+			//verificam daca e materia cadrului respectiv
+			if(!cadruPentruDisciplina.get(i))
+			{
+				updateSucces.add(-1.0f);
+				continue;
+			}
+				
+			//Verificam daca exista deja o nota pentru acel elev la aceasta materie
+			NotaCatalog notaExistentaMaxima=notaCatalogDAO.getNotaCatalog(nota.codDisciplina, nota.cnpStudent);
+			
+			//Daca nu exista nota, o inseram
+			if(notaExistentaMaxima==null)
+				updateSucces.add(notaCatalogDAO.insertNotaCatalog(nota) ? 1.0f : 0.0f);
+			//Daca exista dar era mai mica sau era restanta, o actualizam
+			else if(notaExistentaMaxima.nota<5 || notaExistentaMaxima.nota<=nota.nota)
+				updateSucces.add(notaCatalogDAO.updateNotaCatalog(notaExistentaMaxima, nota) ? 2.0f : 0.0f);
+			else
+				//altfel nu facem nimic
+				updateSucces.add(0f);
+		}
+	
+		return updateSucces;
 	}
 
 	/*

@@ -7,9 +7,9 @@
 package aii.protocol;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import aii.Disciplina;
@@ -134,7 +134,7 @@ public class MessageParser{
 	 * @param fieldMatch the field match
 	 * @return the object
 	 */
-	@SuppressWarnings({ "deprecation", "unchecked" })
+	@SuppressWarnings("unchecked")
 	public static <T> T parseObject(Class<T> classType, String representation, String[] fieldMatch)
 	{
 		T instance;
@@ -162,7 +162,11 @@ public class MessageParser{
 				}
 
 				if (field.getType() == java.sql.Date.class)
-					field.set(instance, Date.parse(fields[i]));
+				{
+					System.out.println("Parsam data: "+fields[i]);
+					SimpleDateFormat formatter=new SimpleDateFormat("dd-MM-yyyy");
+					field.set(instance, formatter.parseObject(fields[i]));
+				}
 				
 				else if (field.getType() == int.class)
 					field.setInt(instance, Integer.parseInt(fields[i]));

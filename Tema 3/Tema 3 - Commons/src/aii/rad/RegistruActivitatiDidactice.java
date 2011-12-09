@@ -176,7 +176,7 @@ public interface RegistruActivitatiDidactice{
 	 * @return the array list of OrarComplet entities
 	 * @  the remote exception
 	 */
-	public ArrayList<OrarComplet> obtineOrarComplet(String CNPStudent, String grupa, int semestru)  ;
+	public ArrayList<OrarComplet> obtineOrarComplet(String CNPStudent, int semestru) throws Exception ;
 	
 	/**
 	 * Obtine orarul complet al tuturor activitatile. De folosit in interfata de secretar.
@@ -187,14 +187,14 @@ public interface RegistruActivitatiDidactice{
 	public ArrayList<OrarComplet> obtineOrarComplet()  ;
 
 	/**
-	 * Obţine calendarul examenelor pentru sesiunea în curs. Se completeaza si campul denumireDisciplina din obiectele Examen.
+	 * Obţine calendarul examenelor pentru sesiunea în curs. 
 	 *
 	 * @param CNPStudent the CNP student
 	 * @param grupa the grupa
 	 * @return the array list
 	 * @  the remote exception
 	 */
-	public ArrayList<Examen> obtineProgramareExamene(String CNPStudent, String grupa)  ;
+	public ArrayList<Examen> obtineProgramareExamene(String CNPStudent) throws Exception ;
 
 	
 	/**

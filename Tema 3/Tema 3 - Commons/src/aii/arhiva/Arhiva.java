@@ -108,11 +108,12 @@ public interface Arhiva {
 	 * Specifica nota obţinută de un student la un examen.
 	 *
 	 * @param CNPCadruDidactic the cNP cadru didactic
-	 * @param nota the nota
-	 * @return true, if successful
+	 * @param note the note
+	 * @return 1.0 - daca e nota noua si a reusit; 2.0 - daca e nota veche dar asta e mai mare si operatia a reusit; 
+	 * -1.0 - daca nu e materia cadrului respectiv; 0.0 - daca nu a reusit din alt motiv
 	 * @  the remote exception
 	 */
-	public boolean stabilesteNota(String CNPCadruDidactic, NotaCatalog nota)  ;
+	public ArrayList<Float> stabilesteNota(String CNPCadruDidactic, ArrayList<NotaCatalog> note)  ;
 	
 	/**
 	 * Stergere nota obţinută de un student la un examen.

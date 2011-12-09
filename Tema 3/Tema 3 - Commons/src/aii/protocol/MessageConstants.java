@@ -45,7 +45,9 @@ public class MessageConstants {
 				Type.RAD),
 		new MessageStructure("stabilire_calendar_examene", 
 				Type.RAD),
-		
+		new MessageStructure("cadru_pentru_disciplina", 
+				Type.RAD),
+				
 		new MessageStructure("schimbare_grupa", 
 				Type.JURNAL),
 		new MessageStructure("contestare_nota", 
@@ -63,7 +65,7 @@ public class MessageConstants {
 		};
 	
 	public static final String[] STRUCTURE_DISCIPLINA={"cod", "denumire", "tip", "nrOre",  "pctCredit",     "examinare", "anStudiu",  "semestru", "grup"};
-	public static final String[] STRUCTURE_CATALOG={ "cnpStudent",  "codDisciplina",  "data", "nota"};
+	public static final String[] STRUCTURE_CATALOG={ "codDisciplina", "cnpStudent", "nota", "data"};
 	
 	public static final String[] STRUCTURE_ACTIVITATE={"cnpCadruDidactic", "codDisciplina", "tip"};
 	public static final String[] STRUCTURE_ORAR={"idActivitate", "grupa",  "zi", "ora", "sala", "durata", "codDisciplina", "numeCadruDidactic", "tip", "frecventa"  };

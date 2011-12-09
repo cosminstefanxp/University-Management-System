@@ -12,20 +12,24 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Vector;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import aii.Activitate;
 import aii.Examen;
 import aii.Orar;
 import aii.OrarComplet;
-import aii.SituatieScolara;
 import aii.Utilizator;
 import aii.Utilizator.Tip;
 import aii.arhiva.Arhiva;
 import aii.database.ActivitateWrapper;
+import aii.database.Constants;
+import aii.database.DatabaseConnection;
 import aii.database.ExamenWrapper;
 import aii.database.OrarCompletWrapper;
 import aii.database.OrarWrapper;
@@ -82,6 +86,8 @@ public class RADServer implements RegistruActivitatiDidactice {
 			return providerOrarStudent(message);
 		if(structure.header.equalsIgnoreCase("solicitare_calendar_examene"))
 			return providerExameneStudent(message);
+		if(structure.header.equalsIgnoreCase("cadru_pentru_disciplina"))
+			return queryCadruPentruDisciplina(message);		
 		
 		return null;
 	}
@@ -179,23 +185,26 @@ public class RADServer implements RegistruActivitatiDidactice {
 	{
 		//Spargere mesaj in componente
 		String[] msgFields=MessageParser.splitMessage(message);
-		if(msgFields.length!=4)
+		if(msgFields.length!=3)
 		{
 			debug("Format incorect mesaj: "+message);
 			return "error#format_mesaj";
 		}
 		
 		//Realizam fiecare operatie
-		Integer semestru=Integer.parseInt(msgFields[3]);
-		String grupa=msgFields[2];
+		Integer semestru=Integer.parseInt(msgFields[2]);
 		String cnp=msgFields[1];
 		
 		String response;
 		response="raspuns_"+msgFields[0];	//header de raspuns
 
 		//Realizare operatii
-		ArrayList<OrarComplet> orarComplet=obtineOrarComplet(cnp, grupa, semestru);
-		
+		ArrayList<OrarComplet> orarComplet;
+		try {
+			orarComplet=obtineOrarComplet(cnp, semestru);
+		} catch (Exception e) {
+			return "eroare#"+e.getMessage();
+		}		
 		//Raspuns
 		response+=MessageParser.DELIMITER.toString()+orarComplet.size();
 		for(OrarComplet orar: orarComplet)
@@ -214,22 +223,25 @@ public class RADServer implements RegistruActivitatiDidactice {
 	{
 		//Spargere mesaj in componente
 		String[] msgFields=MessageParser.splitMessage(message);
-		if(msgFields.length!=3)
+		if(msgFields.length!=2)
 		{
 			debug("Format incorect mesaj: "+message);
 			return "error#format_mesaj";
 		}
 		
 		//Realizam fiecare operatie
-		String grupa=msgFields[2];
 		String cnp=msgFields[1];
 		
 		String response;
 		response="raspuns_"+msgFields[0];	//header de raspuns
 
 		//Realizare operatii
-		ArrayList<Examen> examene=obtineProgramareExamene(cnp, grupa);
-		
+		ArrayList<Examen> examene;
+		try {
+			examene = obtineProgramareExamene(cnp);
+		} catch (Exception e) {
+			return "eroare#"+e.getMessage();
+		}
 		//Raspuns
 		response+=MessageParser.DELIMITER.toString()+examene.size();
 		response+=MessageParser.getObjectsRepresentation(Examen.class, examene, MessageConstants.STRUCTURE_EXAMEN);	
@@ -237,6 +249,43 @@ public class RADServer implements RegistruActivitatiDidactice {
 		return response;
 	}
 
+	/**
+	 * Verifica daca un cadru preda cursul pentru o disciplina.
+	 *	
+	 * Format: cadru_pentru_disciplina#cnp_cadru#numar_discipline#cod_disciplina_1#..#cod_desciplina_n
+	 *
+	 * @param message the message
+	 * @return the string
+	 */
+	private String queryCadruPentruDisciplina(String message)
+	{
+		//Spargere mesaj in componente
+		String[] msgFields=MessageParser.splitMessage(message);
+		if(msgFields.length<4)
+		{
+			debug("Format incorect mesaj: "+message);
+			return "error#format_mesaj";
+		}
+		
+
+		int cod;
+		String cnp=msgFields[1];
+		int n=Integer.parseInt(msgFields[2]);
+		String response="response_"+msgFields[0]+MessageParser.DELIMITER+msgFields[1];
+		
+		//Realizam fiecare operatie
+		for(int i=3;i<n+3;i++)
+		{
+			debug("Verificam disciplina "+msgFields[i]);
+			cod=Integer.parseInt(msgFields[i]);
+			boolean res=cadruPentruDisciplina(cod, cnp);
+			
+			response+=MessageParser.DELIMITER+Boolean.toString(res);
+			
+		}
+		
+		return response;	
+	}
 	
 	@Override
 	public boolean adaugareActivitateOrar(Orar orar) {
@@ -262,10 +311,27 @@ public class RADServer implements RegistruActivitatiDidactice {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#cadruPentruDisciplina(int, java.lang.String)
+	 */
 	@Override
 	public boolean cadruPentruDisciplina(int codDisciplina, String cnpCadruDidactic) {
-		// TODO Auto-generated method stub
-		return false;
+		//Pregatim un query in care numaram cate rezultate avem
+		String sqlQuery="SELECT count(*) " +
+				"FROM "+ Constants.ACTIVITATE_TABLE+" a " +
+				"WHERE a.cnp_cadru_didactic=\'"+cnpCadruDidactic+"\' AND a.tip=\'"+Activitate.TipActivitate.Curs+"\' AND a.cod_disciplina=\'"+codDisciplina+"\';";
+		
+		//Daca nu avem nici un rezultat, inseamna ca acest cadru didactic nu preda la disciplina respectiva cursul
+		try {
+			if((int)DatabaseConnection.getSingleValueResult(sqlQuery)==0)
+				return false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		
+		return true;
 	}
 
 	@Override
@@ -307,18 +373,26 @@ public class RADServer implements RegistruActivitatiDidactice {
 	 * @see aii.rad.RegistruActivitatiDidactice#obtineOrarComplet(java.lang.String, java.lang.String, int)
 	 */
 	@Override
-	public ArrayList<OrarComplet> obtineOrarComplet(String cnpStudent, String grupa, int semestru) {
-		//TODO: De obtinut dinamic grupa si verificat cnp-ul
+	public ArrayList<OrarComplet> obtineOrarComplet(String cnpStudent, int semestru) throws Exception{
+		
+		//Obtinut dinamic grupa si verificat cnp-ul
+		Utilizator user=utilizatorDAO.getUtilizator(cnpStudent);
+		if(user==null || user.tip!=Tip.STUDENT)
+			throw new Exception("CNP-ul dat nu este al unui student valid!");
+		String grupa=user.titlu_grupa;
+		if(!user.isContractCompletat())
+			throw new Exception("Studentul nu si-a completat contractul de studii.");
+		
 		//Pregatim anul de studiu, din grupa
 		if(grupa==null || grupa.isEmpty())
 		{
-			System.out.println("Studentul "+cnpStudent+" nu e inregistrat la nici o grupa.");
-			return null;
+			System.err.println("Studentul "+cnpStudent+" nu e inregistrat la nici o grupa.");
+			throw new Exception("Studentul "+cnpStudent+" nu e inregistrat la nici o grupa.");
 		}
 		if(grupa.equals("licentiat"))
 		{
-			System.out.println("Studentul "+cnpStudent+" este licentiat.");
-			return null;
+			System.err.println("Studentul "+cnpStudent+" este licentiat.");
+			throw new Exception("Studentul "+cnpStudent+" este licentiat.");
 		}
 		int anStudiu = grupa.charAt(1) - '0';
 
@@ -339,17 +413,23 @@ public class RADServer implements RegistruActivitatiDidactice {
 	 * @see aii.rad.RegistruActivitatiDidactice#obtineProgramareExamene(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public ArrayList<Examen> obtineProgramareExamene(String cnpStudent, String grupa) {
+	public ArrayList<Examen> obtineProgramareExamene(String cnpStudent) throws Exception{
+		//Obtinut dinamic grupa si verificat cnp-ul
+		Utilizator user=utilizatorDAO.getUtilizator(cnpStudent);
+		if(user==null || user.tip!=Tip.STUDENT)
+			throw new Exception("CNP-ul dat nu este al unui student valid!");
+		String grupa=user.titlu_grupa;
+		
 		//Pregatim anul de studiu, din grupa
 		if(grupa==null || grupa.isEmpty())
 		{
-			System.out.println("Studentul "+cnpStudent+" nu e inregistrat la nici o grupa.");
-			return null;
+			System.err.println("Studentul "+cnpStudent+" nu e inregistrat la nici o grupa.");
+			throw new Exception("Studentul "+cnpStudent+" nu e inregistrat la nici o grupa.");
 		}
 		if(grupa.equals("licentiat"))
 		{
-			System.out.println("Studentul "+cnpStudent+" este licentiat.");
-			return null;
+			System.err.println("Studentul "+cnpStudent+" este licentiat.");
+			throw new Exception("Studentul "+cnpStudent+" este licentiat.");
 		}
 		int anStudiu = grupa.charAt(1) - '0';
 		
