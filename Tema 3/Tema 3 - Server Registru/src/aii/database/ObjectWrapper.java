@@ -111,9 +111,6 @@ public class ObjectWrapper<T> {
 								continue;
 							field.set(instance, Enum.valueOf((Class<Enum>) field.getType(), enumValue));	
 						}
-						else
-							if(field.getType() == java.sql.Date.class)
-								field.set(instance, entries.getTime(columnName));
 							else
 								field.set(instance, entries.getObject(columnName));
 			}

@@ -81,7 +81,7 @@ public class Client {
 					"3~444~6~18-02-2012#" +		//la prima executie a testului o sa scrie nota 6 (si va intoarce 1), dupa care va face o suprascriere (vezi readme) si va intoarce 2
 					"10~444~988~12-01-2012";	//nu e materia cadrului respectiv
 			toSocket.println(message);
-			System.out.println("Test 4 "+mode+":"+message);
+			System.out.println("Test 5 "+mode+":"+message);
 			response=fromSocket.readLine();
 			System.out.println("Raspuns "+mode+":"+response);
 		}
@@ -93,8 +93,9 @@ public class Client {
 			String message;
 			
 			//TEST Activitati
-			message="repartizare_cadre_didactice#2#" +
+			message="repartizare_cadre_didactice#3#" +
 					"1876398642864~988~Curs#" +		//Repartizare valida
+					"666~988~Laborator#"+			//Intrare valida
 					"2890508035278~983328~Seminar";	//Repartizare nevalida, pentru ca nu exista acea disciplina
 					
 					
@@ -103,11 +104,26 @@ public class Client {
 			response=fromSocket.readLine();
 			System.out.println("Raspuns "+mode+":"+response);
 
+			//TEST Orar
+			message="stabilire_orar#2#" +
+					"Vineri~14~EC105~2~24~343C4~Saptamanal#" + 
+			//Adaug o noua intrare in orar, Vineri, intre orele 14-16, in EC105, Saptamanal, pentru 343C4, 
+			//pentru activitatea 24 (ar trebui sa fie activitatea de curs adaugata mai sus, pentru baza de date data ca exemplu).
+					"Joi~10~EG106~2~25~341C4~Saptamanal";
+			//Adaug o noua intrare in orar, Joi, intre orele 10-12, in EG106, Saptamanal, pentru 341C4, 
+			//pentru activitatea 25 (este activitatea de Laborator adaugata mai sus, pentru baza de date data ca exemplu).
+			
+			toSocket.println(message);
+			System.out.println("Test 2 "+mode+":"+message);
+			response=fromSocket.readLine();
+			System.out.println("Raspuns "+mode+":"+response);
+			
+			
 			//TEST Orar Student
 			message="solicitare_orar#444#1";	//orarul pentru anul 4, semestrul 1
 		
 			toSocket.println(message);
-			System.out.println("Test 2 "+mode+":"+message);
+			System.out.println("Test 3 "+mode+":"+message);
 			response=fromSocket.readLine();
 			System.out.println("Raspuns "+mode+":"+response);
 
@@ -116,7 +132,7 @@ public class Client {
 			message="solicitare_calendar_examene#444";	//orarul pentru anul 4, semestrul 1 (semestrul curent)
 		
 			toSocket.println(message);
-			System.out.println("Test 3 "+mode+":"+message);
+			System.out.println("Test 4 "+mode+":"+message);
 			response=fromSocket.readLine();
 			System.out.println("Raspuns "+mode+":"+response);
 			
@@ -124,7 +140,7 @@ public class Client {
 			message="solicitare_calendar_examene#222";	//orarul pentru anul 4, semestrul 1 (semestrul curent)
 		
 			toSocket.println(message);
-			System.out.println("Test 4 "+mode+":"+message);
+			System.out.println("Test 5 "+mode+":"+message);
 			response=fromSocket.readLine();
 			System.out.println("Raspuns "+mode+":"+response);
 			
@@ -134,9 +150,22 @@ public class Client {
 					"3";		// false
 		
 			toSocket.println(message);
-			System.out.println("Test 5 "+mode+":"+message);
+			System.out.println("Test 6 "+mode+":"+message);
 			response=fromSocket.readLine();
 			System.out.println("Raspuns "+mode+":"+response);
+			
+			//TEST Stabilire grupa
+			message="stabilire_formatie_de_studiu#341C4#3#" +
+					"444#" +	//va reusi
+					"777#" +	//va reusi
+					"222";		//nu e student, deci nu va reusi
+		
+			toSocket.println(message);
+			System.out.println("Test 7 "+mode+":"+message);
+			response=fromSocket.readLine();
+			System.out.println("Raspuns "+mode+":"+response);
+			
+			
 			
 		}		
 	}
@@ -166,7 +195,7 @@ public class Client {
 				System.out.print("> ");
 				//TODO: de reparat
 				//line = keyboardInput.readLine();
-				line="1";
+				line="2";
 				switch (Integer.parseInt(line)) {
 				case JURNAL:
 					mode = JURNAL;

@@ -63,11 +63,13 @@ Detalii implementare:
 Modificari mesaje:
 	-solicitare_situatie scolara (Student -> Arhiva): Am adaugat si anul de studiu pentru care se cere: solicitare_situatie_scolara#cnp_student#an_studiu
 	-raspuns_situatie_scolara: Am adaugat mai multe campuri cu mai multe informatii: "medieGenerala", "medieAritmetica", "puncteCredit", "restante", "medieSemestrul1", "medieSemestrul2"
-	-solicitare_orar: Am adaugat si semestrul pentru ca este posibil ca un student aflat, sa zicem, la finalul semestrului 1, sa vrea sa afle care este orarul pentru semestrul 2, pentru a, de exemplu, planifica ceva cu cateva luni in avans. Nou format: solicitare_orar#CNP#semestru
+	-solicitare_orar: Am adaugat si semestrul pentru ca este posibil ca un student aflat, sa zicem, la finalul semestrului 1, sa vrea sa afle care este orarul pentru semestrul 2, pentru a, de exemplu, planifica ceva cu cateva luni in avans. Nou format: solicitare_orar#CNP#semestru. La raspuns, disciplina este reprezentata doar prin codul acesteia.
 	-raspuns_solicitare_calendar_examene: Adaugat si campul pentru grupa, la final. Disciplina este reprezentata doar prin codul acesteia.
 	-cadru_pentru_disciplina: Mesaj ce verifica daca un cadru preda cursul pentru anumite discipline. Folosit intre Arhiva si RegistruActivitatiDidactice. Format: cadru_pentru_disciplina#cnp_cadru#numar_discipline#cod_disciplina_1#..#cod_desciplina_n
 	-stabilire_nota: notele sunt numere intregi, ca in situatia reala (nu putem avea nota 9.4 la o materie).
 	-raspuns_stabilire_nota: Formatul este cel din enunt: raspuns_stabilire_nota#nr_note#valoare_succes_1#..#valoare_succes_n, dar valoare succes poate lua urmatoarele valori: 1.0 - daca e nota noua si a reusit operatia; 2.0 - daca exista o nota veche, dar nota curenta e mai mare si operatia a reusit; -1.0 - daca nu e materia cadrului respectiv; -2.0 - daca nota curenta nu mai mare decat cea care exista deja; 0.0 - daca nu a reusit din alt motiv. De asemenea, pentru a observa schimbarea unei note (pentru rulari succesive ale testerului din Client), am considerat ca se face inlocuirea cu noua nota si daca nota curenta este egala cu cea veche.
+	-raspuns_stabilire_formatie_studiu: Intoarce numarul de modificari realizate cu succes: raspuns_stabilire_formatie_studiu#nr_intrari_realizate_cu_succes
+	-stabilire_orar: Cum, in cazul meu, tabela orar din cerinta este impartita in doua tabele (pentru a avea FN3), la stabilirea unui orar trebuie precizat id-ul activitatii de predare. Astfel, formatul devine: zi~ora~sala~durata~idActivitate~grupa~frecventa . Am adaugat si grupa, pentru ca, de exemplu, un seminar are intrari diferite pentru grupe diferite.
 
 
 Detalii bonus:

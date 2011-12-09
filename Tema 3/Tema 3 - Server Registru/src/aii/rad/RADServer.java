@@ -88,6 +88,10 @@ public class RADServer implements RegistruActivitatiDidactice {
 			return providerExameneStudent(message);
 		if(structure.header.equalsIgnoreCase("cadru_pentru_disciplina"))
 			return queryCadruPentruDisciplina(message);		
+		if(structure.header.equalsIgnoreCase("stabilire_formatie_de_studiu"))
+			return managementFormatieStudiu(message);
+		if(structure.header.equalsIgnoreCase("stabilire_orar"))
+			return managementOrar(message);
 		
 		return null;
 	}
@@ -167,6 +171,42 @@ public class RADServer implements RegistruActivitatiDidactice {
 			//Realizare operatii
 			Activitate activitate=MessageParser.parseObject(Activitate.class, msgFields[i], MessageConstants.STRUCTURE_ACTIVITATE);
 			res=activitateDAO.insertActivitate(activitate);
+
+			//Raspuns
+			response+=MessageParser.DELIMITER.toString()+Boolean.toString(res);
+		}
+		
+		return response;
+	}
+	
+	/**
+	 * Realizeaza taskurile de management asupre unei/mai multor intrari in orar.
+	 *
+	 * @param message the message
+	 * @return the string
+	 */
+	private String managementOrar(String message)
+	{
+		//Spargere mesaj in componente
+		String[] msgFields=MessageParser.splitMessage(message);
+		if(msgFields.length<3)
+		{
+			debug("Format incorect mesaj: "+message);
+			return "error#format_mesaj";
+		}
+		
+		//Realizam fiecare operatie
+		Integer n=Integer.parseInt(msgFields[1]);
+		String response;
+		response="raspuns_"+msgFields[0]+"#"+n;	//header de raspuns
+		for(int i=2;i<n+2;i++)
+		{
+			boolean res=true;
+			debug("Analizam intrare in orar "+msgFields[i]);
+			
+			//Realizare operatii
+			Orar orar=MessageParser.parseObject(Orar.class, msgFields[i], MessageConstants.STRUCTURE_ORAR_SIMPLU);
+			res=this.adaugareActivitateOrar(orar);
 
 			//Raspuns
 			response+=MessageParser.DELIMITER.toString()+Boolean.toString(res);
@@ -287,10 +327,47 @@ public class RADServer implements RegistruActivitatiDidactice {
 		return response;	
 	}
 	
+	/**
+	 * Management pentru grupe studenti.
+	 *
+	 * @param message the message
+	 * @return the string
+	 */
+	private String managementFormatieStudiu(String message)
+	{
+		//Spargere mesaj in componente
+		String[] msgFields=MessageParser.splitMessage(message);
+		if(msgFields.length<4)
+		{
+			debug("Format incorect mesaj: "+message);
+			return "error#format_mesaj";
+		}
+		
+		//Realizam fiecare operatie
+		Integer n=Integer.parseInt(msgFields[2]);
+		String grupa=msgFields[1];
+		String response;
+		response="raspuns_"+msgFields[0];	//header de raspuns
+		//Obtinem CNP-urile
+		ArrayList<String> cnps=new ArrayList<String>();
+		for(int i=3;i<n+3;i++)
+		{
+			cnps.add(msgFields[i]);
+		}
+		
+		//Realizare operatie
+		debug("Schimbam formatia de studiu in "+grupa + " pentru "+cnps);
+		response+=MessageParser.DELIMITER.toString() + stabilesteFormatieDeStudiu(cnps, grupa);
+		
+		return response;
+	}
+	
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#adaugareActivitateOrar(aii.Orar)
+	 */
 	@Override
 	public boolean adaugareActivitateOrar(Orar orar) {
-		// TODO Auto-generated method stub
-		return false;
+		return orarDAO.insertOrar(orar);
 	}
 
 	@Override
@@ -487,10 +564,28 @@ public class RADServer implements RegistruActivitatiDidactice {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#stabilesteFormatieDeStudiu(java.util.ArrayList, java.lang.String)
+	 */
 	@Override
 	public int stabilesteFormatieDeStudiu(ArrayList<String> CNPStudent, String grupa) {
-		// TODO Auto-generated method stub
-		return 0;
+		//Pregatim o expresie SQL care sa actualizeze grupele studentilor
+		String whereClause="cnp IN (";
+		for(String cnp : CNPStudent)
+		{
+			whereClause+="\'"+cnp+"\', ";
+		}
+		whereClause=whereClause.substring(0,whereClause.length()-2);	//eliminam ultima virgula
+		whereClause+=") AND tip=\'STUDENT\'";
+		
+		String setClause="titlu_grupa=\'"+grupa+"\'";
+		
+		try {
+			return DatabaseConnection.updateEntitiesCount(Constants.USER_TABLE, setClause, whereClause);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return 0;
+		}
 	}
 
 	@Override

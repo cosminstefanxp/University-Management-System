@@ -41,9 +41,11 @@ public class MessageConstants {
 				Type.RAD),
 		new MessageStructure("repartizare_cadre_didactice", 
 				Type.RAD),
-		new MessageStructure("stabilirea_formatie_de_studiu", 
+		new MessageStructure("stabilire_formatie_de_studiu", 
 				Type.RAD),
 		new MessageStructure("stabilire_calendar_examene", 
+				Type.RAD),
+		new MessageStructure("stabilire_orar", 
 				Type.RAD),
 		new MessageStructure("cadru_pentru_disciplina", 
 				Type.RAD),
@@ -69,6 +71,7 @@ public class MessageConstants {
 	
 	public static final String[] STRUCTURE_ACTIVITATE={"cnpCadruDidactic", "codDisciplina", "tip"};
 	public static final String[] STRUCTURE_ORAR={"idActivitate", "grupa",  "zi", "ora", "sala", "durata", "codDisciplina", "numeCadruDidactic", "tip", "frecventa"  };
+	public static final String[] STRUCTURE_ORAR_SIMPLU={"zi", "ora", "sala", "durata", "idActivitate", "grupa", "frecventa"  };
 	public static final String[] STRUCTURE_EXAMEN={"data", "ora", "sala", "codDisciplina",  "grupa"};
 	public static final String[] STRUCTURE_USER={"CNP", "parola", "tip", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare", "contractCompletat"};
 	public static final String[] STRUCTURE_SITUATIE_SCOLARA={"medieGenerala", "medieAritmetica", "puncteCredit", "restante", "medieSemestru1", "medieSemestru2"}; 
