@@ -119,6 +119,21 @@ public class Client {
 			System.out.println("Raspuns "+mode+":"+response);
 			
 			
+			//TEST Examen
+			message="stabilire_calendar_examene#4#" +
+				"stergere#988~341C4#" +						//true / false - depinde daca exista sau nu
+				"editare#12-02-2012~12~EC101~988~341C4#" +	//false
+				
+				"adaugare#09-02-2012~8~EC108~988~341C4#" +	//true
+				"editare#12-02-2012~12~EC101~988~341C4";	//true
+					
+					
+			toSocket.println(message);
+			System.out.println("Test 1 "+mode+":"+message);
+			response=fromSocket.readLine();
+			System.out.println("Raspuns "+mode+":"+response);
+			
+			
 			//TEST Orar Student
 			message="solicitare_orar#444#1";	//orarul pentru anul 4, semestrul 1
 		

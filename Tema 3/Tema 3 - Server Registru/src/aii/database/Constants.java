@@ -53,7 +53,7 @@ public class Constants {
 																{ "codDisciplina",  "grupa", "data", "ora", "sala"}		//campuri obiect
 															};
 
-	final public static int			EXAMEN_TABLE_PK_COUNT	= 3;	//atat 'cod_disciplina' cat si 'grupa' si 'data' fac parte din cheie
+	final public static int			EXAMEN_TABLE_PK_COUNT	= 2;	//atat 'cod_disciplina' cat si 'grupa'  fac parte din cheie
 		
 
 	/*******FIELD SIZES*********/

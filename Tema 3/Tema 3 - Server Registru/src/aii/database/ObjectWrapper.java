@@ -42,7 +42,7 @@ public class ObjectWrapper<T> {
 	 * @param type the type
 	 * @param nameMatch a 2 dimensional array containing matchings between the names of the fields in the database and the
 	 * names of the fields in the objects.
-	 * @param privateKeyCount The private key count is the number of the fields the form the private key of the object. The fields should
+	 * @param privateKeyCount The primary key count is the number of the fields the form the primary key of the object. The fields should
 	 * be on the first privateKeyCount positions in the nameMatch array.
 	 */
 	public ObjectWrapper(Class<T> type, String[][] nameMatch, int privateKeyCount) {
@@ -203,10 +203,20 @@ public class ObjectWrapper<T> {
 			Field field=classType.getDeclaredField(nameMatch[1][i]);
 			
 			Object value=field.get(object);
-			if(value!=null)
-				values[i]=value.toString();
+			
+			if(field.getType()==java.util.Date.class)
+			{
+				java.util.Date date=(java.util.Date) value;
+				java.sql.Date sqlDate=new java.sql.Date(date.getTime());
+				values[i]=sqlDate.toString();
+			}
 			else
-				values[i]="NULL";
+			{
+				if(value!=null)
+					values[i]=value.toString();
+				else
+					values[i]="NULL";
+			}
 		}
 		
 		//Run the SQL insertion query
@@ -216,7 +226,7 @@ public class ObjectWrapper<T> {
 	}
 	
 	/**
-	 * Delete an object from the given table. Object selection is based on private key.
+	 * Delete an object from the given table. Object selection is based on primary key.
 	 *
 	 * @param table the table
 	 * @param object the object
@@ -230,7 +240,7 @@ public class ObjectWrapper<T> {
 	{
 		String whereClause="";
 		
-		//For every field in the private key, we put the value in the where clause
+		//For every field in the primary key, we put the value in the where clause
 		for(int i=0;i<this.privateKeyCount;i++)
 		{
 			//Prepare the field of the object which we are now getting info from
@@ -270,7 +280,7 @@ public class ObjectWrapper<T> {
 	}
 	
 	/**
-	 * Updates an object from the given table. Object selection is based on private key.
+	 * Updates an object from the given table. Object selection is based on primary key.
 	 *
 	 * @param table the table
 	 * @param oldObject the old object
@@ -286,7 +296,7 @@ public class ObjectWrapper<T> {
 		String whereClause="";
 		String setClause="";
 		
-		//For every field in the private key, we put the value in the where clause
+		//For every field in the primary key, we put the value in the where clause
 		for(int i=0;i<this.privateKeyCount;i++)
 		{
 			//Prepare the field of the object which we are now getting info from

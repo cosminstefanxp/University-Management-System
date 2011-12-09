@@ -21,6 +21,7 @@ import java.util.Vector;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import aii.Activitate;
+import aii.Disciplina;
 import aii.Examen;
 import aii.Orar;
 import aii.OrarComplet;
@@ -92,7 +93,10 @@ public class RADServer implements RegistruActivitatiDidactice {
 			return managementFormatieStudiu(message);
 		if(structure.header.equalsIgnoreCase("stabilire_orar"))
 			return managementOrar(message);
-		
+		if(structure.header.equalsIgnoreCase("stabilire_calendar_examene"))
+			return managementExamene(message);
+		//TODO - sa verifice cat a editat la examene
+				
 		return null;
 	}
 	
@@ -175,6 +179,63 @@ public class RADServer implements RegistruActivitatiDidactice {
 			//Raspuns
 			response+=MessageParser.DELIMITER.toString()+Boolean.toString(res);
 		}
+		
+		return response;
+	}
+	
+	/**
+	 * Realizeaza taskurile de management asupre unei/mai multor examene.
+	 *
+	 * @param message the message
+	 * @return the string
+	 */
+	private String managementExamene(String message)
+	{
+		//Spargere mesaj in componente
+		String[] msgFields=MessageParser.splitMessage(message);
+		if(msgFields.length<3)
+		{
+			debug("Format incorect mesaj: "+message);
+			return "error#format_mesaj";
+		}
+		
+		//Realizam fiecare operatie
+		Integer n=Integer.parseInt(msgFields[1]);
+		String response;
+		response="raspuns_"+msgFields[0]+"#"+n;	//header de raspuns
+		for(int i=1;i<=n;i++)
+		{
+			String operatie=msgFields[2*i];
+			boolean res=true;
+			debug("Analizam operatia "+(2*i)+":"+operatie);
+			
+			//Realizare operatii
+			if(operatie.equals("stergere"))
+			{
+				String[] delFields=msgFields[2*i+1].split(MessageParser.FIELD_DELIMITER.toString());
+				if(delFields.length!=2)
+				{
+					debug("Format incorect stergere: "+message);
+					return "error#format_mesaj_stergere";
+				}
+				res=examenDAO.deleteExamen("cod_disciplina=\'"+delFields[0]+"\' AND grupa=\'"+delFields[1]+"\'");
+			}
+			else 
+			{
+				Examen examen=MessageParser.parseObject(Examen.class, msgFields[2*i+1], MessageConstants.STRUCTURE_EXAMEN);
+				if(operatie.equals("adaugare"))
+					res=examenDAO.insertExamen(examen);
+				else if(operatie.equals("editare"))
+					res=examenDAO.updateExamen(examen, examen);
+					//Sectiunea de update va folosi doar campurile din cheia primara, deci e ok daca la obiect vechi dam
+					//noul obiect, pentru ca va face cautarea doar dupa cod_disciplina si grupa
+				else 
+					res=false;
+			}
+			//Raspuns
+			response+=MessageParser.DELIMITER.toString()+Boolean.toString(res);
+		}
+		
 		
 		return response;
 	}
@@ -370,10 +431,28 @@ public class RADServer implements RegistruActivitatiDidactice {
 		return orarDAO.insertOrar(orar);
 	}
 
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#adaugareExamen(aii.Examen)
+	 */
 	@Override
-	public boolean adaugareExamen(Examen examen) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean adaugareExamen(Examen examen){
+		return examenDAO.insertExamen(examen);
+	}
+
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#editareExamen(aii.Examen, aii.Examen)
+	 */
+	@Override
+	public boolean editareExamen(Examen examenNou, Examen examenVechi){
+		return examenDAO.updateExamen(examenVechi, examenNou);
+	}
+
+	/* (non-Javadoc)
+	 * @see aii.rad.RegistruActivitatiDidactice#stergereExamen(aii.Examen)
+	 */
+	@Override
+	public boolean stergereExamen(Examen examen){
+		return examenDAO.deleteExamen(examen);
 	}
 
 	@Override
@@ -601,18 +680,5 @@ public class RADServer implements RegistruActivitatiDidactice {
 	public boolean stergereActivitatePredare(Activitate activitate) {
 		return activitateDAO.deleteActivitate(activitate);
 	}
-
-	@Override
-	public boolean stergereExamen(Examen examen) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean editareExamen(Examen examenNou, Examen examenVechi) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 
 }
