@@ -33,6 +33,8 @@ public class Client {
 		{
 			String response;
 			String message;
+			int testCount=0;
+			String testName="ARHIVA";
 			
 			//TEST Disciplina
 			message="stabilire_plan_de_invatamant#6#" +
@@ -43,9 +45,9 @@ public class Client {
 					"adaugare#988~Inteligenta Artificiala~Obligatoriu~5~6~Examen~4~1~0#" +					//true
 					"editare#988~Aplicatii Integrate pentru Intreprinderi~Optional~5~6~Colocviu~4~1~0";		//true
 			toSocket.println(message);
-			System.out.println("Test 1 "+mode+":"+message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
 			response=fromSocket.readLine();
-			System.out.println("Raspuns "+mode+":"+response);
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
 			
 			//TEST Note Student
 			message="solicitare_note#444#3#" +
@@ -54,26 +56,26 @@ public class Client {
 					"988";	//nu e disciplina lui
 					
 			toSocket.println(message);
-			System.out.println("Test 2 "+mode+":"+message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
 			response=fromSocket.readLine();
-			System.out.println("Raspuns "+mode+":"+response);
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
 			
 			//TEST Situatie Scolara
 			message="solicitare_situatie_scolara#444#4";	//situatia scolara pentru anul 4
 															//raspunsul are: "medieGenerala", "medieAritmetica", "puncteCredit", "restante", "medieSemestrul1", "medieSemestrul2"
 					
 			toSocket.println(message);
-			System.out.println("Test 3 "+mode+":"+message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
 			response=fromSocket.readLine();
-			System.out.println("Raspuns "+mode+":"+response);
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
 			
 			//TEST Discipline Urmate
 			message="solicitare_discipline_urmate#444#4#1";	//disciplinele pentru anul 2, semestrul 1
 		
 			toSocket.println(message);
-			System.out.println("Test 4 "+mode+":"+message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
 			response=fromSocket.readLine();
-			System.out.println("Raspuns "+mode+":"+response);
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
 			
 			//TEST Stabilire nota
 			message="stabilire_nota#222#3#" +
@@ -81,9 +83,9 @@ public class Client {
 					"3~444~6~18-02-2012#" +		//la prima executie a testului o sa scrie nota 6 (si va intoarce 1), dupa care va face o suprascriere (vezi readme) si va intoarce 2
 					"10~444~988~12-01-2012";	//nu e materia cadrului respectiv
 			toSocket.println(message);
-			System.out.println("Test 5 "+mode+":"+message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
 			response=fromSocket.readLine();
-			System.out.println("Raspuns "+mode+":"+response);
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
 		}
 
 		//TEST RAD
@@ -91,6 +93,8 @@ public class Client {
 		{
 			String response;
 			String message;
+			int testCount=0;
+			String testName="RAD";
 			
 			//TEST Activitati
 			message="repartizare_cadre_didactice#3#" +
@@ -100,9 +104,9 @@ public class Client {
 					
 					
 			toSocket.println(message);
-			System.out.println("Test 1 "+mode+":"+message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
 			response=fromSocket.readLine();
-			System.out.println("Raspuns "+mode+":"+response);
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
 
 			//TEST Orar
 			message="stabilire_orar#2#" +
@@ -114,9 +118,9 @@ public class Client {
 			//pentru activitatea 25 (este activitatea de Laborator adaugata mai sus, pentru baza de date data ca exemplu).
 			
 			toSocket.println(message);
-			System.out.println("Test 2 "+mode+":"+message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
 			response=fromSocket.readLine();
-			System.out.println("Raspuns "+mode+":"+response);
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
 			
 			
 			//TEST Examen
@@ -129,35 +133,35 @@ public class Client {
 					
 					
 			toSocket.println(message);
-			System.out.println("Test 3 "+mode+":"+message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
 			response=fromSocket.readLine();
-			System.out.println("Raspuns "+mode+":"+response);
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
 			
 			
 			//TEST Orar Student
 			message="solicitare_orar#444#1";	//orarul pentru anul 4, semestrul 1
 		
 			toSocket.println(message);
-			System.out.println("Test 4 "+mode+":"+message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
 			response=fromSocket.readLine();
-			System.out.println("Raspuns "+mode+":"+response);
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
 
 			
 			//TEST Examene Student
 			message="solicitare_calendar_examene#444";	//orarul pentru anul 4, semestrul 1 (semestrul curent)
 		
 			toSocket.println(message);
-			System.out.println("Test 5 "+mode+":"+message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
 			response=fromSocket.readLine();
-			System.out.println("Raspuns "+mode+":"+response);
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
 			
 			//TEST Examene Student - Fail
 			message="solicitare_calendar_examene#222";	//orarul pentru anul 4, semestrul 1 (semestrul curent)
 		
 			toSocket.println(message);
-			System.out.println("Test 6 "+mode+":"+message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
 			response=fromSocket.readLine();
-			System.out.println("Raspuns "+mode+":"+response);
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
 			
 			//TEST Cadru disciplina
 			message="cadru_pentru_disciplina#1876398642864#2#" +
@@ -165,9 +169,9 @@ public class Client {
 					"3";		// false
 		
 			toSocket.println(message);
-			System.out.println("Test 7 "+mode+":"+message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
 			response=fromSocket.readLine();
-			System.out.println("Raspuns "+mode+":"+response);
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
 			
 			//TEST Stabilire grupa
 			message="stabilire_formatie_de_studiu#341C4#3#" +
@@ -176,13 +180,127 @@ public class Client {
 					"222";		//nu e student, deci nu va reusi
 		
 			toSocket.println(message);
-			System.out.println("Test 8 "+mode+":"+message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
 			response=fromSocket.readLine();
-			System.out.println("Raspuns "+mode+":"+response);
-			
-			
-			
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
 		}		
+		
+		//TEST Jurnal
+		if(mode==JURNAL)
+		{
+			String response;
+			String message;
+			int testCount=0;
+			String testName="JURNAL";
+			
+			//TEST Schimbare grupa
+			message="schimbare_grupa#444#342C4";
+		
+			toSocket.println(message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
+			response=fromSocket.readLine();
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
+			
+			//TEST Schimbare grupa - eroare, ca exista deja o cerere
+			message="schimbare_grupa#444#343C4";
+		
+			toSocket.println(message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
+			response=fromSocket.readLine();
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
+			
+			//TEST Contestare nota
+			message="contestare_nota#444#222#3";
+		
+			toSocket.println(message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
+			response=fromSocket.readLine();
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
+			
+			//TEST Contestare nota - invalid, mai exista deja
+			message="contestare_nota#444#222#3";
+		
+			toSocket.println(message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
+			response=fromSocket.readLine();
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
+			
+			//TEST Contestare nota
+			message="contestare_nota#444#666#7";
+		
+			toSocket.println(message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
+			response=fromSocket.readLine();
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
+			
+			//TEST Contestare nota
+			message="contestare_nota#444#222#7";
+		
+			toSocket.println(message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
+			response=fromSocket.readLine();
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
+			
+			//TEST Raspuns cereri student
+			message="rezultat_solicitari#444";
+		
+			toSocket.println(message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
+			response=fromSocket.readLine();
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
+			
+			//TEST Cereri asteptare cadru didactic
+			message="cereri_in_asteptare_cadru_didactic#222";
+		
+			toSocket.println(message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
+			response=fromSocket.readLine();
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
+		 
+			//TEST Rezolvare cereri cadru didactic
+			message="rezolvare_cereri_cadru_didactic#2#" +
+					"2~1#" +	//prima cerere catre 222 de mai sus
+					"5~-1";		//a doua cerere catre 222 de mai sus
+		
+			toSocket.println(message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
+			response=fromSocket.readLine();
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
+			
+			//TEST Raspuns cereri student
+			message="rezultat_solicitari#444";
+		
+			toSocket.println(message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
+			response=fromSocket.readLine();
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
+
+			//TEST Cereri asteptare secretar
+			message="cereri_in_asteptare_secretar#222";
+		
+			toSocket.println(message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
+			response=fromSocket.readLine();
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
+		 
+			//TEST Rezolvare cereri secretar
+			message="rezolvare_cereri_secretar#1#" +
+					"0~1#";	//cererea de schimbare grupa de mai sus
+		
+			toSocket.println(message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
+			response=fromSocket.readLine();
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
+			
+			//TEST Raspuns cereri student
+			message="rezultat_solicitari#444";
+		
+			toSocket.println(message);
+			System.out.println(String.format("__________________\nTest %d pentru %s: %s",++testCount,testName,message));
+			response=fromSocket.readLine();
+			System.out.println(String.format("Raspuns %d pentru %s: %s",testCount,testName,response));
+			
+		}
 	}
 	
 	/**
@@ -210,7 +328,7 @@ public class Client {
 				System.out.print("> ");
 				//TODO: de reparat
 				//line = keyboardInput.readLine();
-				line="2";
+				line="0";
 				switch (Integer.parseInt(line)) {
 				case JURNAL:
 					mode = JURNAL;

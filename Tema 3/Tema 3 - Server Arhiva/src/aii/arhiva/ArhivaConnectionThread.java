@@ -117,6 +117,7 @@ public class ArhivaConnectionThread extends Thread {
 			// Read new messages from clients
 			while ((message = fromClient.readLine()) != null) {
 				// Analyze and process the message and then send response
+				debug("-----");
 				debug("New message from Client:" + message);
 				toClient.println(analyze(message));
 				if (done)
