@@ -92,7 +92,15 @@ public class MessageParser{
 
 				//Add it to the representation
 				if (value != null)
+				{	
+					if(field.getType()==Date.class)
+					{
+						SimpleDateFormat formatter=new SimpleDateFormat("dd-MM-yyyy");
+						representation +=formatter.format(value)+FIELD_DELIMITER;
+					}
+					else
 					representation += value.toString()+FIELD_DELIMITER;
+				}
 				else
 					representation += "NULL"+FIELD_DELIMITER;
 			}

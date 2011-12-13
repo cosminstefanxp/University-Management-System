@@ -32,12 +32,27 @@ public class MessageStructure {
 		/** The CLIENT. */
 		CLIENT
 	}
+	
+	/**
+	 * The Enum Sender.
+	 */
+	public enum Sender {
+		STUDENT,
+		CADRU_DIDACTIC,
+		SEF_CATEDRA,
+		SECRETAR,
+		ANY,
+		SERVER
+	}
 	/** The header. */
 	public String header;
 	
 	
 	/** The type. */
 	public Type type;
+	
+	/** The sender. */
+	public Sender sender;
 
 
 	/* (non-Javadoc)
@@ -55,10 +70,11 @@ public class MessageStructure {
 	 * @param header the header
 	 * @param type the type
 	 */
-	public MessageStructure(String header, Type type) {
+	public MessageStructure(String header, Type type, Sender sender) {
 		super();
 		this.header = header;
 		this.type = type;
+		this.sender = sender;
 	}
 
 

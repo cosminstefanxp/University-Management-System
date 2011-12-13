@@ -13,6 +13,9 @@ import java.net.UnknownHostException;
 
 import aii.arhiva.Arhiva;
 import aii.jurnal.Jurnal;
+import aii.protocol.MessageParser;
+import aii.protocol.MessageStructure;
+import aii.protocol.MessageStructure.Sender;
 import aii.rad.RegistruActivitatiDidactice;
 
 /**
@@ -56,6 +59,14 @@ public class Client {
 
 	}
 
+	/**
+	 * Testing unit.
+	 *
+	 * @param mode the mode
+	 * @param fromSocket the from socket
+	 * @param toSocket the to socket
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private static void testingUnit(int mode, BufferedReader fromSocket, PrintWriter toSocket)
 			throws IOException {
 		// TEST Arhiva
@@ -344,7 +355,7 @@ public class Client {
 			System.out.println(String.format("Raspuns %d pentru %s: %s", testCount, testName, response));
 
 			// TEST Cereri asteptare secretar
-			message = "cereri_in_asteptare_secretar#222";
+			message = "cereri_in_asteptare_secretar#333";
 
 			toSocket.println(message);
 			System.out.println(String.format("__________________\nTest %d pentru %s: %s", ++testCount,
@@ -353,7 +364,8 @@ public class Client {
 			System.out.println(String.format("Raspuns %d pentru %s: %s", testCount, testName, response));
 
 			// TEST Rezolvare cereri secretar
-			message = "rezolvare_cereri_secretar#1#" + "0~1#"; // cererea de schimbare grupa de mai sus
+			message = "rezolvare_cereri_secretar#1#" + 
+				"0~1#"; // cererea de schimbare grupa de mai sus
 
 			toSocket.println(message);
 			System.out.println(String.format("__________________\nTest %d pentru %s: %s", ++testCount,
@@ -381,7 +393,7 @@ public class Client {
 	 */
 	public static void main(String[] args) {
 
-		Integer mode = ARHIVA;
+		Sender mode = Sender.STUDENT;
 		BufferedReader keyboardInput = new BufferedReader(new InputStreamReader(System.in));
 		String line;
 		Boolean done = false;
@@ -395,7 +407,7 @@ public class Client {
 
 		System.out.println("Ne-am conectat la cele 3 servere.");
 
-		System.out.println("Introduce-ti modul de pornire al aplicatiei: 0 - Testing, 1 - Utilizare normala");
+		System.out.println("Introduceti modul de pornire al aplicatiei: 0 - Testing, 1 - Utilizare normala");
 		while (!done) {
 			try {
 				System.out.print("> ");
@@ -449,27 +461,32 @@ public class Client {
 		}
 		else
 		{
-			System.out.println("Introduceti componenta cu care doriti sa comunicati:"
-					+ "0 - Jurnal, 1 - Arhiva, 2 - Registru Activitati Didactice");
+			System.out.println("Introduceti tipul de utilizator cu care doriti sa va conectati:"
+					+ "0 - Student, 1 - Cadru Didactic, 2 - Sef de Catedra, 3 - Secretar");
 			done=false;
 			while (!done) {
 				try {
 					System.out.print("> ");
 					line = keyboardInput.readLine();
 					switch (Integer.parseInt(line)) {
-					case JURNAL:
-						mode = JURNAL;
-						System.out.println("Mod selectat: Jurnal");
+					case 0:
+						mode = Sender.STUDENT;
+						System.out.println("Mod selectat: Student");
 						done = true;
 						break;
-					case ARHIVA:
-						mode = ARHIVA;
-						System.out.println("Mod selectat: Arhiva");
+					case 1:
+						mode = Sender.CADRU_DIDACTIC;
+						System.out.println("Mod selectat: Cadru Didactic");
 						done = true;
 						break;
-					case RAD:
-						mode = RAD;
-						System.out.println("Mod selectat: RegistruActivitatiDidactice");
+					case 2:
+						mode = Sender.SEF_CATEDRA;
+						System.out.println("Mod selectat: Sef Catedra");
+						done = true;
+						break;
+					case 3:
+						mode = Sender.SECRETAR;
+						System.out.println("Mod selectat: Secretar");
 						done = true;
 						break;
 					default:
@@ -481,7 +498,7 @@ public class Client {
 				}
 			}
 	
-			String fromServer;
+			String fromServer = null;
 			String fromClient;
 	
 			//Citim mesajele de la clienti si le trimitem la server
@@ -489,20 +506,55 @@ public class Client {
 				do {
 					//Citire mesaj
 					fromClient = keyboardInput.readLine();
-					//Transmitere mesaj
-					if (fromClient != null) {
-						System.out.println("Client message: " + fromClient);
-						connections[mode].toServer.println(fromClient);
+					if(fromClient.trim().isEmpty())
+						continue;
+					//Check messsage locally
+					MessageStructure structure=MessageParser.getMessageStructure(fromClient);
+					
+					//No corresponding message structure was found
+					if(structure==null)
+					{
+						System.err.println("Unrecognized message type!");
+						continue;
 					}
+					//Check message sender type
+					if(mode!=structure.sender && structure.sender!=Sender.ANY)
+						if(!(mode==Sender.SEF_CATEDRA && structure.sender==Sender.CADRU_DIDACTIC))
+						{
+							System.err.println("Mesaj ilegal de transmis de catre tipul de utilizator "+mode);
+							continue;
+						}
+					
+					//Transmitem mesajul componentei corespunzatoare
+					int sentTo=0;
+					switch(structure.type)
+					{
+					case ARHIVA:
+						System.out.println("Mesaj client pentru arhiva: " + fromClient);
+						connections[ARHIVA].toServer.println(fromClient);
+						sentTo=ARHIVA;
+						break;
+					case JURNAL:
+						System.out.println("Mesaj client pentru jurnal: " + fromClient);
+						connections[JURNAL].toServer.println(fromClient);
+						sentTo=JURNAL;
+						break;
+					case RAD:
+						System.out.println("Mesaj client pentru rad: " + fromClient);
+						connections[RAD].toServer.println(fromClient);
+						sentTo=RAD;
+						break;
+					}
+					
 					//Primire raspuns
-					fromServer = connections[mode].fromServer.readLine();
+					fromServer = connections[sentTo].fromServer.readLine();
 					if (fromServer == null)
 						break;
 					//Afisare raspuns
-					System.out.println("Server: " + fromServer);
+					System.out.println("Mesaj de la server: " + fromServer);
 					if (fromServer.equals("end_connection"))
 						break;
-				} while (fromServer != null);
+				} while (true);
 	
 				//Cleanup
 				keyboardInput.close();
