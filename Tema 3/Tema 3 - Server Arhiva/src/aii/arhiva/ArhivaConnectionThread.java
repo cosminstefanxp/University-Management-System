@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.locks.ReentrantLock;
 
 import aii.protocol.MessageParser;
 import aii.protocol.MessageStructure;
@@ -33,6 +34,10 @@ public class ArhivaConnectionThread extends Thread {
 	
 	/** The done. */
 	private Boolean done=false;
+	
+	
+	/** The lock. */
+	private static ReentrantLock lock=new ReentrantLock();
 	
 	/**
 	 * Debug message printer.
@@ -91,12 +96,13 @@ public class ArhivaConnectionThread extends Thread {
 			System.err.println("Message is not for this component!");
 			return "Illegal message for ARHIVA!";
 		}
+	
+		//Process the message and return the message to the client
+		lock.lock();
+		String returnMsg=arhiva.processMessage(message, structure);
+		lock.unlock();
 		
-
-		
-		
-		//Process the message an return the message to the client
-		return arhiva.processMessage(message, structure);
+		return returnMsg;
 	}
 
 	/*

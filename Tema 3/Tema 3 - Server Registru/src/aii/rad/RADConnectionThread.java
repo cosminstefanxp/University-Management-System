@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.locks.ReentrantLock;
 
 import aii.protocol.MessageParser;
 import aii.protocol.MessageStructure;
@@ -33,6 +34,10 @@ public class RADConnectionThread extends Thread {
 	
 	/** The done. */
 	private Boolean done=false;
+	
+	
+	/** The lock. */
+	private static ReentrantLock lock=new ReentrantLock();
 	
 	/**
 	 * Debug message printer.
@@ -93,8 +98,12 @@ public class RADConnectionThread extends Thread {
 		}
 		
 		
-		//Process the message an return the message to the client
-		return rad.processMessage(message, structure);
+		//Process the message and return the message to the client
+		lock.lock();
+		String returnMsg=rad.processMessage(message, structure);
+		lock.unlock();
+		
+		return returnMsg;
 	}
 
 	/*

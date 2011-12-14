@@ -2,7 +2,7 @@
  * Stefan-Dobrin Cosmin
  * 342C4
  * Aplicatii Integrate pentru Intreprinderi 
- * Tema 2
+ * Tema 3
  ****************************************************************/
  
  Detalii Proiect:
@@ -10,26 +10,20 @@
  	* compilarea si rularea s-a facut folosind Eclipse 3.5 cu Java 1.6 si baze de date MySQL
  	* dezvoltarea interfetei grafice s-a realizat cu ajutorul Window Builder
  	* dezvoltarea s-a realizat pe sistemul de operare Ubuntu 11.04
- 	* tema 2 s-a realizat pornind de la infrastructura realizata pentru tema 1
- 	* tema 2 contine 4 proiecte Eclipse:
- 		o Tema 2 - Client -> implementarea interfetei client pentru cele 3 tipuri de utilizatori; folosita pentru testare
- 		o Tema 2 - Commons -> definitiile celor 2 interfete pentru server si definitiile claselor comune utilizate in restul aplicatiei. Se foloseste pentru a genera tema2_commons.jar, ce trebuie inclus in build-path-ul proiectului
- 		o Tema 2 - Server Arhiva -> implementarea pentru serverul remote Arhiva
- 		o Tema 2 - Server Registru -> implementarea pentru serverul remote RegistruActivitatiDidactice
+ 	* tema 3 s-a realizat pornind de la infrastructura realizata pentru tema 1
+ 	* tema 3 contine 5 proiecte Eclipse:
+ 		o Tema 3 - Client -> implementarea interfetei client pentru cele 3 tipuri de utilizatori; folosita pentru testare
+ 		o Tema 3 - Commons -> definitiile pentru un message parser si clasele de manipulare ale mesajelor si definitiile claselor comune utilizate in restul aplicatiei. Se foloseste pentru a genera tema3_commons.jar, ce trebuie inclus in build-path-ul fiecarui proiect.
+ 		o Tema 3 - Server Arhiva -> implementarea pentru serverul Arhiva
+ 		o Tema 3 - Server Registru -> implementarea pentru serverul RegistruActivitatiDidactice
+ 		o Tema 3 - Jurnal -> implementarea pentru serverul Jurnal
  Alte mentiuni:
- 	* asa cum s-a specificat pe forum si in cerinta, nu am realizat implementarea pentru nici o functie a administratorului, pentru setari personale sau pentru interactiunea (vizualizare/salvare) contract de studii. Acestea se considera deja salvate.
- 	* baza de date a fost populata cu utilizatori cu CNP-uri invalide (si e dezactivata momentan verificarea pentru lungime CNP) pentru a usura si accelera testarea.
- 	* in interfata grafica sunt folosite numai apeluri catre cele 2 server prin RMI. Toate interactiunile cu baza de date sunt implementate in acestea.
+ 	* baza de date a fost populata cu utilizatori cu CNP-uri scurte (si e dezactivata momentan verificarea pentru lungime CNP) pentru a usura si accelera testarea.
  	* pentru o rulare corespunzatoare:
- 		o se executa scriptul pornireregistrudenume.sh
- 		o se pornesc cele doua servere: Server Arhiva si Server Registru
+ 		o se pornesc cele 3 servere: Server Arhiva, Server Registru si Server Jurnal
  		o se porneste clientul
- 	* in fiecare dintre folderele de proiect sa gaseste un fisier policy, in care e specificata politica pentru acel proiect Java
- 	* configuratia de rulare pentru eclipse:
- 		o pentru servere si client, VM Arguments:
- 			-Djava.rmi.server.codebase=file:./-
-			-Djava.security.policy=policy
-	* in toate proiectele Server + Client, trebuie adaugat in buildPath-ul din Eclipse fisierul 'Tema 2 - Commons/tema2_commons.jar' . Acesta este generat prin Export din Proiectul 'Tema 2 - Commons'. In arhiva cu tema trimisa, acesta este momentan genrat in folderul specificat 'Tema 2 - Commons/'.
+ 		o se introduce modul in care se doreste (fie testare, fie utilizare normala)
+	* in toate proiectele Server + Client, trebuie adaugat in buildPath-ul din Eclipse fisierul 'Tema 3 - Commons/tema3_commons.jar' . Acesta este generat prin Export din Proiectul 'Tema 3 - Commons'. In arhiva cu tema trimisa, acesta este momentan genrat in folderul specificat 'Tema 3 - Commons/'.
 	* utilizatori cu care se poate face testarea (cnp/parola):
 		o 111/111 - super-admin
 		o 222/222 - sef catedra
@@ -41,24 +35,20 @@ Detalii implementare:
  	* aplicatia este impartita in 7 pachete:
  		o aii - contine clasele container pentru diversele tipuri de obiecte (utilizatori, discipline, examene, etc)
  		o aii.database - contine clasa de acces la baza de date (DatabaseConnector), clasa wrapper peste obiecte pentru scriere/citire/stergere/actualizare din/in baza de date (ObjectWrapper) si particularizari ale acesteia pentru tipurile de obiect folosite
- 		o aii.gui.frames - contine cele 5 frame-uri folosite in aplicatie: Autentificare, Administrator, Student, Cadru Didactic si Secretar
- 		o aii.gui.panels - contine implementarile panel-urilor folosite in aplicatie
- 		o aii.gui.tools - clase ajutatoare pentru GUI
  		o aii.arhiva - clase pentru componenta server Arhiva
+ 		o aii.jurnal - clase pentru componenta server Jurnal
  		o aii.rad - clase pentru componenta server RegistruActivitatiDidactice
+ 		o aii.protocol - clase pentru manipularea si parsarea mesajelor
  	* in baza de date, am folosit modelul bazelor dat in enuntul problemelor, cu spargerea tabelei orar in 2 sectiuni:
  		o activitate - pentru asocierea 'cadru didactic'-'disciplina'-'tip activitate' 
 		o orar - pentru restul informatiilor particularizate - asocierea activitate - grupa - sala - ora
 	* mergand pe modelul de la tema 1, am folosit clase Wrapper (de tipul ObjectWrapper) pentru o interfatare mai usoara intre baza de date si obiecte. Fata de tema 1 am facut modificarile necesare pentru a imparti adecvat accesul componenentelor server pe tabelele corespunzatoare.
 	* intrucat activitate si orar (in cazul implementarii mele) formeaza tabela orar (asa cum este in enunt), ambele tabele le-am facut accesibile doar din componenta RegistruActivitatiDidactice.
-	* pentru comunicarea inter componente server, fiecare dintre acestea are o proprietate Arhiva, respectiv RegistruActivitatiDidactice. Initial acestea sunt null, insa in momentul in care se doreste folosirea lor, daca nu au fost initializare deja, se initializeaza. In felul acesta am reusit sa evit problemele care apareau daca initializarea se facea la inceput, probleme ce apareau de la faptul ca celalalt server nu era inca pornit.
+	* pentru comunicarea inter componente server, fiecare dintre acestea deschide un socket catre celalalt server necesar, insa numai in momentul in care se doreste folosirea lor, daca nu au fost initializare deja, se initializeaza. In felul acesta am reusit sa evit problemele care apareau daca initializarea se facea la inceput, probleme ce apareau de la faptul ca celalalt server nu era inca pornit.
 	* pentru accesul la BD, in fiecare componenta server am initializat obiectele de tip Wrapper, pentru obiecte asociate, o singura data, la pornirea serverului, dupa care acestea raman initializate si pot fi folosit in orice moment.
-	* pentru verificarile de consistenta ce cer accesul la celelalte tabele, am realizat diverse metode helper:
-		- cadruPentruDisciplina - verifica daca un cadru didactic preda cursul la o disciplina - pentru catalog
-		- obtineDisciplineUrmate - intoarce o lista cu codurile disciplinelor urmate de un student intr-un an de studiu/semestru - pentru orar/examene
-		- etc
+	* pentru manipularea mesajelor am implementat clasele din pachetul protocol. Clasa MessageParser se poate folosi pentru a parsa (din string in Obiecte) sau serializa (din Obiecte in Stringuri), diversele obiecte din programe, folosind Reflection.
 	* obtineSituatieScolara, din ArhivaServer am implementat-o cat mai general, in sensul ca obtine situatia scolara pe un an de studiu dat (daca anStudiu>0) sau pe toti anii (daca anStudiu=0). In client, momentan este folosita doar versiunea pentru anul de studiu curent, pentru care sunt calculare inclusiv mediile aritmetice pe fiecare semestru.
-	
+	* in toate proiectele se afiseaza momentan mesaje de debug, pentru a se urmari parcursul programului. De asemenea, in proiectele server sunt folosite exceptiile pentru diferite situatii, si acestea sunt afisate (vor aparea cu rosu in consola), desi nu sunt efectul unei erori neasteptate. De exemplu, daca o entitate nu este modificata, in consola respectivului server v-a aparea o eroare, cu rosu, desi functionalitatea este corespunzatoare si raspunsul este corespunzator. 
 	
 Modificari mesaje:
 	-pentru raspunsurile care cereau statusul comenzii, am folosit, in principiu (mai putin cazurile speciale prezentate), true - pentru succes si false - pentru insucces.
@@ -75,9 +65,12 @@ Modificari mesaje:
 	-stabilite_calendar_examen: ordinea pentru campuri este: "data", "ora", "sala", "codDisciplina",  "grupa". Pentru stergere, este suficient doar codul disciplinei si grupa.
 	-error: in cazul anumitor situatii, se pot trimite inapoi mesaje de eroare, sub formatul: error#mesaj_de_eroare
 
+Detalii testare/utilizare:
+	- la pornirea clientului se cere intrarea in modul de testing sau modul de utilizare normal
+		o in modul de TESTING, se conecteaza la toate cele trei servere si se realizeaza teste cu toate tipurile de mesaje din cerinta (functia testingUnit din Client.java). Raspunsurile asteptate sunt specificate in comentarii. Testele au fost gandite astfel incat sa ia in considerare majoritatea cazurilor de folosire si sa nu strice ireversibil baza de date (prin stergeri in cascada pe datele de test).
+		o in modul normal, se cere tipul de utilizator cu care se doreste conectarea si dupa care sunt asteptate mesaje din partea utilizatorului. Mesajele introduse sunt verificate pe client atat sa aiba numele de mesaj corespunzator, cat si sa fie transmise doar tipurile de mesaje permise de acel tip de utilizator.
+
 Detalii bonus:
-	* am implementat bonusul pentru dezvoltarea unei interfete grafice, toate facilitatile componentelor server cerute fiind testate.
-	* pentru a implementa interfata grafica, in componentele server sunt implementate multe alte metode (fata de cele din cerinta) folosite pentru afisarea informatiile si pentru un feedback vizual cat mai bun.
-	* pentru vizualizarea notelor, am realizat o afisare pentru toate disciplinele din sistem, intorcandu-se doar notele pe care le are studentul. In acest fel am vrut sa testez si intoarcerea -1 pentru lipsa unor note 
-	* toate metodele din Arhiva si din RegistruActivitatiDidactice, ca de altfel majoritatea metodelor din toate proiectele, sunt bine documentate si au asociata inclusiv documentatie JavaDoc, ce poate fi generata folosind utilitarul javadoc
+	* am implementat partea de sincronizare intra diverse threaduri alea aceluiasi server prin folosirea unui ReentrantLock in clasele corespunzatore. Pentru ca metodele de pe ArhivaServer folosesc in foarte mare procent obiecte comune sau acces la baza de date, locking-ul l-am facut inainte de a se intra in aceasta clasa, dar dupa ce s-a realizat parsarea. 
+	* toate metodele din Arhiva, Jurnal si din RegistruActivitatiDidactice, ca de altfel majoritatea metodelor din toate proiectele, sunt bine documentate si au asociata inclusiv documentatie JavaDoc, ce poate fi generata folosind utilitarul javadoc
 	
