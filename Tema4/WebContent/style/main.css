@@ -1,0 +1,115 @@
+* {
+	margin: 0;
+	padding: 0
+}
+
+html {
+	height: 100%
+}
+
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0
+}
+
+#content {
+	width: 60%;
+	min-width: 956px;
+	margin: auto;
+	padding: 30px 10px;
+	border-left: 1px solid #a0a0a0;
+	border-right: 1px solid #a0a0a0;
+	background: #f9f9f9;
+}
+
+#content form {
+	margin:10px;
+	border: 1px solid #a0a0a0;
+	padding: 10px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+
+#content form td {
+	min-width: 100px;
+	padding: 3px;
+}
+
+#content .button {
+	background: #224;
+	color: white;
+	padding: 6px;
+}
+
+#content .button:hover {
+	color: #a0a0a0;
+}
+
+#content .error {
+	color: white;
+	background: #bb4444;
+	padding: 10px;
+	font-weight: bold;
+}
+
+#content .notify {
+	color: white;
+	background: #bbaa44;
+	padding: 10px;
+	font-weight: bold;
+}
+
+#content .link-box {
+	margin:10px;
+	border: 1px solid #a0a0a0;
+	padding: 10px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+
+#content .link-box a {
+	float: left;
+	width: 100%;
+}
+
+#header {
+	width: 100%;
+	background: #224;
+	height: 120px;
+	color: #fff;
+	border-bottom: 1px solid #3847a8;
+}
+
+#header .header-content {
+	width: 60%;
+	min-width: 956px;
+	margin: auto;
+	padding: 20px 0px;
+}
+#header h4{
+	margin: 10px;
+	color: #ddd;
+}
+#header .user{
+	float:right;
+	color: #aaf;
+}
+
+#footer {
+	width: 100%;
+	background: #002;
+	padding: 4px 0;
+	height: 50px;
+	border-top: 1px solid #3847a8;
+	color: #fff;
+	margin: auto;
+}
+
+.hidden {
+	display: none;
+}
+
+.clear {
+	clear: both;
+}
