@@ -3,24 +3,31 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>ACS - Administrator</title>
+<title>ACS - Profesor</title>
 <link rel="stylesheet" href="../style/main.css" type="text/css" />
 </head>
 <%@include file="../include/tools.jsp"%>
-<% request.setAttribute("permissions", Tip.ADMIN);%>
+<% request.setAttribute("permissions", Tip.CADRU_DIDACTIC);%>
 <%@include file="../include/authentify.jsp" %>
 
 <body>
+		<%
+		String denumire="";
+		if(utilizator.tip==Tip.CADRU_DIDACTIC) 
+			denumire="Consola Cadru Didactic";
+		else
+			denumire="Consola Sef de Catedra";
+		%>
 	<!-- Headerul paginii -->
 	<jsp:include page="/include/header.jsp">
-		<jsp:param value="Consola Administrator" name="title"/>
+			<jsp:param value="<%=denumire%>" name="title"/>
 	</jsp:include>
 	<!-- Continutul principal al paginii -->
 	<div id="content">
-		Bine ai venit pe consola de administrare a facultatii! Alege de mai jos una dintre optiunile dorite:
+		Bine ai venit pe consola cadrelor didactice ale facultatii! Alege de mai jos una dintre optiunile dorite:
 		<div class="link-box">
 			<a href="../user_settings.jsp" class="button">Editare setari personale</a>
-			<a href="users.jsp" class="button">Vizualizare/Editare utilizatori</a>
+			<a href="catalog.jsp" class="button">Vizualizare catalog</a>
 			<div class="clear"></div>
 		</div>
 	</div>

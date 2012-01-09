@@ -14,7 +14,7 @@
 		break;
 	case CADRU_DIDACTIC:
 	case SEF_CATEDRA:
-		response.sendRedirect("cadru.jsp");
+		response.sendRedirect("profesor");
 		break;
 	case SECRETAR:
 		response.sendRedirect("secretar.jsp");

@@ -2,6 +2,7 @@
 <%@page import="aii.Utilizator"%>
 <div id="header">
 	<div class="header-content">
+		<center><image src="/AII-Tema4/images/upb.jpg"/ style="align:'middle'" height="30px"></image></center>
 		<center><h2>Facultatea de Automatica si Calculatoare</h2></center>
 		<center><h4><%=request.getParameter("title") %></h3></center>
 		<%

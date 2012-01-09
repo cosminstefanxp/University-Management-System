@@ -16,6 +16,7 @@ body {
 #content {
 	width: 60%;
 	min-width: 1100px;
+	min-height: 400px;
 	margin: auto; 
 	padding: 30px 10px;
 	border-left: 1px solid #a0a0a0;
@@ -40,6 +41,7 @@ body {
 	background: #224;
 	color: white;
 	padding: 6px;
+	text-align: center;
 }
 
 #content .button:hover {
@@ -85,10 +87,13 @@ body {
 	text-decoration: none;
 }
 
-#content .link-box a {
+#content .link-box a.button {
 	float: left;
-	width: 100%;
+	padding: 10px;
+	width: 250px;
 	margin: 7px;
+	clear: both;
+	text-decoration: none;
 }
 
 #content .table-box {
@@ -119,7 +124,7 @@ body {
 	border-style: solid;
 	border-color: gray;
 	background-color: rgb(255, 250, 250);
-	-moz-border-radius: ;
+	-moz-border-radius: 3px;
 }
 
 #content .table-box table tbody tr:hover td {
@@ -130,7 +135,7 @@ body {
 #header {
 	width: 100%;
 	background: #224;
-	height: 120px;
+	height: 140px;
 	color: #fff;
 	border-bottom: 1px solid #3847a8;
 }
@@ -139,7 +144,7 @@ body {
 	width: 60%;
 	min-width: 956px;
 	margin: auto;
-	padding: 20px 0px;
+	padding: 10px 0px;
 }
 #header h4{
 	margin: 10px;
@@ -159,11 +164,17 @@ body {
 #footer {
 	width: 100%;
 	background: #002;
-	padding: 4px 0;
+	padding: 20px 0 5px 0;
 	height: 50px;
 	border-top: 1px solid #3847a8;
 	color: #fff;
 	margin: auto;
+}
+
+#footer p 
+{
+	text-align: center;
+	margin:auto;
 }
 
 .hidden {

@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>ACS - Login</title>
+<title>ACS - Editare Date Personale</title>
 <link rel="stylesheet" href="style/main.css" type="text/css" />
 </head>
 <%@include file="include/tools.jsp"%>
@@ -15,7 +15,7 @@
 <body>
 	<!-- Headerul paginii -->
 	<jsp:include page="/include/header.jsp">
-		<jsp:param value="Panou de autentificare" name="title" />
+		<jsp:param value="Panou editare informatii personale" name="title" />
 	</jsp:include>
 
 	<!-- Continutul principal al paginii -->
