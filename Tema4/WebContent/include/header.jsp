@@ -9,6 +9,7 @@
 		if(utilizator!=null) {%>
 		<div class="user">
 			Welcome, <%=((Utilizator)session.getAttribute("user")).prenume %>!
+			<a href="/AII-Tema4/logout.jsp" class="button">Logout</a>
 		</div>
 		<%} %>
 	</div>

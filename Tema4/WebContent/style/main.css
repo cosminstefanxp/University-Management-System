@@ -70,6 +70,13 @@ body {
 	border-radius: 4px;
 }
 
+#content .footer .button
+{
+	background: #345;
+	padding: 4px;
+	margin: 5px 0 5px 0;
+}
+
 #content .footer{
 	margin-top:25px;
 }
@@ -141,6 +148,12 @@ body {
 #header .user{
 	float:right;
 	color: #aaf;
+}
+#header a.button{
+	color: white;
+	border: 1px solid #aaa;
+	padding:4px; 
+	text-decoration: none;
 }
 
 #footer {

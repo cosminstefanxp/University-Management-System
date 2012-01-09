@@ -13,7 +13,7 @@ public void debug(String msg, JspWriter out)
 {
 	try {
 		out.write("<div class='notify'>");
-		out.write("Error: " + msg);
+		out.write("Debug: " + msg);
 		out.write("</div>");
 	} catch (Exception ex) {
 		ex.printStackTrace();
@@ -24,7 +24,7 @@ public void notify(String msg, JspWriter out)
 {
 	try {
 		out.write("<div class='notify'>");
-		out.write("Error: " + msg);
+		out.write("Notification: " + msg);
 		out.write("</div>");
 	} catch (Exception ex) {
 		ex.printStackTrace();
