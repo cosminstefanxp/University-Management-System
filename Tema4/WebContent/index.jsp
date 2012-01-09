@@ -57,24 +57,7 @@
 					log("Utilizator " + utilizator + " autentificat.");
 					session.setAttribute("user", utilizator);
 					
-					switch (utilizator.tip) {
-					case ADMIN:
-					case SUPER_ADMIN:
-						response.sendRedirect("admin.jsp");
-						break;
-					case CADRU_DIDACTIC:
-					case SEF_CATEDRA:
-						response.sendRedirect("cadru.jsp");
-						break;
-					case SECRETAR:
-						response.sendRedirect("secretar.jsp");
-						break;
-					case STUDENT:
-						response.sendRedirect("student.jsp");
-						break;
-					default:
-						notify("Tipul utilizatorului necunoscut", out);
-					}
+					response.sendRedirect("redirecter.jsp");
 				}
 			}
 		%>

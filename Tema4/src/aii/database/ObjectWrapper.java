@@ -64,7 +64,7 @@ public class ObjectWrapper<T> {
 	 * @throws SecurityException the security exception
 	 * @throws NoSuchFieldException the no such field exception
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private ArrayList<T> parseResultSet(ResultSet entries) throws IllegalArgumentException, IllegalAccessException, SQLException, InstantiationException, SecurityException, NoSuchFieldException
 	{
 		//Parse the result set entries, create the objects and insert them in the list
@@ -320,8 +320,9 @@ public class ObjectWrapper<T> {
 					setClause+=nameMatch[0][i]+"=\'1\', ";
 				else
 					setClause+=nameMatch[0][i]+"=\'0\', ";
+				
 			}
-			if(field.getType() == java.util.Date.class)
+			else if(field.getType() == java.util.Date.class)
 			{
 				java.util.Date date=(java.util.Date) field.get(newObject);
 				java.sql.Date sqlDate= new Date(date.getTime());

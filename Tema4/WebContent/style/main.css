@@ -15,8 +15,8 @@ body {
 
 #content {
 	width: 60%;
-	min-width: 956px;
-	margin: auto;
+	min-width: 1100px;
+	margin: auto; 
 	padding: 30px 10px;
 	border-left: 1px solid #a0a0a0;
 	border-right: 1px solid #a0a0a0;
@@ -51,6 +51,7 @@ body {
 	background: #bb4444;
 	padding: 10px;
 	font-weight: bold;
+	margin: 10px 0 10px 0;
 }
 
 #content .notify {
@@ -58,6 +59,7 @@ body {
 	background: #bbaa44;
 	padding: 10px;
 	font-weight: bold;
+	margin: 10px 0 10px 0;
 }
 
 #content .link-box {
@@ -68,10 +70,55 @@ body {
 	border-radius: 4px;
 }
 
+#content .footer{
+	margin-top:25px;
+}
+
+#content .footer a {
+	text-decoration: none;
+}
+
 #content .link-box a {
 	float: left;
 	width: 100%;
+	margin: 7px;
 }
+
+#content .table-box {
+	margin: 20px 0px 20px 0;	
+}
+
+#content .table-box table {
+	border-width: 0px;
+	border-spacing: 0px;
+	border-style: none;
+	border-color: gray;
+	border-collapse: separate;
+	background-color: white;
+	font-size: 13px;
+}
+#content .table-box table th {
+	border-width: thin;
+	padding: 4px;
+	border-style: solid;
+	border-color: gray;
+	background-color: #aaf;
+	-moz-border-radius: ;
+	font-size: 14px;
+}
+#content .table-box table td {
+	border-width: thin;
+	padding: 3px;
+	border-style: solid;
+	border-color: gray;
+	background-color: rgb(255, 250, 250);
+	-moz-border-radius: ;
+}
+
+#content .table-box table tbody tr:hover td {
+	background: #aaf;
+}
+
 
 #header {
 	width: 100%;

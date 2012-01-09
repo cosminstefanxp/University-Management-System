@@ -11,7 +11,7 @@
 		//The user is not logged in
 		if(utilizator==null)
 		{
-			response.sendRedirect("index.jsp");
+			response.sendRedirect("/AII-Tema4/index.jsp");
 			log("[ERROR] Lipsa utilizator in sesiune!");
 			return;
 		}

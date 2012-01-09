@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="style/main.css" type="text/css" />
 </head>
 <%@include file="include/tools.jsp"%>
-<% request.setAttribute("permissions", Tip.ANY);%>
+<%request.setAttribute("permissions", Tip.ANY);%>
 <%@include file="include/authentify.jsp"%>
 
 <body>
@@ -20,62 +20,64 @@
 
 	<!-- Continutul principal al paginii -->
 	<div id="content">
+		<%-- Analizam datele din formular, pentru cazul unui submit. --%>
+		<%
+			if (request.getParameter("submitted") != null) {
+				log("Avem parametrii pentru setarea proprietatilor: " + request.getParameterMap());
+
+				//Copy the old user
+				Utilizator utilizatorCopy = utilizator.clone();
+
+				//Create the new user
+				utilizator.CNP = request.getParameter("cnp");
+				utilizator.nume = request.getParameter("nume");
+				utilizator.prenume = request.getParameter("prenume");
+				utilizator.parola = request.getParameter("pass");
+				utilizator.email = request.getParameter("email");
+				utilizator.adresa = request.getParameter("adresa");
+
+				System.out.println("Utilizator existent -> modificat in " + utilizator);
+				if (!new UtilizatorWrapper().UpdateUtilizator(utilizatorCopy, utilizator))
+					return;
+
+				notify("Utilizatorul " + utilizator.CNP + " a fost actualizat.", out);
+			}
+		%>
+
 		Mai jos poti sa iti editezi datele personale:
 		<form name="user_settings" action="user_settings.jsp" method="POST">
 			<table>
 				<tr>
 					<td>CNP:</td>
-					<td><input type="text" name="cnp" value="<%=utilizator.CNP %>"></td>
+					<td><input type="text" name="cnp" value="<%=utilizator.CNP%>"></td>
 				</tr>
 				<tr>
 					<td>Parola:</td>
-					<td><input type="password" name="pass" value="<%=utilizator.parola %>"></td>
+					<td><input type="password" name="pass" value="<%=utilizator.parola%>"></td>
 				</tr>
 				<tr>
 					<td>Nume:</td>
-					<td><input type="text" name="nume" value="<%=utilizator.nume %>"></td>
+					<td><input type="text" name="nume" value="<%=utilizator.nume%>"></td>
 				</tr>
 				<tr>
 					<td>Prenume:</td>
-					<td><input type="text" name="prenume" value="<%=utilizator.prenume %>"></td>
+					<td><input type="text" name="prenume" value="<%=utilizator.prenume%>"></td>
 				</tr>
 				<tr>
 					<td>Email:</td>
-					<td><input type="text" name="email" value="<%=utilizator.email %>"></td>
+					<td><input type="text" name="email" value="<%=utilizator.email%>"></td>
 				</tr>
 				<tr>
 					<td>Adresa:</td>
-					<td><input type="text" name="adresa" value="<%=utilizator.adresa %>"></td>
+					<td><input type="text" name="adresa" value="<%=utilizator.adresa%>"></td>
 				</tr>
 
 			</table>
-			<input type="hidden" name="submitted" value="true"/>
-			<input type="submit" name="submit" class="button" value="Salveaza">
+			<input type="hidden" name="submitted" value="true" /> <input type="submit" name="submit" class="button"
+				value="Salveaza">
 		</form>
 		
-		<%-- Analizam datele din formular, pentru cazul unui submit. --%>
-		<% if(request.getParameter("submitted")!=null)
-		{
-			log("Avem parametrii pentru setarea proprietatilor: "+request.getParameterMap());
-			
-			//Copy the old user
-			Utilizator utilizatorCopy=utilizator.clone();
-			
-			//Create the new user
-			utilizator.CNP=request.getParameter("cnp");
-			utilizator.nume=request.getParameter("nume");;
-			utilizator.prenume=request.getParameter("prenume");
-			utilizator.parola=request.getParameter("parola");
-			utilizator.email=request.getParameter("email");
-			utilizator.adresa=request.getParameter("adresa");
-			
-			System.out.println("Utilizator existent -> modificat in " + utilizator);
-			if(!new UtilizatorWrapper().UpdateUtilizator(utilizatorCopy,utilizator))
-				return;
-			
-			notify("Utilizatorul "+utilizator.CNP+" a fost actualizat.",out);
-		}
-		%>
+		<jsp:include page="/include/content_footer.jsp"></jsp:include>
 	</div>
 
 	<!-- Footerul paginii -->

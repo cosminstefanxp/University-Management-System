@@ -93,8 +93,8 @@ public class Constants {
 	
 	/*******TABELE********/
 	final public static String[][]	ADMIN_USER_COLUMN_FIELD_MATCH ={
-															{ "tip",      "CNP", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare", "contractCompletat"},			//campuri obiect
-															{ "Tip Cont", "CNP", "Nume", "Prenume", "Email", "Adresa", "Titlu/Grupa", "Forma Finantare", "contract"}	//nume coloane
+															{ "tip",      "CNP", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare", },			//campuri obiect
+															{ "Tip Cont", "CNP", "Nume", "Prenume", "Email", "Adresa", "Titlu/Grupa", "Finantare"}	//nume coloane
 														};
 	final public static String[][]	ADMIN_DISCIPLINA_COLUMN_FIELD_MATCH		= {
 															{ "cod", "denumire", "tip", "nrOre", "pctCredit", "examinare", "anStudiu", "semestru", "grup"},	//campuri obiect

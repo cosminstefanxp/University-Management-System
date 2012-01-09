@@ -3,33 +3,29 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>ACS - Login</title>
-<link rel="stylesheet" href="style/main.css" type="text/css" />
+<title>ACS - Administrator</title>
+<link rel="stylesheet" href="/style/main.css" type="text/css" />
 </head>
-<%@include file="include/tools.jsp"%>
+<%@include file="/include/tools.jsp"%>
+<% request.setAttribute("permissions", Tip.ADMIN);%>
+<%@include file="/include/authentify.jsp" %>
 
 <body>
 	<!-- Headerul paginii -->
 	<jsp:include page="/include/header.jsp">
-		<jsp:param value="Panou de autentificare" name="title"/>
+		<jsp:param value="Consola Administrator" name="title"/>
 	</jsp:include>
-	
 	<!-- Continutul principal al paginii -->
 	<div id="content">
-		Bine ai venit pe consola de administrare! Introdu-ti datele mai jos pentru autentificare:
-		<form name="login_form" action="index.jsp" method="POST" >
-			<table>
-				<tr>
-					<td>Utilizator:</td>
-					<td><input type="text" name="user"></td>
-				</tr>
-				<tr>
-					<td>Parola:</td>
-					<td><input type="password" name="pass"></td>
-				</tr>
-			</table>
-			<input type="submit" name="submit" class="button" value="Autentifica">
-		</form>
+		Bine ai venit pe consola de administrare a facultatii! Alege de mai jos una dintre optiunile dorite:
+		<div class="link-box">
+			<a href="user_settings.jsp">Editare setari personale</a>
+			<a href="admin_users.jsp">Vizualizare/Editare utilizatori</a>
+			<div class="clear"></div>
+		</div>
+		
+		<!-- Link catre pagina principala a utilizatorului -->
+		<jsp:include page="/include/content_footer.jsp"></jsp:include>
 	</div>
 	
 	<!-- Footerul paginii -->
