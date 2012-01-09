@@ -1,9 +1,3 @@
-/*
- * Aplicatii Integrate pentru Intreprinderi
- * 
- * Stefan-Dobrin Cosmin
- * 342C4
- */
 package aii.database;
 
 import java.sql.SQLException;
@@ -12,9 +6,9 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
-
 import aii.Utilizator;
+
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 /**
  * The Class that wraps the access to database for Utilizator Objects.
@@ -47,6 +41,34 @@ public class UtilizatorWrapper extends ObjectWrapper<Utilizator> {
 			e.printStackTrace();
 			return null;
 		} 
+		
+		return utilizatori;
+	}
+	
+	/**
+	 * Gets the utilizatori joined with other tables.
+	 *
+	 * @param fields the fields
+	 * @param tables the tables
+	 * @param whereClause the where clause
+	 * @return the utilizatori joined
+	 */
+	public ArrayList<Utilizator> getUtilizatoriJoined(String fields, String tables, String whereClause)
+	{
+		ArrayList<Utilizator> utilizatori = null;
+		try {
+			utilizatori = this.getObjects(fields, tables, whereClause, null);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"accesului la baza de date!");
+			return null;
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
 		
 		return utilizatori;
 	}

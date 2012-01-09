@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import aii.Activitate;
 import aii.NotaCatalog;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
@@ -115,16 +116,16 @@ public class NotaCatalogWrapper extends ObjectWrapper<NotaCatalog> {
 			this.insertObject(Constants.CATALOG_TABLE, nota);
 		} catch (MySQLIntegrityConstraintViolationException e){
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Aveti campuri invalide: "+e.getMessage());	
+			//JOptionPane.showMessageDialog(null,"Aveti campuri invalide: "+e.getMessage());	
 			return false;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
-					"accesului la baza de date!");
+			//JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+			//		"accesului la baza de date!");
 			return false;
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
-					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
+			//JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
+			//		"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
 			e.printStackTrace();
 			return false;
 		} 
@@ -184,6 +185,32 @@ public class NotaCatalogWrapper extends ObjectWrapper<NotaCatalog> {
 			e.printStackTrace();
 			return false;
 		}
+		
+		return true;
+	}
+	
+	/**
+	 * Cadru pentru disciplina.
+	 *
+	 * @param codDisciplina the cod disciplina
+	 * @param cnpCadruDidactic the cnp cadru didactic
+	 * @return true, if successful
+	 */
+	public boolean cadruPentruDisciplina(int codDisciplina, String cnpCadruDidactic) {
+		//Pregatim un query in care numaram cate rezultate avem
+		String sqlQuery="SELECT count(*) " +
+				"FROM "+ Constants.ACTIVITATE_TABLE+" a " +
+				"WHERE a.cnp_cadru_didactic=\'"+cnpCadruDidactic+"\' AND a.tip=\'"+Activitate.TipActivitate.Curs+"\' AND a.cod_disciplina=\'"+codDisciplina+"\';";
+		
+		//Daca nu avem nici un rezultat, inseamna ca acest cadru didactic nu preda la disciplina respectiva cursul
+		try {
+			if((int)DatabaseConnection.getSingleValueResult(sqlQuery)==0)
+				return false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
 		
 		return true;
 	}

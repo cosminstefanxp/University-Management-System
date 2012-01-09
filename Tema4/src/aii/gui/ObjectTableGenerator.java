@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class ObjectTableModel.
  *
@@ -23,8 +24,11 @@ public class ObjectTableGenerator<T> extends AbstractTableModel {
 	/** The fields. */
 	private Field[] fields;
 	
-	/** The primary key count. */
+	/** The indexes of the fields which will be used to id a given row, when using the edit/delete column. */
 	private int[] idFields;
+	
+	/** The id names. */
+	private String[] idNames;
 
 
 	/**
@@ -35,13 +39,15 @@ public class ObjectTableGenerator<T> extends AbstractTableModel {
 	 * @param columnNames the column names
 	 * @param fieldNames the field names
 	 * @param idFields the fields which will be used for the generation of the id
+	 * @param idNames the id names
 	 * @throws SecurityException the security exception
 	 * @throws NoSuchFieldException the no such field exception
 	 */
-	public ObjectTableGenerator(Class<T> classType, ArrayList<T> objects, String[] columnNames, String[] fieldNames, int[] idFields) throws SecurityException, NoSuchFieldException {
+	public ObjectTableGenerator(Class<T> classType, ArrayList<T> objects, String[] columnNames, String[] fieldNames, int[] idFields, String[] idNames) throws SecurityException, NoSuchFieldException {
 		this.objects = objects;
 		this.columnNames = columnNames;
 		this.idFields=idFields;
+		this.idNames=idNames;
 		fields=new Field[fieldNames.length];
 		
 		//Build the object fields
@@ -100,6 +106,8 @@ public class ObjectTableGenerator<T> extends AbstractTableModel {
 	/**
 	 * Gets the HTML table representation. Without the table tag
 	 *
+	 * @param editLink the edit link
+	 * @param deleteLink the delete link
 	 * @return the hTML table representation
 	 */
 	public String getHTMLTableRepresentation(String editLink, String deleteLink)
@@ -155,7 +163,7 @@ public class ObjectTableGenerator<T> extends AbstractTableModel {
 	{
 		String result="";
 		for(int i=0;i<idFields.length;i++)
-			result+=getColumnName(idFields[i])+"="+getValueAt(row, idFields[i])+"&";
+			result+=idNames[i]+"="+getValueAt(row, idFields[i])+"&";
 		return result.substring(0,result.length()-1);
 	}
 }

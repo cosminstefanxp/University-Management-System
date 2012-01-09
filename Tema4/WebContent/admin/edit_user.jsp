@@ -11,7 +11,7 @@
 </head>
 <%@include file="../include/tools.jsp"%>
 <%
-	request.setAttribute("permissions", Tip.ANY);
+	request.setAttribute("permissions", Tip.ADMIN);
 %>
 <%@include file="../include/authentify.jsp"%>
 

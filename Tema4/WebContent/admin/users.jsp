@@ -36,7 +36,8 @@
 						objects,
 						Constants.ADMIN_USER_COLUMN_FIELD_MATCH[1],
 						Constants.ADMIN_USER_COLUMN_FIELD_MATCH[0],
-						new int[] {1});
+						new int[] {1},
+						new String[] {"CNP"});
 			} catch (SQLException e) {
 				error(e.getMessage(), out);
 				e.printStackTrace();

@@ -14,55 +14,57 @@
 <link rel="stylesheet" href="../style/main.css" type="text/css" />
 </head>
 <%@include file="../include/tools.jsp"%>
-<% request.setAttribute("permissions", Tip.CADRU_DIDACTIC);%>
-<%@include file="../include/authentify.jsp" %>
+<%
+	request.setAttribute("permissions", Tip.CADRU_DIDACTIC);
+%>
+<%@include file="../include/authentify.jsp"%>
 
 <body>
 	<!-- Headerul paginii -->
 	<jsp:include page="/include/header.jsp">
-		<jsp:param value="Catalog - Cadru Didactic" name="title"/>
+		<jsp:param value="Catalog - Cadru Didactic" name="title" />
 	</jsp:include>
 	<!-- Continutul principal al paginii -->
 	<div id="content">
 		Mai jos se pot vizualiza utilizatorii din sistem:
 		<div class="table-box">
 			<%
-			//Prepare the data for the table model 
-			ArrayList<NotaCatalog> objects;
-			
-			ObjectTableGenerator<NotaCatalog> tableModel=null;
-			NotaCatalogWrapper dao=new NotaCatalogWrapper();
-			//Get the objects		
-			try {
-				//set the Field Match to get more info (nume disciplina & nume student)
-				dao.setNameMatch(Constants.CATALOG_FIELD_MATCH_FULL);
-				objects=dao.getNoteCatalogJoined("c.cnp_student, c.cod_disciplina, c.data, c.nota, concat(u.nume,concat(\" \",u.prenume)) nume, d.denumire",
-						"catalog c, utilizatori u, disciplina d",
-						"c.cnp_student=u.cnp AND c.cod_disciplina=d.cod");
-				tableModel=new ObjectTableGenerator<NotaCatalog>(NotaCatalog.class,
-						objects,
-						Constants.ADMIN_CATALOG_COLUMN_FIELD_MATCH[1],
-						Constants.ADMIN_CATALOG_COLUMN_FIELD_MATCH[0],
-						new int[] {0,2,4});
-			} catch (Exception e) {
-				error(e.getMessage(), out);
-				e.printStackTrace();
-			}			
+				//Prepare the data for the table model 
+				ArrayList<NotaCatalog> objects;
+
+				ObjectTableGenerator<NotaCatalog> tableModel = null;
+				NotaCatalogWrapper dao = new NotaCatalogWrapper();
+				//Get the objects		
+				try {
+					//set the Field Match to get more info (nume disciplina & nume student)
+					dao.setNameMatch(Constants.CATALOG_FIELD_MATCH_FULL);
+					objects = dao
+							.getNoteCatalogJoined(
+									"c.cnp_student, c.cod_disciplina, c.data, c.nota, concat(u.nume,concat(\" \",u.prenume)) nume, d.denumire",
+									"catalog c, utilizatori u, disciplina d, activitate a",
+									"c.cnp_student=u.cnp AND c.cod_disciplina=d.cod AND a.cod_disciplina=c.cod_disciplina AND a.tip=\'Curs\' AND a.cnp_cadru_didactic=\'"
+											+ utilizator.CNP + "\'");
+					tableModel = new ObjectTableGenerator<NotaCatalog>(NotaCatalog.class, objects,
+							Constants.ADMIN_CATALOG_COLUMN_FIELD_MATCH[1], Constants.ADMIN_CATALOG_COLUMN_FIELD_MATCH[0],
+							new int[] { 0, 2 }, new String[] { "cod_disciplina", "cnp_student" });
+				} catch (Exception e) {
+					error(e.getMessage(), out);
+					e.printStackTrace();
+				}
 			%>
 			<!-- Afisare date in tabel -->
 			<table>
-				<%=tableModel.getHTMLTableRepresentation("edit_user.jsp","delete_user.jsp") %>
+				<%=tableModel.getHTMLTableRepresentation("edit_nota.jsp", "delete_nota.jsp")%>
 			</table>
-			<br/>
-			<a href="add_user.jsp" class="button">Adauga</a>
+			<br /> <a href="add_nota.jsp" class="button">Adauga</a>
 
 
 		</div>
-		
+
 		<!-- Link catre pagina principala a utilizatorului -->
 		<jsp:include page="../include/content_footer.jsp"></jsp:include>
 	</div>
-	
+
 	<!-- Footerul paginii -->
 	<jsp:include page="/include/footer.jsp"></jsp:include>
 </body>

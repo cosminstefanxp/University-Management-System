@@ -12,6 +12,10 @@ public class Constants {
 															{ "cnp", "parola", "tip", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare", "contract_completat"},	//campuri obiect
 															{ "CNP", "parola", "tip", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare", "contractCompletat"}		//campuri baza de date
 														};
+	final public static String[][]	USER_FIELD_MATCH_SHORT	= {
+															{ "cnp", "nume", "prenume"},	//campuri obiect
+															{ "CNP", "nume", "prenume"}		//campuri baza de date
+														};
 	final public static int			USER_TABLE_PK_COUNT	= 1;		//doar cnp face parte din cheie
 	
 	
@@ -86,7 +90,7 @@ public class Constants {
 																{ "cnp_student", "cod_disciplina", "data", "nota", "nume", "denumire"},		//campuri baza de date
 																{ "cnpStudent",  "codDisciplina",  "data", "nota", "numeStudent", "denumireDisciplina"}		//campuri obiect
 															};	
-	final public static int			CATALOG_TABLE_PK_COUNT	= 3;	//atat 'cod_disciplina' cat si 'cnp student' si 'data' fac parte din cheie	
+	final public static int			CATALOG_TABLE_PK_COUNT	= 2;	//atat 'cod_disciplina' cat si 'cnp student' fac parte din cheie	
 
 	/*******OPTIUNI CONTRACT********/
 	final public static String		CONTRACT_TABLE			= "optiuni_contract";
