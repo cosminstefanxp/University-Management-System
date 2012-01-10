@@ -61,7 +61,7 @@ public class OptiuneContractWrapper extends ObjectWrapper<Disciplina> {
 	 * @param optiune the optiune
 	 * @return true, if successful
 	 */
-	public boolean insertOptiune(Disciplina optiune, String cnpStudent, int anStudiu)
+	public boolean insertOptiune(String cod, String cnpStudent, int anStudiu)
 	{
 		try {
 			//Prepare SQL insert
@@ -70,7 +70,7 @@ public class OptiuneContractWrapper extends ObjectWrapper<Disciplina> {
 					" VALUES (" +
 					"\'" + cnpStudent  +"\', " +
 					"\'" + anStudiu    +"\', " +
-					"\'" + optiune.cod +"\' );";
+					"\'" + cod +"\' );";
 			DatabaseConnection.customExecute(sqlStatement);
 		} catch (MySQLIntegrityConstraintViolationException e){
 			e.printStackTrace();

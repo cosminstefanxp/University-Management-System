@@ -111,6 +111,8 @@ public class ObjectTableGenerator<T> extends AbstractTableModel {
 		this.objects = objects;
 	}
 	
+	public enum ControlType {Checkbox, Radio};
+	
 	/**
 	 * Gets the HTML table representation. Without the table tag
 	 *
@@ -120,21 +122,46 @@ public class ObjectTableGenerator<T> extends AbstractTableModel {
 	 */
 	public String getHTMLTableRepresentation(String editLink, String deleteLink)
 	{
+		return getHTMLTableRepresentation(editLink, deleteLink, null,null);
+	}
+	
+	/**
+	 * Gets the HTML table representation. Without the table tag. Only the first id is used for the control.
+	 *
+	 * @param editLink the edit link
+	 * @param deleteLink the delete link
+	 * @return the hTML table representation
+	 */
+	public String getHTMLTableRepresentation(String editLink, String deleteLink, ControlType control, String name)
+	{
 		StringBuilder result=new StringBuilder();
 		//Build the header first
 		result.append("\t<tr>");
+		//Select column
+		if(control!=null)
+			result.append("\t\t<th>Sel</th>");
 		for(int i=0;i<getColumnCount();i++)
 			result.append("\t\t<th>"+getColumnName(i)+"</th>");
 		//Admin column
 		if(editLink!=null || deleteLink!=null)
 			result.append("\t\t<th>Admin</th>");
+
 		result.append("</tr>\n");
 
 		//Add the data
 		for(int i=0; i<getRowCount();i++)
 		{
 			result.append("\t<tr>");
-			
+			//Select column
+			if(control!=null)
+			{
+				result.append("\t\t<td>");
+				if(control==ControlType.Radio)
+					result.append("<input type='radio' name='"+name+"' value='"+getValueAt(i, idFields[0])+"'/>");
+				else if(control==ControlType.Checkbox)
+					result.append("<input type='checkbox' name='"+name+"' value='"+getValueAt(i, idFields[0])+"'/>");
+				result.append("</td>");
+			}
 			//Data columns
 			for (int j = 0; j < getColumnCount(); j++)
 			{
@@ -153,8 +180,8 @@ public class ObjectTableGenerator<T> extends AbstractTableModel {
 				if(deleteLink!=null)
 					result.append("<a href='"+deleteLink+"?"+id+"'>Delete</a>");
 				result.append("</td>");
-				
 			}
+
 			result.append("</tr>");
 		}
 		

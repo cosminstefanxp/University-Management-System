@@ -152,6 +152,7 @@ public class DatabaseConnection {
 		ResultSet result = statement.executeQuery(sqlQuery);
 		
 		result.next();
+		System.out.println("Rezultat: "+result.getFloat(1));
 		return result.getFloat(1);
 	}
 	

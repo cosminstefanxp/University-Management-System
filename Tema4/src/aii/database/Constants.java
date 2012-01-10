@@ -1,6 +1,7 @@
 package aii.database;
 
 
+
 public class Constants {
 	final public static String 		DATABASE_CONNECTION	= "jdbc:mysql://localhost/Grupa342C4_StefanDobrinCosmin";
 	final public static String		DATABASE_USER		= "root";
@@ -132,7 +133,10 @@ public class Constants {
 															{ "denumireDisciplina", "data", "ora", "sala"},		//campuri obiect
 															{ "Disciplina", "Data", "Ora", "Sala"}		//nume coloane
 														};
-	
+	final public static String[][]	VIEW_SITUATIE_SCOLARA_COLUMN_FIELD_MATCH		= {
+													{ "medieSemestru1", "medieSemestru2", "medieAritmetica", "medieGenerala", "puncteCredit", "restante"},		//campuri obiect
+													{ "Semestrul 1", "Semestrul 2", "Medie Aritmetica", "Medie Generala", "Puncte Credit", "Restante"}		//nume coloane
+												};
 	
 	/*******FIELD SIZES*********/
 	final public static int FIELD_SIZE_GRUPA=6;
