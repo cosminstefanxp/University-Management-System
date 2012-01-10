@@ -77,12 +77,36 @@ public class OrarCompletWrapper extends ObjectWrapper<OrarComplet> {
 			orare=this.getObjects(fields, from, where, extra);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
-					"accesului la baza de date!");
 			return null;
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " +
-					"constructiei dinamice a obiectelor din baza de date:"+e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		
+		return orare;
+	}
+	
+	/**
+	 * Gets all the orar entries.
+	 *
+	 * @return the orare
+	 */
+	public ArrayList<OrarComplet> getOrare(String whereS)
+	{
+		String fields="o.zi, o.ora, o.sala, o.grupa, o.frecventa, o.durata, o.id_activitate, a.tip, a.cod_disciplina, d.denumire, u.cnp, concat(u.nume,concat(' ',u.prenume)) nume";
+		String from=Constants.ORAR_TABLE+" o, "+Constants.ACTIVITATE_TABLE+" a, "+Constants.DISCIPLINA_TABLE+" d,"+Constants.USER_TABLE+" u";
+		String extra="ORDER BY o.grupa";
+		String where="o.id_activitate=a.id" +
+				" AND u.cnp=a.cnp_cadru_didactic" +
+				" AND d.cod=a.cod_disciplina AND "+whereS;
+			
+		ArrayList<OrarComplet> orare = null;
+		try {
+			orare=this.getObjects(fields, from, where, extra);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}

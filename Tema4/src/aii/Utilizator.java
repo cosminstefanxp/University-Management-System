@@ -13,6 +13,10 @@ public class Utilizator {
 		Buget, Taxa
 	};
 
+	public enum Taxa {
+		Achitata, Neachitata
+	}
+	
 	public String CNP;
 	public String parola;
 	public Tip tip;
@@ -23,6 +27,7 @@ public class Utilizator {
 	public String titlu_grupa;
 	public Finantare finantare;
 	public boolean contractCompletat;
+	public Taxa taxa;
 	
 	@Override
 	public Utilizator clone() {
@@ -38,6 +43,7 @@ public class Utilizator {
 		utilizator.titlu_grupa=titlu_grupa;
 		utilizator.finantare=finantare;
 		utilizator.contractCompletat=contractCompletat;
+		utilizator.taxa=taxa;
 		
 		return utilizator;
 	}

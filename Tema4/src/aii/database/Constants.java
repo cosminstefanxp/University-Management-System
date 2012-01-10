@@ -10,8 +10,8 @@ public class Constants {
 	/*******UTILIZATOR********/
 	final public static String		USER_TABLE			= "utilizatori";
 	final public static String[][]	USER_FIELD_MATCH	= {
-															{ "cnp", "parola", "tip", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare", "contract_completat"},	//campuri obiect
-															{ "CNP", "parola", "tip", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare", "contractCompletat"}		//campuri baza de date
+															{ "cnp", "parola", "tip", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare", "contract_completat", "taxa"},	//campuri obiect
+															{ "CNP", "parola", "tip", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare", "contractCompletat", "taxa"}		//campuri baza de date
 														};
 	final public static String[][]	USER_FIELD_MATCH_SHORT	= {
 															{ "cnp", "nume", "prenume"},	//campuri obiect
@@ -37,7 +37,12 @@ public class Constants {
 	final public static String[][]	ACTIVITATE_FIELD_MATCH_SHORT= {
 																{ "id", "cod_disciplina", "denumire"},	//campuri baza de date
 																{ "id", "codDisciplina", "denumireDisciplina"}		//campuri obiect
-															};	
+															};
+	
+	final public static String[][]	ACTIVITATE_FIELD_MATCH_MEDIUM= {
+											{ "id", "cod_disciplina", "denumire", "nume"},	//campuri baza de date
+											{ "id", "codDisciplina", "denumireDisciplina", "numeCadruDidactic"}		//campuri obiect
+										};		
 	final public static String[][]	ACTIVITATE_FIELD_MATCH_FULL		= {
 																{ "id", "cod_disciplina", "cnp_cadru_didactic", "tip", "denumire", "nume"},							//campuri baza de date
 																{ "id", "codDisciplina", "cnpCadruDidactic", "tip", "denumireDisciplina", "numeCadruDidactic"}		//campuri obiect
@@ -98,8 +103,12 @@ public class Constants {
 	
 	/*******TABELE********/
 	final public static String[][]	ADMIN_USER_COLUMN_FIELD_MATCH ={
-															{ "tip",      "CNP", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare", },			//campuri obiect
-															{ "Tip Cont", "CNP", "Nume", "Prenume", "Email", "Adresa", "Titlu/Grupa", "Finantare"}	//nume coloane
+															{ "tip",      "CNP", "nume", "prenume", "email", "adresa", "titlu_grupa", "finantare", "taxa" },			//campuri obiect
+															{ "Tip Cont", "CNP", "Nume", "Prenume", "Email", "Adresa", "Titlu/Grupa", "Finantare", "Taxa"}	//nume coloane
+														};
+	final public static String[][]	ADMIN_STUDENT_COLUMN_FIELD_MATCH ={
+															{ "CNP", "nume", "prenume", "titlu_grupa", "finantare", "taxa" },			//campuri obiect
+															{ "CNP", "Nume", "Prenume", "Grupa", "Finantare", "Taxa"}					//nume coloane
 														};
 	final public static String[][]	ADMIN_DISCIPLINA_COLUMN_FIELD_MATCH		= {
 															{ "cod", "denumire", "tip", "nrOre", "pctCredit", "examinare", "anStudiu", "semestru", "grup"},	//campuri obiect
@@ -109,10 +118,7 @@ public class Constants {
 															{ "id", "codDisciplina", "denumireDisciplina" , "cnpCadruDidactic", "numeCadruDidactic",  "tip"},		//campuri obiect
 															{ "ID", "Cod Disciplina", "Denumire", "CNP Cadru Didactic", "Nume Cadru", "Tip Activitate"}			//nume coloane
 														};
-	final public static String[][]	ADMIN_ORAR_COLUMN_FIELD_MATCH 	= {
-															{ "grupa", "idActivitate", "tipActivitate", "denumireDisciplina", "zi", "ora", "sala", "durata",   "frecventa"},	//campuri obiect
-															{ "Grupa", "ID Activitate", "Tip", "Disciplina", "Zi", "Ora", "Sala", "Durata", "Frecventa"}	//nume coloane
-														};
+
 	final public static String[][]	ADMIN_EXAMEN_COLUMN_FIELD_MATCH 	= {
 															{ "grupa", "codDisciplina", "denumireDisciplina", "data", "ora", "sala"},	//campuri obiect
 															{ "Grupa", "Cod Disciplina", "Denumire", "Data", "Ora", "Sala"}		//nume coloane
@@ -125,6 +131,10 @@ public class Constants {
 															{ "cod", "denumire", "tip", "nrOre", "pctCredit", "examinare"},	//campuri obiect
 															{ "Cod Disciplina", "Denumire", "Tip", "Numar Ore", "Puncte Credit", "Examinare"}	//nume coloane
 														};
+	final public static String[][]	ADMIN_ORAR_COLUMN_FIELD_MATCH 	= {
+															{ "grupa", "idActivitate", "tip", "denumireDisciplina", "numeCadruDidactic", "zi", "ora", "sala", "durata",   "frecventa"},	//campuri obiect
+															{ "Grupa", "ID Activitate", "Tip", "Disciplina", "Cadru Didactic", "Zi", "Ora", "Sala", "Durata", "Frecventa"}	//nume coloane
+														};	
 	final public static String[][]	VIEW_ORAR_STUDENT_COLUMN_FIELD_MATCH = {
 															{ "zi", "ora", "sala", "denumireDisciplina", "numeCadruDidactic", "durata", "frecventa",  "tip", "grupa", "idActivitate"},	//campuri obiect
 															{ "Zi", "Ora", "Sala", "Denumire Disciplina", "Cadru Didactic", "Durata (h)", "Frecventa",  "Tip", "Grupa", "ID"}	//nume coloane
@@ -138,17 +148,6 @@ public class Constants {
 													{ "Semestrul 1", "Semestrul 2", "Medie Aritmetica", "Medie Generala", "Puncte Credit", "Restante"}		//nume coloane
 												};
 	
-	/*******FIELD SIZES*********/
-	final public static int FIELD_SIZE_GRUPA=6;
-	final public static int FIELD_SIZE_TITLU=12;
-	final public static int FIELD_SIZE_SALA=10;
-	final public static int FIELD_SIZE_NUME=45;
-	final public static int FIELD_SIZE_PRENUME=45;
-	final public static int FIELD_SIZE_PAROLA=25;
-	final public static int FIELD_SIZE_CNP=13;
-	final public static int FIELD_SIZE_EMAIL=45;
-	final public static int FIELD_SIZE_ADRESA=120;
-	final public static int FIELD_SIZE_DISCIPLINA_DENUMIRE=45;
-	
+
 	
 }
