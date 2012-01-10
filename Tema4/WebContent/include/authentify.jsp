@@ -23,15 +23,19 @@
 			{
 				fail=true;
 			}
-			if(authenticationType==Tip.CADRU_DIDACTIC && (utilizator.tip!=Tip.CADRU_DIDACTIC && utilizator.tip!=Tip.SEF_CATEDRA) )
+			else if(authenticationType==Tip.CADRU_DIDACTIC && (utilizator.tip!=Tip.CADRU_DIDACTIC && utilizator.tip!=Tip.SEF_CATEDRA) )
 			{
 				fail=true;
 			}
-			if(authenticationType==Tip.STUDENT && utilizator.tip!=Tip.STUDENT)
+			else if(authenticationType==Tip.STUDENT && utilizator.tip!=Tip.STUDENT)
 			{
 				fail=true;
 			}
-			if(authenticationType==Tip.SECRETAR && utilizator.tip!=Tip.SECRETAR)
+			else if(authenticationType==Tip.SECRETAR && utilizator.tip!=Tip.SECRETAR)
+			{
+				fail=true;
+			}
+			else if(authenticationType==Tip.SEF_CATEDRA && utilizator.tip!=Tip.SEF_CATEDRA)
 			{
 				fail=true;
 			}
@@ -41,6 +45,7 @@
 			{
 				response.sendRedirect("index.jsp?error='Lipsa Permisiuni'");
 				log("[ERROR] Utilizatorul nu are permisiunile necesare!");
+				return;
 			}
 		}
 	}

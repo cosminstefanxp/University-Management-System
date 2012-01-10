@@ -39,55 +39,73 @@
 			if (request.getParameter("submitted") != null) {
 				log("Avem parametrii pentru setarea notei: " + request.getParameterMap());
 
-				//Backup the old one
-				NotaCatalog notaVeche=new NotaCatalog();
-				notaVeche.cnpStudent=nota.cnpStudent;
-				notaVeche.codDisciplina=nota.codDisciplina;
+				//Verificari campuri
+				if (request.getParameter("cnp_student") == null || request.getParameter("cod_disciplina").isEmpty()
+						|| request.getParameter("nota").isEmpty() || request.getParameter("data").isEmpty()) {
+					error("Completati toti parametrii necesari!", out);
+				} else {
+					try {
 
-				//Create the new nota
-				nota.cnpStudent=request.getParameter("cnp_student");
-				nota.codDisciplina=Integer.parseInt(request.getParameter("cod_disciplina"));
-				SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
-				nota.data=new Date(dateFormat.parse(request.getParameter("data")).getTime());
-				nota.nota=Integer.parseInt(request.getParameter("nota"));
-						
-				System.out.println("Nota existenta -> modificata in " + nota);
-				if (!new NotaCatalogWrapper().updateNotaCatalog(notaVeche, nota))
-					return;
+						//Backup the old one
+						NotaCatalog notaVeche = new NotaCatalog();
+						notaVeche.cnpStudent = nota.cnpStudent;
+						notaVeche.codDisciplina = nota.codDisciplina;
 
-				notify("Nota " + nota + " a fost actualizata.", out);
+						//Create the new nota
+						nota.cnpStudent = request.getParameter("cnp_student");
+						nota.codDisciplina = Integer.parseInt(request.getParameter("cod_disciplina"));
+						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+						nota.data = new Date(dateFormat.parse(request.getParameter("data")).getTime());
+						nota.nota = Integer.parseInt(request.getParameter("nota"));
+
+						System.out.println("Nota existenta -> modificata in " + nota);
+						if (!new NotaCatalogWrapper().updateNotaCatalog(notaVeche, nota)) {
+							error("A fost intampinata o problema la introducerea notei in catalog! Aceasta deja exista!",
+									out);
+						} else
+							notify("Nota " + nota + " a fost actualizata.", out);
+					} catch (Exception ex) {
+						error(ex.getMessage(), out);
+					}
+				}
 			}
 		%>
 
 		Mai jos poti sa editezi datele referitoare la o nota:
-		<%  //Obtinem disciplinele la care preda acest cadru didactic
-			ActivitateWrapper activitateDAO=new ActivitateWrapper();
+		<%
+			//Obtinem disciplinele la care preda acest cadru didactic
+			ActivitateWrapper activitateDAO = new ActivitateWrapper();
 			activitateDAO.setNameMatch(Constants.ACTIVITATE_FIELD_MATCH_SHORT);
-			ArrayList<Activitate> activitati=activitateDAO.getActivitatiJoined("a.id, a.cod_disciplina, d.denumire",
-					Constants.ACTIVITATE_TABLE+" a, "+Constants.DISCIPLINA_TABLE+" d",
-					"a.cnp_cadru_didactic='"+utilizator.CNP+"\' AND a.tip=\'"+Activitate.TipActivitate.Curs+"\' AND d.cod=a.cod_disciplina");
-			
+			ArrayList<Activitate> activitati = activitateDAO.getActivitatiJoined("a.id, a.cod_disciplina, d.denumire",
+					Constants.ACTIVITATE_TABLE + " a, " + Constants.DISCIPLINA_TABLE + " d", "a.cnp_cadru_didactic='"
+							+ utilizator.CNP + "\' AND a.tip=\'" + Activitate.TipActivitate.Curs
+							+ "\' AND d.cod=a.cod_disciplina");
+
 			//Obtinem studentii care sunt la grupe la activitati asociate disciplinelor la care preda acest cadru didactic
-			UtilizatorWrapper utilizatoriDAO=new UtilizatorWrapper();
+			UtilizatorWrapper utilizatoriDAO = new UtilizatorWrapper();
 			utilizatoriDAO.setNameMatch(Constants.USER_FIELD_MATCH_SHORT);
-			ArrayList<Utilizator> utilizatori=utilizatoriDAO.getUtilizatoriJoined("u.cnp, u.nume, u.prenume",
-					Constants.ACTIVITATE_TABLE+" a, "+Constants.DISCIPLINA_TABLE+" d, "+Constants.USER_TABLE+" u," +Constants.ORAR_TABLE+" o",
-					"a.cnp_cadru_didactic='"+utilizator.CNP+"\' AND a.tip=\'"+Activitate.TipActivitate.Curs+"\' AND d.cod=a.cod_disciplina AND "+
-					"o.id_activitate=a.id AND o.grupa=u.titlu_grupa");
-			
-		
+			ArrayList<Utilizator> utilizatori = utilizatoriDAO.getUtilizatoriJoined("u.cnp, u.nume, u.prenume",
+					Constants.ACTIVITATE_TABLE + " a, " + Constants.DISCIPLINA_TABLE + " d, " + Constants.USER_TABLE
+							+ " u," + Constants.ORAR_TABLE + " o", "a.cnp_cadru_didactic='" + utilizator.CNP
+							+ "\' AND a.tip=\'" + Activitate.TipActivitate.Curs + "\' AND d.cod=a.cod_disciplina AND "
+							+ "o.id_activitate=a.id AND o.grupa=u.titlu_grupa");
 		%>
-		<form name="edit_nota" action="<%=request.getRequestURI() %>" method="POST">
+		<form name="edit_nota" action="<%=request.getRequestURI()%>" method="POST">
 			<table>
 				<tr>
 					<td>Disciplina:</td>
 					<td>
 						<select name="cod_disciplina">
-						<% for(Activitate a:activitati) {%>
-						<option value="<%=a.codDisciplina%>" <%if(nota.codDisciplina==a.codDisciplina) out.write("selected='selected'"); %>>
-							<%=a.codDisciplina+" - "+a.denumireDisciplina %>
+						<%
+							for (Activitate a : activitati) {
+						%>
+						<option value="<%=a.codDisciplina%>" <%if (nota.codDisciplina == a.codDisciplina)
+					out.write("selected='selected'");%>>
+							<%=a.codDisciplina + " - " + a.denumireDisciplina%>
 						</option>
-						<%} %>
+						<%
+							}
+						%>
 						</select>
 					</td>
 				</tr>
@@ -96,9 +114,14 @@
 					<td>Student:</td>
 					<td>
 						<select name="cnp_student">
-						<% for(Utilizator u:utilizatori) {%>
-						<option value="<%=u.CNP%>" <%if(nota.cnpStudent.equals(u.CNP)) out.write("selected='selected'"); %>><%=u.CNP+" - "+u.prenume+" "+u.nume %></option>
-						<%} %>
+						<%
+							for (Utilizator u : utilizatori) {
+						%>
+						<option value="<%=u.CNP%>" <%if (nota.cnpStudent.equals(u.CNP))
+					out.write("selected='selected'");%>><%=u.CNP + " - " + u.prenume + " " + u.nume%></option>
+						<%
+							}
+						%>
 						</select>
 					</td>
 				</tr>

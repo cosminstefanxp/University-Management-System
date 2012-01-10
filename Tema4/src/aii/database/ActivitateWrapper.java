@@ -82,9 +82,9 @@ public class ActivitateWrapper extends ObjectWrapper<Activitate> {
 	 * @param cod the cod
 	 * @return the activitate
 	 */
-	public Activitate getActivitate(String cod)
+	public Activitate getActivitate(String id)
 	{
-		List<Activitate> activitati=this.getActivitati("cod=\'"+cod+"\'");
+		List<Activitate> activitati=this.getActivitati("id=\'"+id+"\'");
 		
 		if(activitati==null || activitati.size()!=1)
 			return null;

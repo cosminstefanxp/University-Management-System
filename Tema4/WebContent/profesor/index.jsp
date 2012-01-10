@@ -28,6 +28,10 @@
 		<div class="link-box">
 			<a href="../user_settings.jsp" class="button">Editare setari personale</a>
 			<a href="catalog.jsp" class="button">Vizualizare catalog</a>
+			<% if(utilizator.tip==Tip.SEF_CATEDRA) { %>
+			<a href="discipline.jsp" class="button">Administrare discipline</a>
+			<a href="activitati.jsp" class="button">Administrare activitati didactice</a>
+			<%} %>
 			<div class="clear"></div>
 		</div>
 	</div>
