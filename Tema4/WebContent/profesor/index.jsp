@@ -27,6 +27,7 @@
 		Bine ai venit pe consola cadrelor didactice ale facultatii! Alege de mai jos una dintre optiunile dorite:
 		<div class="link-box">
 			<a href="../user_settings.jsp" class="button">Editare setari personale</a>
+			<a href="../mesaje.jsp" class="button">Mesaje</a>
 			<a href="catalog.jsp" class="button">Vizualizare catalog</a>
 			<% if(utilizator.tip==Tip.SEF_CATEDRA) { %>
 			<a href="discipline.jsp" class="button">Administrare discipline</a>

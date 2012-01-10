@@ -2,6 +2,7 @@ package aii.database;
 
 
 
+
 public class Constants {
 	final public static String 		DATABASE_CONNECTION	= "jdbc:mysql://localhost/Grupa342C4_StefanDobrinCosmin";
 	final public static String		DATABASE_USER		= "root";
@@ -27,6 +28,14 @@ public class Constants {
 																{ "cod", "denumire", "tip", "nrOre",  "pctCredit",     "examinare", "anStudiu",  "semestru", "grup"}	//campuri obiect
 															};
 	final public static int			DISCIPLINA_TABLE_PK_COUNT	= 1;	//doar cod face parte din cheie
+	
+	/*******MESAJ********/
+	final public static String		MESAJ_TABLE					= "mesaje";
+	final public static String[][]	MESAJ_FIELD_MATCH		= {
+																{ "id", "cnp_sursa", "cnp_destinatie", "subiect", "mesaj", "data", "citit" },	//campuri baza de date
+																{ "id", "cnpSursa", "cnpDestinatie", "subiect", "mesaj", "data", "citit" }	//campuri obiect
+															};
+	final public static int			MESAJ_TABLE_PK_COUNT	= 1;	//doar cod face parte din cheie	
 	
 	/*******ACTIVITATE********/
 	final public static String		ACTIVITATE_TABLE			= "activitate";
@@ -114,6 +123,10 @@ public class Constants {
 															{ "cod", "denumire", "tip", "nrOre", "pctCredit", "examinare", "anStudiu", "semestru", "grup"},	//campuri obiect
 															{ "Cod Disciplina", "Denumire", "Tip", "Numar Ore", "Puncte Credit", "Examinare", "An Studiu", "Semestru", "Grup"}	//nume coloane
 														};
+	final public static String[][]	ADMIN_MESAJ_COLUMN_FIELD_MATCH		= {
+											{ "id", "cnpSursa", "cnpDestinatie", "subiect", "mesaj", "data", "citit" },	//campuri obiect,	//campuri obiect
+											{ "ID", "Sursa", "Destinatie", "Subiect", "Mesaj", "Data", "Citit" }	//nume coloane
+	};
 	final public static String[][]	ADMIN_ACTIVITATE_COLUMN_FIELD_MATCH 	= {
 															{ "id", "codDisciplina", "denumireDisciplina" , "cnpCadruDidactic", "numeCadruDidactic",  "tip"},		//campuri obiect
 															{ "ID", "Cod Disciplina", "Denumire", "CNP Cadru Didactic", "Nume Cadru", "Tip Activitate"}			//nume coloane

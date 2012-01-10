@@ -20,6 +20,7 @@
 		Bine ai venit pe consola studentilor facultatii! Alege de mai jos una dintre optiunile dorite:
 		<div class="link-box">
 			<a href="../user_settings.jsp" class="button">Editare setari personale</a>
+			<a href="../mesaje.jsp" class="button">Mesaje</a>
 			<a href="contract_studii.jsp" class="button">Contract de Studii</a> 
 			<a href="orar.jsp" class="button">Orar</a>
 			<a href="examene.jsp" class="button">Programare Examene</a>
