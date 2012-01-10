@@ -52,7 +52,15 @@ public class ObjectTableGenerator<T> extends AbstractTableModel {
 		
 		//Build the object fields
 		for(int i=0;i<fieldNames.length;i++)
+		{
+			try{
 			fields[i]=classType.getDeclaredField(fieldNames[i]);
+			}
+			catch(NoSuchFieldException ex)
+			{
+				fields[i]=classType.getSuperclass().getDeclaredField(fieldNames[i]);
+			}
+		}
 		
 	}
 

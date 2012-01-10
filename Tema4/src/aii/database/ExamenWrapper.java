@@ -80,10 +80,11 @@ public class ExamenWrapper extends ObjectWrapper<Examen> {
 	 */
 	public ArrayList<Examen> getExameneParticularizat(ArrayList<Integer> discipline, String grupa)
 	{
-		String fields="*";
-		String tables=Constants.EXAMEN_TABLE+" e";
+		String fields="e.*, d.denumire";
+		String tables=Constants.EXAMEN_TABLE+" e,"+Constants.DISCIPLINA_TABLE+" d";
 		String extra="ORDER BY data, ora";
 		String where="e.grupa=\'"+grupa+"\'" +
+		" AND e.cod_disciplina=d.cod " +
 		" AND e.cod_disciplina IN (";
 		
 		//adaugam clauza IN

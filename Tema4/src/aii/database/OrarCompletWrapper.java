@@ -57,12 +57,13 @@ public class OrarCompletWrapper extends ObjectWrapper<OrarComplet> {
 	 */
 	public ArrayList<OrarComplet> getOrareParticularizat(String grupa, ArrayList<Integer> discipline)
 	{
-		String fields="o.zi, o.ora, o.sala, o.grupa, o.frecventa, o.durata, o.id_activitate, a.tip, a.cod_disciplina, u.cnp, concat(u.nume,concat(' ',u.prenume)) nume";
-		String from=Constants.ORAR_TABLE+" o, "+Constants.ACTIVITATE_TABLE+" a, "+Constants.USER_TABLE+" u";
+		String fields="o.zi, o.ora, o.sala, o.grupa, o.frecventa, o.durata, o.id_activitate, a.tip, a.cod_disciplina, d.denumire, u.cnp, concat(u.nume,concat(' ',u.prenume)) nume";
+		String from=Constants.ORAR_TABLE+" o, "+Constants.ACTIVITATE_TABLE+" a, "+Constants.DISCIPLINA_TABLE+" d,"+Constants.USER_TABLE+" u";
 		String extra="ORDER BY o.zi, o.ora";
 		String where="o.grupa=\'"+grupa+"\'" +
 				" AND o.id_activitate=a.id" +
 				" AND u.cnp=a.cnp_cadru_didactic" +
+				" AND d.cod=a.cod_disciplina" +
 				" AND a.cod_disciplina IN (";
 		//adaugam clauza IN
 		for(Integer codDisciplina : discipline)

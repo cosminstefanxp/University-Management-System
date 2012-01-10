@@ -32,15 +32,13 @@ public class OrarComplet extends Orar implements Serializable {
 	public TipActivitate tip;
 
 	// ****************** METHODS ********************/
-	/* (non-Javadoc)
-	 * @see aii.Orar#toString()
-	 */
 	@Override
 	public String toString() {
-		return "OrarComplet [cnpCadruDidactic=" + cnpCadruDidactic + ", codDisciplina="
-				+ codDisciplina + ", numeCadruDidactic=" + numeCadruDidactic + ", tip=" + tip + ", durata="
-				+ durata + ", frecventa=" + frecventa + ", grupa=" + grupa + ", idActivitate="
-				+ idActivitate + ", ora=" + ora + ", sala=" + sala + ", zi=" + zi + "]";
+		return "OrarComplet [codDisciplina=" + codDisciplina + ", cnpCadruDidactic=" + cnpCadruDidactic
+				+ ", numeCadruDidactic=" + numeCadruDidactic + ", tip=" + tip + ", zi=" + zi + ", ora=" + ora
+				+ ", sala=" + sala + ", durata=" + durata + ", idActivitate=" + idActivitate + ", frecventa="
+				+ frecventa + ", grupa=" + grupa + ", denumireDisciplina=" + denumireDisciplina + ", tipActivitate="
+				+ tipActivitate + "]";
 	}
 
 
@@ -54,6 +52,9 @@ public class OrarComplet extends Orar implements Serializable {
 	public int getCodDisciplina() {
 		return codDisciplina;
 	}
+
+
+
 
 
 	/**

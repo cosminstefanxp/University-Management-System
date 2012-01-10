@@ -17,10 +17,10 @@
 		response.sendRedirect("profesor");
 		break;
 	case SECRETAR:
-		response.sendRedirect("secretar.jsp");
+		response.sendRedirect("secretar");
 		break;
 	case STUDENT:
-		response.sendRedirect("student.jsp");
+		response.sendRedirect("student");
 		break;
 	default:
 		notify("Tipul utilizatorului necunoscut", out);

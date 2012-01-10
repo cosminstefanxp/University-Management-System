@@ -58,8 +58,8 @@ public class Constants {
 																{ "grupa", "zi", "ora", "sala", "durata", "frecventa", "denumireDisciplina", "tipActivitate"}	//campuri obiect
 															};
 	final public static String[][]	ORAR_COMPLET_FIELD_MATCH	= {
-															{ "id_activitate", "grupa", "zi", "ora", "sala", "durata", "frecventa", "cod_disciplina", "tip", "nume", "cnp"},							//campuri baza de date
-															{ "idActivitate",  "grupa",  "zi", "ora", "sala", "durata", "frecventa", "codDisciplina", "tip", "numeCadruDidactic", "cnpCadruDidactic"}	//campuri obiect
+															{ "id_activitate", "grupa", "zi", "ora", "sala", "durata", "frecventa", "cod_disciplina", "tip", "nume", "cnp", "denumire"},							//campuri baza de date
+															{ "idActivitate",  "grupa",  "zi", "ora", "sala", "durata", "frecventa", "codDisciplina", "tip", "numeCadruDidactic", "cnpCadruDidactic", "denumireDisciplina"}	//campuri obiect
 														};
 	final public static int			ORAR_TABLE_PK_COUNT	= 2;	//atat 'id_activitate' cat si 'grupa' fac parte din cheie	
 	
@@ -125,8 +125,8 @@ public class Constants {
 															{ "Cod Disciplina", "Denumire", "Tip", "Numar Ore", "Puncte Credit", "Examinare"}	//nume coloane
 														};
 	final public static String[][]	VIEW_ORAR_STUDENT_COLUMN_FIELD_MATCH = {
-															{ "zi", "ora", "sala", "denumireDisciplina", "durata", "frecventa",  "tipActivitate", "grupa"},	//campuri obiect
-															{ "Zi", "Ora", "Sala", "Denumire Disciplina", "Durata (h)", "Frecventa",  "Tip", "Grupa"}	//nume coloane
+															{ "zi", "ora", "sala", "denumireDisciplina", "numeCadruDidactic", "durata", "frecventa",  "tip", "grupa", "idActivitate"},	//campuri obiect
+															{ "Zi", "Ora", "Sala", "Denumire Disciplina", "Cadru Didactic", "Durata (h)", "Frecventa",  "Tip", "Grupa", "ID"}	//nume coloane
 														};	
 	final public static String[][]	VIEW_EXAMEN_STUDENT_COLUMN_FIELD_MATCH		= {
 															{ "denumireDisciplina", "data", "ora", "sala"},		//campuri obiect
