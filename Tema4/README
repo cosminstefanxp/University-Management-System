@@ -1,0 +1,52 @@
+/****************************************************************
+ * Stefan-Dobrin Cosmin
+ * 342C4
+ * Aplicatii Integrate pentru Intreprinderi 
+ * Tema 4
+ ****************************************************************/
+ 
+ Detalii Proiect:
+ 	* proiectul a fost implementat folosind tehnologiile Java Server Pages
+ 	* compilarea si rularea s-a facut folosind Eclipse 3.5 cu Java 1.6 si baze de date MySQL
+ 	* dezvoltarea interfetei grafice s-a realizat cu ajutorul CSS, JSP si HTML
+ 	* testarea interfetei s-a facut pe Mozilla Firefox 5.0
+ 	* serverul folosit pentru testare a fost TomCat 7
+ 	* tema 4 s-a realizat pornind de la infrastructura realizata pentru tema 1
+ 	* tema 4 contine 1 proiect Eclipse, generat pentru un proiect Web JSP
+ 	
+ 
+ Alte mentiuni:
+ 	* baza de date a fost populata cu utilizatori cu CNP-uri scurte (si e dezactivata momentan verificarea pentru lungime CNP) pentru a usura si accelera testarea.
+	* utilizatori cu care se poate face testarea (cnp/parola):
+		o 111/111 - super-admin
+		o 222/222 - sef catedra
+		o 333/333 - secretar
+		o 444/444 - student 
+		o 555/555 - cadru didactic
+	* ca modificare fata de versiunile anterioare, am adaugat in baza de date o noua tabela mesaje, ce retine informatiile din mesajele schimbate intre utilizatori
+	* momentan am lasat schimbarea de mesaje activa intre toti studentii si cadrele didactice (inclusiv intre studenti sau intre cadre didactice), pentru a ajuta la o comunicare mai buna.
+ 	
+Detalii implementare:
+	* toate paginile au verificari de securitate, de acces si permite afisarea unor mesaje de eroare si de notificare
+ 	* aplicatia a fost gandita cat mai structurat, fiind realizate diverse fisiere auziliare incluse in paginile JSP. Mentionez cateva:
+ 		* style/main.css se ocupa de stilurile CSS
+ 		* include/header.jsp - contine headerul tuturor paginilor (parametrizat pentru titlu)
+ 		* include/footer.jsp - contine footerul paginilor
+ 		* include/content_footer.jsp - contine footer customizat de tip meniu pentru anumite pagini
+ 		* include/authentify.jsp - se ocupa de autentificarea utilizatorului pe pagina curenta. Declara si ramane declarat un obiect Utilizator, cel logat curent, ce poate fi folosit in restul paginii
+ 		* include/tools.jsp - folosit pentru afisarea unor mesaje de eroare sau de notificare
+ 	* ca structura, am mers pe urmatoarea idee:
+ 		* autentificarea se face pe /index.jsp
+ 		* in functie de tip este redirectat utilizatorul catre unul din folderelre:
+ 			* /student
+ 			* /admin
+ 			* /profesor
+ 			* /secretar
+ 		* in fiecare din aceste foldere se gasesc toate fisierele necasre pentru acel tip de utilizator (mai putin cele comune: setari si mesaje)
+ 	* pentru realizarea tabelelor, am folosit o clasa cu tip variabil: ObjectTableGenerator<T>, care permite crearea unor tabele HTML in functie de anumite customizari. Toate tabelele le-am realizat folosit acest Wrapper.
+ 	* mergand pe modelul de la tema 1, am folosit clase Wrapper (de tipul ObjectWrapper) pentru o interfatare mai usoara intre baza de date si obiecte. 
+
+Detalii testare:
+	* am incercat sa folosesc eatj.com pentru deploymentul aplicatiei, insa m-am lovit de niste probleme de securitate si nu am mai avut timp sa realizez urcarea: http://cosminstefanxp.s155.eatj.com/AII-Tema4
+	* In arhiva atasasez si un folder WAR ce poate fi folosit pentru deployment.
+	* !!! Aplicatia trebuie sa ruleze in folderul AII-Tema4 pentru a nu fi generate erori de lipse de dependinte (am anumite url-uri construite cu AII-Tema4)
