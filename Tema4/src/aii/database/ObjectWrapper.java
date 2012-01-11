@@ -99,7 +99,15 @@ public class ObjectWrapper<T> {
 				{
 					java.sql.Date sqlDate=entries.getDate(columnName);
 					field.set(instance, new java.util.Date(sqlDate.getTime()));
+				} else
+				if(field.getType() == boolean.class)
+				{
+					if(entries.getInt(columnName)==1)
+						field.setBoolean(instance, true);
+					else
+						field.setBoolean(instance, false);
 				}
+				
 				else
 					if(field.getType() == int.class)
 						field.setInt(instance, entries.getInt(columnName));

@@ -46,7 +46,7 @@
 			}			
 			%>
 			<!-- Afisare date in tabel -->
-			<table>
+			<table style="width:100%; text-wrap:normal;">
 				<%=tableModel.getHTMLTableRepresentation("read_mesaj.jsp",null) %>
 			</table>
 			<br/>

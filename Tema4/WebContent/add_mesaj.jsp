@@ -1,3 +1,4 @@
+<%@page import="aii.database.MesajWrapper"%>
 <%@page import="aii.Mesaj"%>
 <%@page import="aii.database.Constants"%>
 <%@page import="java.util.ArrayList"%>
@@ -47,14 +48,14 @@
 					mesaj.mesaj=request.getParameter("mesaj");
 					mesaj.cnpSursa=utilizator.CNP;
 					
-					System.out.println("Mesaj nou creat: " + user);
-					if (!new UtilizatorWrapper().insertUtilizator(user))
+					System.out.println("Mesaj nou creat: " + mesaj);
+					if (!new MesajWrapper().insertMesaj(mesaj))
 					{
-						error("O eroare a avut loc in momentul crearii utilizatorului in baza de date.",out);
+						error("O eroare a avut loc in momentul adaugarii mesajului in baza de date.",out);
 						return;
 					}
 	
-					notify("Utilizatorul " + user + " a fost creat.", out);
+					notify("Mesajul " + mesaj + " a fost transmis.", out);
 					}
 			}
 		%>
@@ -82,12 +83,12 @@
 				</tr>
 				<tr>
 					<td>Mesaj:</td>
-					<td><textarea name="mesaj"></textarea></td>
+					<td><textarea cols="100" rows="5" name="mesaj"></textarea></td>
 				</tr>
 
 			</table>
 			<input type="hidden" name="submitted" value="true" /> <input type="submit" name="submit" class="button"
-				value="Salveaza">
+				value="Trimite">
 		</form>
 
 		<jsp:include page="/include/content_footer.jsp">

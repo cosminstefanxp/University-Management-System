@@ -39,7 +39,9 @@ public class MesajWrapper extends ObjectWrapper<Mesaj> {
 	{
 		ArrayList<Mesaj> mesaje = null;
 		try {
-			mesaje=this.getObjects(Constants.MESAJ_TABLE, whereClause);
+			this.setNameMatch(Constants.MESAJ_FIELD_MATCH_FULL);
+			mesaje=this.getObjects("m.*, concat(u.nume,concat(\" \",u.prenume)) nume_sursa ",Constants.MESAJ_TABLE+" m, "+Constants.USER_TABLE+" u ", "u.cnp=m.cnp_sursa AND "+ whereClause,"ORDER BY citit");
+			this.setNameMatch(Constants.MESAJ_FIELD_MATCH);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			//JOptionPane.showMessageDialog(null,"A fost intampinata o eroare in momentul " + "accesului la baza de date!");

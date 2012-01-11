@@ -1,6 +1,6 @@
 package aii;
 
-import java.util.Date;
+import java.sql.Date;
 
 
 // TODO: Auto-generated Javadoc
@@ -12,7 +12,7 @@ public class Mesaj {
 	public Mesaj() {
 		super();
 		citit=false;
-		data=new Date();
+		data=new Date(new java.util.Date().getTime());
 	}
 
 	/** The id. */
@@ -23,6 +23,9 @@ public class Mesaj {
 	
 	/** The cnp destinatie. */
 	public String cnpDestinatie;
+	
+	/** The nume destinatie. */
+	public String numeSursa;
 	
 	/** The subiect. */
 	public String subiect;

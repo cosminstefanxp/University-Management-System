@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import aii.Mesaj;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class ObjectTableModel.
@@ -168,15 +170,35 @@ public class ObjectTableGenerator<T> extends AbstractTableModel {
 				if(getValueAt(i, j)==null)
 					result.append("\t\t<td> - </td>");	
 				else
-					result.append("\t\t<td>" + getValueAt(i, j) + "</td>");
+				{
+					if(editLink!=null && editLink.contains("read"))
+					{
+						Boolean citit=(Boolean) getValueAt(i, 5);		
+						if(!citit)
+							result.append("\t\t<td><b>" + getValueAt(i, j) + "<b></td>");
+						else
+							result.append("\t\t<td>" + getValueAt(i, j) + "</td>");
+					}
+					else
+						result.append("\t\t<td>" + getValueAt(i, j) + "</td>");
+				}
 			}
 			//Admin columns
 			if(editLink!=null || deleteLink!=null)
 			{
 				result.append("\t\t<td>");
 				String id=buildIdentificationString(i);
+				String text="Edit";
+				if(editLink!=null && editLink.contains("read"))
+				{
+					Boolean citit=(Boolean) getValueAt(i, 5);
+					if(!citit)
+						text="Mark as Read";
+					else
+						text="";
+				}
 				if(editLink!=null)
-					result.append("<a href='"+editLink+"?"+id+"'>Edit</a> ");
+					result.append("<a href='"+editLink+"?"+id+"'>"+text+"</a> ");
 				if(deleteLink!=null)
 					result.append("<a href='"+deleteLink+"?"+id+"'>Delete</a>");
 				result.append("</td>");
